@@ -7,12 +7,12 @@ export default {
     "module": true,
     "resourceType": "script"
   },
-  "/Users/eliasalerno/GitHub/Cuby/node_modules/nuxt/dist/app/entry.js": {
+  "C:/Users/Elia Workstation/GitHub/Cuby/node_modules/nuxt/dist/app/entry.js": {
     "resourceType": "script",
     "module": true,
     "prefetch": true,
     "preload": true,
     "isEntry": true,
-    "file": "/Users/eliasalerno/GitHub/Cuby/node_modules/nuxt/dist/app/entry.js"
+    "file": "C:/Users/Elia Workstation/GitHub/Cuby/node_modules/nuxt/dist/app/entry.js"
   }
 }

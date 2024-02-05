@@ -1,7 +1,8 @@
 <template>
   <div>
     <div class="main">
-      <BoxGraph></BoxGraph>
+      <!-- <BoxGraph></BoxGraph> -->
+      <treeMap/>
     </div>
   </div>
 </template>
