@@ -39,7 +39,27 @@ let renderer;
 let scene;
 let camera;
 
+function changeView() {
+  console.log("currentStorage:", currentStorage);
+  currentStorage.value = !currentStorage.value;
+
+  // Clear the scene
+  scene.traverse((object) => {
+    if (object.geometry) object.geometry.dispose();
+    if (object.material) object.material.dispose();
+  });
+
+  // Remove existing meshes from the scene
+  scene.children.length = 0;
+  // Recreate the treemap and update the 3D representation
+  createTreemap();
+}
+
 onMounted(async () => {
+  createTreemap();
+});
+
+const createTreemap = async () => {
   // set the dimensions and margins of the graph
   const margin = { top: 10, right: 10, bottom: 10, left: 10 };
   const width = 1000 - margin.left - margin.right;
@@ -104,13 +124,9 @@ onMounted(async () => {
   } catch (error) {
     console.error("Error loading JSON data:", error);
   }
-});
+};
 
-function changeView() {
-  console.log("currentStorage:", currentStorage);
-  currentStorage.value = !currentStorage.value;
-  renderer.render(scene, camera);
-}
+console.log("current:", currentStorage);
 
 const create3D = (rectangles, nodes) => {
   // Create a Three.js scene

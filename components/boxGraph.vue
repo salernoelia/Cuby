@@ -188,7 +188,6 @@ controls.maxPolarAngle = Math.PI / 2; // limit the polar angle to avoid going up
 controls.minPolarAngle = 0; // Adjust as needed
 controls.maxPolarAngle = Math.PI; // Adjust as needed
 
-// Animation loop
 const animate = function () {
   requestAnimationFrame(animate);
   renderer.render(scene, camera);
