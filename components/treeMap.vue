@@ -30,6 +30,8 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import data from "~/static/data/data.json";
 
+let zIndex = 2;
+
 const canvas = ref(null);
 let currentStorage = ref(true);
 let rectangles = [];
@@ -53,6 +55,7 @@ function changeView() {
   scene.children.length = 0;
   // Recreate the treemap and update the 3D representation
   createTreemap();
+  create3D(rectangles, nodes);
 }
 
 onMounted(async () => {
@@ -137,7 +140,12 @@ const create3D = (rectangles, nodes) => {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
 
+  zIndex++;
   canvas.value.appendChild(renderer.domElement);
+  renderer.domElement.style.position = "absolute"; // oder 'relative', 'fixed', etc., je nach Bedarf
+  renderer.domElement.style.zIndex = zIndex;
+
+  console.log("zIndex:", zIndex);
 
   // Add axes helpers
   const axesHelper = new THREE.AxesHelper(100);
