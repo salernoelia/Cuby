@@ -9,6 +9,8 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import * as d3 from 'd3';
+import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import data from '~/static/data/data.json';
 
 const myDataviz = ref(null);
@@ -40,7 +42,6 @@ onMounted(async () => {
     .append('g')
     .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
-  // Read JSON data
   try {
     // Create hierarchy
     const root = d3
@@ -53,7 +54,7 @@ onMounted(async () => {
 
     console.log(root.leaves());
     // use this information to add rectangles:
-    svg
+    const rects = svg
       .selectAll('rect')
       .data(root.leaves())
       .enter()
@@ -65,21 +66,80 @@ onMounted(async () => {
       .style('stroke', 'black')
       .style('fill', '#69b3a2');
 
-    // and to add the text labels
-    svg
-      .selectAll('text')
-      .data(root.leaves())
-      .enter()
-      .append('text')
-      .attr('x', (d) => d.x0 + 10)
-      .attr('y', (d) => d.y0 + 20)
-      .text((d) => d.data.Habitat_name)
-      .attr('font-size', '15px')
-      .attr('fill', 'white');
+    // Call the create3D function in onMounted after appending the SVG
+ create3D(root.leaves(), rects);
   } catch (error) {
     console.error('Error loading JSON data:', error);
   }
 });
+
+const create3D = (data, svgRects) => {
+  const cubeMap = new Map();
+  // Initialize Three.js scene
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+  const renderer = new THREE.WebGLRenderer();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  document.body.appendChild(renderer.domElement);
+
+  // Create extrusion material
+  const material = new THREE.MeshBasicMaterial({ color: 0x69b3a2, wireframe: true });
+
+  renderer.setClearColor(0xffffff);
+
+// Set up lighting
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+directionalLight.position.set(5, 5, 5);
+
+scene.add(ambientLight);
+scene.add(directionalLight);
+
+// Extrude the rectangles based on "Above_ground_current_storage"
+data.forEach((d, index) => {
+  const extrusionHeight = d.data.Above_ground_current_storage / 100000;
+  const geometry = new THREE.BoxGeometry(d.x1 - d.x0, extrusionHeight, d.y1 - d.y0);
+  const cube = new THREE.Mesh(geometry, material);
+
+  // Position the cubes in 3D space
+  cube.position.set(d.x0 + (d.x1 - d.x0) / 2, extrusionHeight / 2, d.y0 + (d.y1 - d.y0) / 2);
+
+  // Add the cube to the scene
+  scene.add(cube);
+
+  // Store the association in the map
+  cubeMap.set(svgRects._groups[0][index], cube);
+});
+
+  // Set up orbit controls for interaction
+  const controls = new OrbitControls(camera, renderer.domElement);
+  controls.enableZoom = true;
+
+  // Set up camera position
+  camera.position.z = 5;
+
+   // Render loop
+   const animate = () => {
+    requestAnimationFrame(animate);
+    controls.update();
+
+    // Sync D3 rectangles with corresponding Three.js cubes
+    svgRects.each((d, index) => {
+      const cube = cubeMap.get(svgRects._groups[0][index]);
+      if (cube) {
+        cube.scale.y = d.data.Above_ground_current_storage / 100000;
+        cube.position.y = cube.scale.y / 2; // Adjust position based on scale
+      }
+    });
+
+    renderer.render(scene, camera);
+  };
+
+  animate();
+};
+
+
+
 </script>
 
 
