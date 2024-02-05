@@ -1,30 +1,29 @@
 <template>
-  
   <div>
     <!-- Create a div where the graph will take place -->
-    <div class="myDataviz" ref="myDataviz"></div>
+    <div class="canvas" ref="canvas"></div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import * as d3 from 'd3';
-import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import data from '~/static/data/data.json';
+import { ref, onMounted } from "vue";
+import * as d3 from "d3";
+import * as THREE from "three";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import data from "~/static/data/data.json";
 
-const myDataviz = ref(null);
+const canvas = ref(null);
 
 onMounted(async () => {
   // set the dimensions and margins of the graph
   const margin = { top: 10, right: 10, bottom: 10, left: 10 };
-  const width = 445 - margin.left - margin.right;
-  const height = 445 - margin.top - margin.bottom;
+  const width = 1000 - margin.left - margin.right;
+  const height = 1000 - margin.top - margin.bottom;
 
   // Wait for the element to be available in the DOM
   await new Promise((resolve) => {
     const checkElement = () => {
-      if (myDataviz.value) {
+      if (canvas.value) {
         resolve();
       } else {
         requestAnimationFrame(checkElement);
@@ -33,14 +32,17 @@ onMounted(async () => {
     checkElement();
   });
 
+  // Create color scale
+  const color = d3.scaleOrdinal(d3.schemeCategory10);
+
   // append the svg object to the body of the page
   const svg = d3
-    .select(myDataviz.value)
-    .append('svg')
-    .attr('width', width + margin.left + margin.right)
-    .attr('height', height + margin.top + margin.bottom)
-    .append('g')
-    .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+    .select(canvas.value)
+    .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
   try {
     // Create hierarchy
@@ -55,94 +57,160 @@ onMounted(async () => {
     console.log(root.leaves());
     // use this information to add rectangles:
     const rects = svg
-      .selectAll('rect')
+      .selectAll("rect")
       .data(root.leaves())
       .enter()
-      .append('rect')
-      .attr('x', (d) => d.x0)
-      .attr('y', (d) => d.y0)
-      .attr('width', (d) => d.x1 - d.x0)
-      .attr('height', (d) => d.y1 - d.y0)
-      .style('stroke', 'black')
-      .style('fill', '#69b3a2');
+      .append("rect")
+      .style("fill", (d) => color(d.data.Habitat_name))
+      .attr("x", (d) => d.x0)
+      .attr("y", (d) => d.y0)
+      .attr("width", (d) => d.x1 - d.x0)
+      .attr("height", (d) => d.y1 - d.y0);
 
-    // Call the create3D function in onMounted after appending the SVG
- create3D(root.leaves(), rects);
+    // Read out d3.js generated rectangles and import them to Three.js
+    const rectangles = svg.selectAll("rect").nodes();
+
+    // Apply the layout to our data
+    const nodes = root.descendants();
+
+    create3D(rectangles, nodes);
+    console.log(rectangles);
   } catch (error) {
-    console.error('Error loading JSON data:', error);
+    console.error("Error loading JSON data:", error);
   }
 });
 
-const create3D = (data, svgRects) => {
-  const cubeMap = new Map();
-  // Initialize Three.js scene
+const colors = [0x2194ce, 0xff6347, 0x8a2be2, 0x00fa9a, 0xffd700];
+
+const create3D = (rectangles, nodes) => {
+  // Create a Three.js scene
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-  const renderer = new THREE.WebGLRenderer();
+  // Create three.js renderer
+  const renderer = new THREE.WebGLRenderer({ antialias: true });
+  // Set the pixel ratio for better quality on high-density displays
+  renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  document.body.appendChild(renderer.domElement);
 
-  // Create extrusion material
-  const material = new THREE.MeshBasicMaterial({ color: 0x69b3a2, wireframe: true });
+  // Append the renderer's DOM element to the canvas div
+  canvas.value.appendChild(renderer.domElement);
 
-  renderer.setClearColor(0xffffff);
+  const axesHelper = new THREE.AxesHelper(100);
+  scene.add(axesHelper);
+  scene.background = new THREE.Color(0xffffff); // Set background color to white
 
-// Set up lighting
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
-directionalLight.position.set(5, 5, 5);
+  rectangles.forEach((rectangle, index) => {
+    let rectWidth = parseFloat(rectangle.getAttribute("width"));
+    let rectHeight = parseFloat(rectangle.getAttribute("height"));
 
-scene.add(ambientLight);
-scene.add(directionalLight);
+    // Use the depth value from the data for extrusion
+    let rectDepth = nodes[index].data.depth;
 
-// Extrude the rectangles based on "Above_ground_current_storage"
-data.forEach((d, index) => {
-  const extrusionHeight = d.data.Above_ground_current_storage / 100000;
-  const geometry = new THREE.BoxGeometry(d.x1 - d.x0, extrusionHeight, d.y1 - d.y0);
-  const cube = new THREE.Mesh(geometry, material);
+    if (rectDepth === null || rectDepth === undefined) {
+      rectDepth = 1;
+    }
 
-  // Position the cubes in 3D space
-  cube.position.set(d.x0 + (d.x1 - d.x0) / 2, extrusionHeight / 2, d.y0 + (d.y1 - d.y0) / 2);
+    console.log("rectWidth:", rectWidth);
+    console.log("rectHeight:", rectHeight);
+    console.log("rectDepth:", rectDepth);
 
-  // Add the cube to the scene
-  scene.add(cube);
+    // Extrude in the positive direction if the value is positive
+    const geometryPositive = new THREE.ExtrudeGeometry(
+      new THREE.Shape([
+        new THREE.Vector2(0, 0),
+        new THREE.Vector2(rectWidth, 0),
+        new THREE.Vector2(rectWidth, rectHeight),
+        new THREE.Vector2(0, rectHeight),
+        new THREE.Vector2(0, 0),
+      ]),
+      { depth: rectDepth, bevelEnabled: false }
+    );
 
-  // Store the association in the map
-  cubeMap.set(svgRects._groups[0][index], cube);
-});
+    // Extrude in the negative direction if the value is negative
+    const geometryNegative = new THREE.ExtrudeGeometry(
+      new THREE.Shape([
+        new THREE.Vector2(0, 0),
+        new THREE.Vector2(rectWidth, 0),
+        new THREE.Vector2(rectWidth, rectHeight),
+        new THREE.Vector2(0, rectHeight),
+        new THREE.Vector2(0, 0),
+      ]),
+      { depth: Math.abs(rectDepth), bevelEnabled: false }
+    );
 
-  // Set up orbit controls for interaction
-  const controls = new OrbitControls(camera, renderer.domElement);
-  controls.enableZoom = true;
-
-  // Set up camera position
-  camera.position.z = 5;
-
-   // Render loop
-   const animate = () => {
-    requestAnimationFrame(animate);
-    controls.update();
-
-    // Sync D3 rectangles with corresponding Three.js cubes
-    svgRects.each((d, index) => {
-      const cube = cubeMap.get(svgRects._groups[0][index]);
-      if (cube) {
-        cube.scale.y = d.data.Above_ground_current_storage / 100000;
-        cube.position.y = cube.scale.y / 2; // Adjust position based on scale
-      }
+    // Create meshes for positive and negative extrusions
+    const material = new THREE.MeshPhongMaterial({
+      color: colors[index % colors.length],
     });
+    const meshPositive = new THREE.Mesh(geometryPositive, material);
+    const meshNegative = new THREE.Mesh(geometryNegative, material);
 
+    // Position the meshes to "kiss" each other
+    meshPositive.position.set(
+      parseFloat(rectangle.getAttribute("x")),
+      parseFloat(rectangle.getAttribute("y")),
+      0
+    );
+
+    meshNegative.position.set(
+      parseFloat(rectangle.getAttribute("x")),
+      parseFloat(rectangle.getAttribute("y")),
+      -rectDepth
+    );
+
+    // Add meshes to the scene
+    scene.add(meshPositive);
+    scene.add(meshNegative);
+  });
+
+  // Add ambient light with increased intensity and white color
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.8); // Increase intensity and set color to white
+  scene.add(ambientLight);
+
+  // Add directional light with increased intensity and white color
+  const directionalLight = new THREE.DirectionalLight(0xffffff, 1.2); // Increase intensity and set color to white
+  directionalLight.position.set(1, 1, 1).normalize(); // Adjust position
+  scene.add(directionalLight);
+
+  // Create a camera
+  const camera = new THREE.PerspectiveCamera(
+    75,
+    window.innerWidth / window.innerHeight,
+    0.1,
+    10000
+  );
+  camera.position.set(0, 0, 200); // Adjust camera position
+
+  // Rotate the scene so it is flat on X and Y axis
+  scene.rotation.x = -Math.PI / 3;
+
+  // Set up OrbitControls with additional features
+  const controls = new OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
+  controls.dampingFactor = 0.25; // setting damping factor for smoother motion
+  controls.screenSpacePanning = false; // enable/disable screen-space panning
+  controls.maxPolarAngle = Math.PI / 2; // limit the polar angle to avoid going upside down
+
+  controls.minPolarAngle = 0; // Adjust as needed
+  controls.maxPolarAngle = Math.PI; // Adjust as needed
+
+  const animate = function () {
+    requestAnimationFrame(animate);
     renderer.render(scene, camera);
+    // Update the OrbitControls
+    controls.update();
   };
 
   animate();
+  camera.lookAt(new THREE.Vector3(0, 0, 0)); // Look at the center of the scene
 };
-
-
-
 </script>
 
-
 <style scoped>
-/* Add any additional styles if needed */
+.canvas {
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  position: absolute;
+}
 </style>
