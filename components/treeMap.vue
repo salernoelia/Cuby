@@ -1,37 +1,41 @@
 <template>
   <div>
     <div class="controls">
-      <label>
-        <input
-          type="radio"
-          name="selectedStorage"
-          @change="storageOptionSelected('currentStorage')"
-        />
-        Current Storage
-      </label>
+      <div class="storageControls">
+        <label class="storage-button">
+          <input
+            class="storage-radio"
+            type="radio"
+            name="selectedStorage"
+            @change="storageOptionSelected('currentStorage')"
+          />
+          Current Storage
+        </label>
 
-      <label>
-        <input
-          type="radio"
-          name="selectedStorage"
-          @change="storageOptionSelected('potentialStorage')"
-        />
-        Potential Storage
-      </label>
-    </div>
-    <div class="filter-buttons">
-      <button
-        v-for="habitat in data"
-        :key="habitat.Habitat_name"
-        :style="{ backgroundColor: habitat.color }"
-        :class="{
-          'button-main-active': isHabitatSelected(habitat.Habitat_name),
-        }"
-        class="button-main"
-        @click="filterData(habitat.Habitat_name)"
-      >
-        {{ habitat.Habitat_name }}
-      </button>
+        <label class="storage-button">
+          <input
+            class="storage-radio"
+            type="radio"
+            name="selectedStorage"
+            @change="storageOptionSelected('potentialStorage')"
+          />
+          Potential Storage
+        </label>
+      </div>
+      <div class="filter-buttons">
+        <button
+          v-for="habitat in data"
+          :key="habitat.Habitat_name"
+          :style="{ backgroundColor: habitat.color }"
+          :class="{
+            'button-main-active': isHabitatSelected(habitat.Habitat_name),
+          }"
+          class="button-main"
+          @click="filterData(habitat.Habitat_name)"
+        >
+          {{ habitat.Habitat_name }}
+        </button>
+      </div>
     </div>
     <div class="canvas" ref="canvas"></div>
   </div>
@@ -330,33 +334,82 @@ body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+  overflow: hidden; /* Hide scrollbars */
 }
 .canvas {
-  width: 100%;
-  height: 100%;
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
   z-index: 2;
-  top: 0;
-  left: 0;
+  top: -8px;
+  left: -8px;
   margin: none;
   padding: none;
   position: absolute;
 }
-.controls,
-.filter-buttons {
+
+.controls {
+  position: fixed; /* Fixed position */
+  bottom: 0;
+  left: 0; /* Ensure it's aligned to the left */
+  z-index: 3;
+  display: flex;
+  flex-direction: row;
+}
+
+.storageControls {
+  display: flex;
+  flex-direction: column;
   position: relative;
-  top: 0;
+
   left: 0;
   z-index: 3;
 }
+
+.storage-button {
+  width: 150px;
+  margin: 10px;
+  padding: 10px;
+  background-color: rgb(207, 207, 207);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  border: 1px solid #000;
+  position: relative; /* Position the button relative to its container */
+}
+
+.storage-radio {
+  position: absolute; /* Position the radio button */
+  opacity: 0; /* Make the radio button transparent */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
 .filter-buttons {
+  position: relative;
+  left: 0;
+  z-index: 3;
   display: flex;
   flex-direction: row;
   justify-content: left;
   align-items: left;
   margin: 10px;
   padding: 10px;
-  background-color: #f0f0f0;
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.button-main {
+  font-size: 16px;
+  margin: 10px;
+  padding: 10px;
+  border: 1px solid #000;
+  pointer-events: auto;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 }
 </style>
