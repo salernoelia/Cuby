@@ -19,6 +19,16 @@
         Potential Storage
       </label>
     </div>
+    <div class="filterbuttons">
+      <button
+        v-for="habitat in data"
+        :class="{ 'button-main-active': isSelected(habitat.Habitat_name) }"
+        class="button-main"
+        @click="filterData(habitat.Habitat_name)"
+      >
+        {{ habitat.Habitat_name }}
+      </button>
+    </div>
     <div class="canvas" ref="canvas"></div>
   </div>
 </template>
@@ -29,6 +39,26 @@ import * as d3 from "d3";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import data from "~/static/data/data.json";
+
+const filteredData = ref([]);
+const filterData = (habitatName) => {
+  const index = filteredData.value.findIndex(
+    (item) => item.Habitat_name === habitatName
+  );
+  if (index === -1) {
+    filteredData.value.push(
+      data.find((item) => item.Habitat_name === habitatName)
+    );
+  } else {
+    filteredData.value.splice(index, 1);
+  }
+  console.log(filteredData.value);
+  resetView();
+};
+
+const isSelected = (habitatName) => {
+  return filteredData.value.some((item) => item.Habitat_name === habitatName);
+};
 
 let zIndex = 2;
 
@@ -61,27 +91,10 @@ resetView = () => {
   scene.children.length = 0;
   // Recreate the treemap and update the 3D representation
   createTreemap();
-  // create3D(rectangles, nodes);
 };
 
-// function changeView() {
-//   console.log("currentStorage:", currentStorage);
-//   currentStorage.value = !currentStorage.value;
-
-//   // Clear the scene
-//   scene.traverse((object) => {
-//     if (object.geometry) object.geometry.dispose();
-//     if (object.material) object.material.dispose();
-//   });
-
-//   // Remove existing meshes from the scene
-//   scene.children.length = 0;
-//   // Recreate the treemap and update the 3D representation
-//   createTreemap();
-//   create3D(rectangles, nodes);
-// }
-
 onMounted(async () => {
+  initCamera();
   createTreemap();
 });
 
@@ -152,7 +165,17 @@ const createTreemap = async () => {
   }
 };
 
-// console.log("current:", currentStorage);
+const initCamera = () => {
+  // Create a camera
+  camera = new THREE.PerspectiveCamera(
+    75,
+    window.innerWidth / window.innerHeight,
+    0.1,
+    20000
+  );
+  camera.position.set(1500, 0, 1500);
+  camera.lookAt(new THREE.Vector3(0, 0, 0)); // Look at the left of the scene
+};
 
 const create3D = (rectangles, nodes) => {
   // Create a Three.js scene
@@ -177,8 +200,8 @@ const create3D = (rectangles, nodes) => {
 
   const centroid = new THREE.Vector3();
   rectangles.forEach((rectangle) => {
-    centroid.x += parseFloat(rectangle.getAttribute("x"));
-    centroid.y += parseFloat(rectangle.getAttribute("y"));
+    centroid.x += parseFloat(rectangle.getAttribute("x") + 50);
+    centroid.y += parseFloat(rectangle.getAttribute("y") + 50);
     centroid.z += 0; // Assuming z-coordinate is 0 for 2D layout
   });
   centroid.divideScalar(rectangles.length);
@@ -198,11 +221,21 @@ const create3D = (rectangles, nodes) => {
         break;
     }
 
-    if (rectAbove === null || rectAbove === undefined || rectAbove === 0) {
+    if (
+      rectAbove === null ||
+      rectAbove === undefined ||
+      rectAbove === 0 ||
+      isNaN(rectBelow)
+    ) {
       rectAbove = 1;
     }
 
-    if (rectBelow === null || rectBelow === undefined || rectBelow === 0) {
+    if (
+      rectBelow === null ||
+      rectBelow === undefined ||
+      rectBelow === 0 ||
+      isNaN(rectBelow)
+    ) {
       rectBelow = -1;
     }
 
@@ -274,15 +307,6 @@ const create3D = (rectangles, nodes) => {
   directionalLight.position.set(1, 1, 1).normalize();
   scene.add(directionalLight);
 
-  // Create a camera
-  camera = new THREE.PerspectiveCamera(
-    75,
-    window.innerWidth / window.innerHeight,
-    0.1,
-    20000
-  );
-  camera.position.set(0, 0, 1500);
-
   scene.rotation.x = -Math.PI / 3;
 
   const controls = new OrbitControls(camera, renderer.domElement);
@@ -306,7 +330,6 @@ const create3D = (rectangles, nodes) => {
   };
 
   animate();
-  camera.lookAt(new THREE.Vector3(0, 0, 0)); // Look at the center of the scene
 };
 </script>
 
@@ -337,5 +360,21 @@ body {
   top: 0;
   left: 0;
   z-index: 3;
+}
+
+.filterbuttons {
+  position: relative;
+  top: 0;
+  left: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  align-items: left;
+  margin: 10px;
+  padding: 10px;
+  background-color: #f0f0f0;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 </style>
