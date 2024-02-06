@@ -1,24 +1,24 @@
 <template>
   <div>
     <div class="controls">
-      <button
-        v-if="currentStorage"
-        type="button"
-        @click="changeView"
-        value="true"
-      >
+      <label>
+        <input
+          type="radio"
+          name="selectedStorage"
+          @change="storageSelected('currentStorage')"
+        />
         Current Storage
-      </button>
-      <button
-        v-if="!currentStorage"
-        type="button"
-        @click="changeView"
-        value="false"
-      >
-        Potential Storage
-      </button>
-    </div>
+      </label>
 
+      <label>
+        <input
+          type="radio"
+          name="selectedStorage"
+          @change="storageSelected('potentialStorage')"
+        />
+        Potential Storage
+      </label>
+    </div>
     <div class="canvas" ref="canvas"></div>
   </div>
 </template>
@@ -33,30 +33,53 @@ import data from "~/static/data/data.json";
 let zIndex = 2;
 
 const canvas = ref(null);
-let currentStorage = ref(true);
+let selectedStorage = ref("currentStorage");
+let storageOption = ref();
 let rectangles = [];
 let nodes = [];
-let animate;
-let renderer;
-let scene;
-let camera;
+let rectAbove,
+  rectBelow,
+  camera,
+  scene,
+  renderer,
+  animate,
+  storageSelected,
+  geometryPositive,
+  geometryNegative,
+  resetView;
 
-function changeView() {
-  console.log("currentStorage:", currentStorage);
-  currentStorage.value = !currentStorage.value;
+storageSelected = (storage) => {
+  selectedStorage.value = storage;
+  resetView();
+};
 
-  // Clear the scene
-  scene.traverse((object) => {
-    if (object.geometry) object.geometry.dispose();
-    if (object.material) object.material.dispose();
-  });
+resetView = () => {
+  geometryPositive.dispose();
+  geometryNegative.dispose();
 
   // Remove existing meshes from the scene
   scene.children.length = 0;
   // Recreate the treemap and update the 3D representation
   createTreemap();
-  create3D(rectangles, nodes);
-}
+  // create3D(rectangles, nodes);
+};
+
+// function changeView() {
+//   console.log("currentStorage:", currentStorage);
+//   currentStorage.value = !currentStorage.value;
+
+//   // Clear the scene
+//   scene.traverse((object) => {
+//     if (object.geometry) object.geometry.dispose();
+//     if (object.material) object.material.dispose();
+//   });
+
+//   // Remove existing meshes from the scene
+//   scene.children.length = 0;
+//   // Recreate the treemap and update the 3D representation
+//   createTreemap();
+//   create3D(rectangles, nodes);
+// }
 
 onMounted(async () => {
   createTreemap();
@@ -129,7 +152,7 @@ const createTreemap = async () => {
   }
 };
 
-console.log("current:", currentStorage);
+// console.log("current:", currentStorage);
 
 const create3D = (rectangles, nodes) => {
   // Create a Three.js scene
@@ -164,19 +187,23 @@ const create3D = (rectangles, nodes) => {
     let rectWidth = parseFloat(rectangle.getAttribute("width"));
     let rectHeight = parseFloat(rectangle.getAttribute("height"));
 
-    let rectAbove, rectBelow;
-
-    if (currentStorage) {
-      rectAbove = data[index].Above_ground_current_storage / 100000000;
-      rectBelow = data[index].Below_ground_current_storage / 100000000;
-    } else {
-      rectAbove = data[index].Above_ground_potential_storage / 100000000;
-      rectBelow = data[index].Below_ground_potential_storage / 100000000;
+    switch (selectedStorage.value) {
+      case "currentStorage":
+        rectAbove = data[index].Above_ground_current_storage / 100000000;
+        rectBelow = data[index].Below_ground_current_storage / 100000000;
+        break;
+      case "potentialStorage":
+        rectAbove = data[index].Above_ground_potential_storage / 100000000;
+        rectBelow = data[index].Below_ground_potential_storage / 100000000;
+        break;
     }
-    console.log("currentStorage:", currentStorage);
 
-    if (rectAbove === null || rectAbove === undefined) {
+    if (rectAbove === null || rectAbove === undefined || rectAbove === 0) {
       rectAbove = 1;
+    }
+
+    if (rectBelow === null || rectBelow === undefined || rectBelow === 0) {
+      rectBelow = -1;
     }
 
     console.log("rectWidth:", rectWidth);
@@ -184,7 +211,7 @@ const create3D = (rectangles, nodes) => {
     console.log("rectAbove:", rectAbove);
     console.log("rectBelow:", rectBelow);
 
-    const geometryPositive = new THREE.ExtrudeGeometry(
+    geometryPositive = new THREE.ExtrudeGeometry(
       new THREE.Shape([
         new THREE.Vector2(0, 0),
         new THREE.Vector2(rectWidth, 0),
@@ -195,7 +222,7 @@ const create3D = (rectangles, nodes) => {
       { depth: rectAbove, bevelEnabled: false }
     );
 
-    const geometryNegative = new THREE.ExtrudeGeometry(
+    geometryNegative = new THREE.ExtrudeGeometry(
       new THREE.Shape([
         new THREE.Vector2(0, 0),
         new THREE.Vector2(rectWidth, 0),
