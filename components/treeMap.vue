@@ -89,6 +89,8 @@ let rectAbove,
   resetView,
   color;
 
+let meshMap = new Map(); // Map to store references to meshes
+
 storageOptionSelected = (storage) => {
   selectedStorage.value = storage;
   resetView();
@@ -102,6 +104,14 @@ resetView = () => {
 
   createTreemap();
   color();
+  filteredData.value.forEach((item) => {
+    const meshes = meshMap.get(item);
+    if (meshes) {
+      scene.remove(meshes.meshPositive);
+      scene.remove(meshes.meshNegative);
+      meshMap.delete(item);
+    }
+  });
 };
 
 onMounted(async () => {
@@ -189,17 +199,9 @@ const create3D = (rectangles, nodes) => {
   renderer.domElement.style.position = "absolute";
   renderer.domElement.style.zIndex = zIndex;
 
-  // const axesHelper = new THREE.AxesHelper(100);
-  // scene.add(axesHelper);
+  const axesHelper = new THREE.AxesHelper(100);
+  scene.add(axesHelper);
   scene.background = new THREE.Color(0xffffff);
-
-  const centroid = new THREE.Vector3();
-  rectangles.forEach((rectangle) => {
-    centroid.x += parseFloat(rectangle.getAttribute("x") - 200);
-    centroid.y += parseFloat(rectangle.getAttribute("y"));
-    centroid.z += 0;
-  });
-  centroid.divideScalar(rectangles.length);
 
   rectangles.forEach((rectangle, index) => {
     let rectWidth = parseFloat(rectangle.getAttribute("width"));
@@ -260,6 +262,15 @@ const create3D = (rectangles, nodes) => {
       { depth: Math.abs(rectBelow), bevelEnabled: false }
     );
 
+    const centroid = new THREE.Vector3();
+    rectangles.forEach((rectangle) => {
+      let posX = parseFloat(rectangle.getAttribute("x"));
+      let posY = parseFloat(rectangle.getAttribute("y"));
+      centroid.x += posX * 2;
+      centroid.y += posY * 2;
+    });
+    centroid.divideScalar(rectangles.length);
+
     const material = new THREE.MeshPhongMaterial({
       color: filteredData.value[index].color,
     });
@@ -289,6 +300,7 @@ const create3D = (rectangles, nodes) => {
 
     scene.add(meshPositive);
     scene.add(meshNegative);
+    meshMap.set(filteredData.value[index], { meshPositive, meshNegative });
   });
 
   const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
@@ -362,14 +374,12 @@ body {
   display: flex;
   flex-direction: column;
   position: relative;
-
   left: 0;
   z-index: 3;
 }
 
 .storage-button {
   width: 150px;
-  margin: 10px;
   padding: 10px;
   background-color: rgb(207, 207, 207);
   display: flex;
