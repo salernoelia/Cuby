@@ -2,35 +2,47 @@
   <div>
     <div class="controls">
       <div class="storageControls">
-        <label class="storage-button">
+        <label
+          class="storage-button"
+          :class="{ active: selectedStorage === 'currentStorage' }"
+        >
           <input
             class="storage-radio"
             type="radio"
             name="selectedStorage"
-            @change="storageOptionSelected('currentStorage')"
+            value="currentStorage"
+            v-model="selectedStorage"
           />
           Current Storage
         </label>
 
-        <label class="storage-button">
+        <label
+          class="storage-button"
+          :class="{ active: selectedStorage === 'potentialStorage' }"
+        >
           <input
             class="storage-radio"
             type="radio"
             name="selectedStorage"
-            @change="storageOptionSelected('potentialStorage')"
+            value="potentialStorage"
+            v-model="selectedStorage"
           />
           Potential Storage
         </label>
       </div>
-      <div class="filter-buttons">
+      <div class="filterControls">
         <button
           v-for="habitat in data"
           :key="habitat.Habitat_name"
-          :style="{ backgroundColor: habitat.color }"
-          :class="{
-            'button-main-active': isHabitatSelected(habitat.Habitat_name),
+          :style="{
+            backgroundColor: isHabitatSelected(habitat.Habitat_name)
+              ? habitat.color
+              : 'white',
           }"
-          class="button-main"
+          :class="[
+            'filter-button',
+            { 'filter-button-active': isHabitatSelected(habitat.Habitat_name) },
+          ]"
           @click="filterData(habitat.Habitat_name)"
         >
           {{ habitat.Habitat_name }}
@@ -42,7 +54,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import * as d3 from "d3";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
@@ -74,7 +86,6 @@ let zIndex = 2;
 
 const canvas = ref(null);
 let selectedStorage = ref("currentStorage");
-let storageOption = ref();
 let rectangles = [];
 let nodes = [];
 let rectAbove,
@@ -91,10 +102,9 @@ let rectAbove,
 
 let meshMap = new Map(); // Map to store references to meshes
 
-storageOptionSelected = (storage) => {
-  selectedStorage.value = storage;
+watch(selectedStorage, () => {
   resetView();
-};
+});
 
 resetView = () => {
   geometryPositive.dispose();
@@ -181,9 +191,9 @@ const initCamera = () => {
     75,
     window.innerWidth / window.innerHeight,
     0.1,
-    30000
+    50000
   );
-  camera.position.set(0, 0, 1500);
+  camera.position.set(0, 0, 3000);
   camera.lookAt(new THREE.Vector3(0, 0, 0));
 };
 
@@ -199,9 +209,9 @@ const create3D = (rectangles, nodes) => {
   renderer.domElement.style.position = "absolute";
   renderer.domElement.style.zIndex = zIndex;
 
-  const axesHelper = new THREE.AxesHelper(100);
-  scene.add(axesHelper);
-  scene.background = new THREE.Color(0xffffff);
+  // const axesHelper = new THREE.AxesHelper(100);
+  // scene.add(axesHelper);
+  scene.background = new THREE.Color(0xfafafa);
 
   rectangles.forEach((rectangle, index) => {
     let rectWidth = parseFloat(rectangle.getAttribute("width"));
@@ -263,11 +273,12 @@ const create3D = (rectangles, nodes) => {
     );
 
     const centroid = new THREE.Vector3();
+
     rectangles.forEach((rectangle) => {
       let posX = parseFloat(rectangle.getAttribute("x"));
       let posY = parseFloat(rectangle.getAttribute("y"));
-      centroid.x += posX * 2;
-      centroid.y += posY * 2;
+      centroid.x += posX;
+      centroid.y += posY;
     });
     centroid.divideScalar(rectangles.length);
 
@@ -277,17 +288,11 @@ const create3D = (rectangles, nodes) => {
     const meshPositive = new THREE.Mesh(geometryPositive, material);
     const meshNegative = new THREE.Mesh(geometryNegative, material);
 
-    meshPositive.position.set(
-      parseFloat(rectangle.getAttribute("x")) - centroid.x,
-      parseFloat(rectangle.getAttribute("y")) - centroid.y,
-      0
-    );
+    const posX = parseFloat(rectangle.getAttribute("x")) - centroid.x;
+    const posY = parseFloat(rectangle.getAttribute("y")) - centroid.y;
 
-    meshNegative.position.set(
-      parseFloat(rectangle.getAttribute("x")) - centroid.x,
-      parseFloat(rectangle.getAttribute("y")) - centroid.y,
-      -Math.abs(rectBelow)
-    );
+    meshPositive.position.set(posX, posY, 0);
+    meshNegative.position.set(posX, posY, -Math.abs(rectBelow));
 
     const existingMeshPositive = scene.getObjectByName(`meshPositive${index}`);
     const existingMeshNegative = scene.getObjectByName(`meshNegative${index}`);
@@ -362,17 +367,22 @@ body {
 }
 
 .controls {
+  width: 100%;
+  padding: 40px;
   position: fixed; /* Fixed position */
   bottom: 0;
   left: 0; /* Ensure it's aligned to the left */
   z-index: 3;
   display: flex;
   flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .storageControls {
   display: flex;
   flex-direction: column;
+  gap: 10px;
   position: relative;
   left: 0;
   z-index: 3;
@@ -380,14 +390,19 @@ body {
 
 .storage-button {
   width: 150px;
+  height: 40px;
   padding: 10px;
-  background-color: rgb(207, 207, 207);
+  background-color: white;
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
   border: 1px solid #000;
-  position: relative; /* Position the button relative to its container */
+  transition: background-color 0.3s ease-in-out; /* Add transition property */
+}
+
+.active {
+  background-color: #ccc; /* Change the background color for active button */
 }
 
 .storage-radio {
@@ -398,28 +413,33 @@ body {
   right: 0;
   bottom: 0;
 }
-
-.filter-buttons {
+.filterControls {
   position: relative;
   left: 0;
   z-index: 3;
   display: flex;
   flex-direction: row;
-  justify-content: left;
-  align-items: left;
-  margin: 10px;
-  padding: 10px;
-  border-radius: 10px;
+  justify-content: flex-start; /* Changed to flex-start */
+  align-items: flex-start; /* Changed to flex-start */
+  flex-wrap: wrap; /* Added */
+  gap: 10px; /* Added */
 }
 
-.button-main {
+.filter-button {
+  height: 40px;
   font-size: 16px;
-  margin: 10px;
   padding: 10px;
   border: 1px solid #000;
-  pointer-events: auto;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
+  transition: background-color 0.3s ease-in-out; /* Add transition property */
+}
+
+.filter-button-active {
+  background-color: #ccc; /* Change the background color for active buttons */
+}
+
+@media (max-width: 50%) {
+  .filterControls {
+    justify-content: center;
+  }
 }
 </style>
