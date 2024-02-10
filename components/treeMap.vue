@@ -199,8 +199,29 @@ const initCamera = () => {
 
   // Create the orthographic camera
   camera = new THREE.OrthographicCamera(left, right, top, bottom, near, far);
-  camera.position.set(0, 0, 3000);
+
+  // Set the camera position to match the perspective camera's position
+  camera.position.set(
+    -1488.697359746549,
+    1492.3078575429806,
+    1927.4453334372429
+  );
+
+  // Set the camera rotation to match the perspective camera's rotation
+  camera.rotation.set(
+    -0.6588359167815547,
+    -0.5482614334642727,
+    -0.3835525580843654
+  );
+
+  // Set the zoom level of the camera
+  camera.zoom = 0.12208654873684852;
+
+  // Ensure the camera is looking at the center of the scene
   camera.lookAt(new THREE.Vector3(0, 0, 0));
+
+  // Update the camera's projection matrix with the new zoom level
+  camera.updateProjectionMatrix();
 };
 
 const create3D = (rectangles, nodes) => {
@@ -215,8 +236,8 @@ const create3D = (rectangles, nodes) => {
   renderer.domElement.style.position = "absolute";
   renderer.domElement.style.zIndex = zIndex;
 
-  const axesHelper = new THREE.AxesHelper(100);
-  scene.add(axesHelper);
+  // const axesHelper = new THREE.AxesHelper(100);
+  // scene.add(axesHelper);
   scene.background = new THREE.Color(0xfafafa);
 
   rectangles.forEach((rectangle, index) => {
@@ -317,10 +338,10 @@ const create3D = (rectangles, nodes) => {
     meshMap.set(filteredData.value[index], { meshPositive, meshNegative });
   });
 
-  const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+  const ambientLight = new THREE.AmbientLight(0xffffff, 1);
   scene.add(ambientLight);
 
-  const directionalLight = new THREE.DirectionalLight(0xffffff, 1.2);
+  const directionalLight = new THREE.DirectionalLight(0xffffff, 1.5);
   directionalLight.position.set(1, 1, 1).normalize();
   scene.add(directionalLight);
 
@@ -348,6 +369,15 @@ const create3D = (rectangles, nodes) => {
   };
 
   animate();
+  console.log(
+    camera.position.x.toString(),
+    camera.position.y.toString(),
+    camera.position.z.toString(),
+    camera.rotation.x.toString(),
+    camera.rotation.y.toString(),
+    camera.rotation.z.toString(),
+    camera.zoom.toString()
+  );
 };
 </script>
 
