@@ -1,7 +1,8 @@
 [
   {
     "Habitat_name": "Forest",
-    "color": "#85AF9E",
+    "colorAbove": "#85AF9E",
+    "colorBelow": "#527365",
     "Habitat_type": "terrestrial",
     "Habitat_description": "Forest consists of a continuous stand of trees and includes both forested areas (generally with a closed canopy) and wooded areas.",
     "Habitat_location": "data provided upon request",
@@ -37,7 +38,8 @@
   },
   {
     "Habitat_name": "Savanna",
-    "color": "#FFA187",
+    "colorAbove": "#FFA187",
+    "colorBelow": "#CE5C3C",
     "Habitat_type": "terrestrial",
     "Habitat_description": "Savannas are transitional between grassland and forests. They are ecosystems dominated by grass ground cover with an overstorey of widely spaced trees and shrubs.",
     "Habitat_location": "data provided upon request",
@@ -73,7 +75,8 @@
   },
   {
     "Habitat_name": "Shrubland",
-    "color": "#B19FD7",
+    "colorAbove": "#B19FD7",
+    "colorBelow": "#77649F",
     "Habitat_type": "terrestrial",
     "Habitat_description": "Shrublands are ecosystems dominated by woody shrubs - low-lying plants that have several stems instead of a single trunk. Shrublands occur often in areas too harsh for trees, e.g. with unpredictable rain or steep slopes.",
     "Habitat_location": "data provided upon request",
@@ -109,7 +112,8 @@
   },
   {
     "Habitat_name": "Grassland",
-    "color": "#FCC9D6",
+    "colorAbove": "#FCC9D6",
+    "colorBelow": "#EE8EA7",
     "Habitat_type": "terrestrial",
     "Habitat_description": "Grasslands occur in regions with warm growing seasons and moderate water shortages. Grasslands are comprised of grasses and broadleaved herbaceous plants, and are either without woody plants or the latter are very sparsely distributed.",
     "Habitat_location": "data provided upon request",
@@ -145,7 +149,8 @@
   },
   {
     "Habitat_name": "Wetlands",
-    "color": "#78B2D9",
+    "colorAbove": "#78B2D9",
+    "colorBelow": "#7B9DB6",
     "Habitat_type": "terrestrial",
     "Habitat_description": "Wetlands are areas of land usually saturated with water, such as peatlands, swamps, marshes, bogs etc.",
     "Habitat_location": "data provided upon request",
@@ -181,7 +186,8 @@
   },
   {
     "Habitat_name": "Desert",
-    "color": "#FFE384",
+    "colorAbove": "#FFE384",
+    "colorBelow": "#FFCA00",
     "Habitat_type": "terrestrial",
     "Habitat_description": "Desert consists of arid landscapes with a sparse plant cover, except in depressions where water accumulates. The sandy, stony or rocky substrate contributes more to the appearance of the landscape than does the vegetation.",
     "Habitat_location": "data provided upon request",
@@ -217,7 +223,8 @@
   },
   {
     "Habitat_name": "Blue Carbon Ecosystems",
-    "color": "#B4BB67",
+    "colorAbove": "#B4BB67",
+    "colorBelow": "#99A136",
     "Habitat_type": "marine",
     "Habitat_description": "Mangroves and seagrass meadows are important habitats and promote biodiversity. These sites are crucial for fisheries production, and protect coastal areas from erosion caused by storms.",
     "Habitat_location": "data provided upon request",
@@ -253,7 +260,8 @@
   },
   {
     "Habitat_name": "Continental margins",
-    "color": "#FFD089",
+    "colorAbove": "#FFD089",
+    "colorBelow": "#FFAC2D",
     "Habitat_type": "marine",
     "Habitat_description": "Interplay between the continent and the open ocean, consisting of continental shelf, slope, and rise. These areas have high productivtiy due to upwelling currents that bring high nutrients from the deep sea to surface waters, fueling primary productivity in certain margins. Rivers supply significant amounts of nutrients to contintental margins, further promoting primary productivity, as well as providing high inputs of terrigenouc organic carbon. High levels of primary productivity, coupled with high sediment discharge from rivers make these continental margins important sites of carbon burial. Their depth ranges from a few meters in depth to 1000 m.",
     "Habitat_location": "data provided upon request",
@@ -289,7 +297,8 @@
   },
   {
     "Habitat_name": "Open Ocean",
-    "color": "#67B0D7",
+    "colorAbove": "#67B0D7",
+    "colorBelow": "#2E6E92",
     "Habitat_type": "marine",
     "Habitat_description": "Areas beyond the continental margin, with big bodies of water that are far below the photic zone. Despite the high productivity in surface waters of certain gyres, the organic matter that can reach the seafloor (as marine snow) is ~1 %, since the majority is degraded during its transit time from surface waters to the seafloor. The seafloor of the open ocean has low OC content and low sedimentation rates, making them less optimal sites of carbon sequestration in the seafloor.",
     "Habitat_location": "data provided upon request",

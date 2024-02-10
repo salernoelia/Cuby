@@ -36,7 +36,7 @@
           :key="habitat.Habitat_name"
           :style="{
             backgroundColor: isHabitatSelected(habitat.Habitat_name)
-              ? habitat.color
+              ? habitat.colorAbove
               : 'white',
           }"
           :class="[
@@ -98,7 +98,8 @@ let rectAbove,
   geometryPositive,
   geometryNegative,
   resetView,
-  color;
+  color,
+  colorBelow;
 
 let meshMap = new Map(); // Map to store references to meshes
 
@@ -187,12 +188,17 @@ const createTreemap = async () => {
 };
 
 const initCamera = () => {
-  camera = new THREE.PerspectiveCamera(
-    75,
-    window.innerWidth / window.innerHeight,
-    0.1,
-    50000
-  );
+  const width = window.innerWidth / 2;
+  const height = window.innerHeight / 2;
+  const left = -width / 2;
+  const right = width / 2;
+  const top = height / 2;
+  const bottom = -height / 2;
+  const near = 0.1;
+  const far = 50000;
+
+  // Create the orthographic camera
+  camera = new THREE.OrthographicCamera(left, right, top, bottom, near, far);
   camera.position.set(0, 0, 3000);
   camera.lookAt(new THREE.Vector3(0, 0, 0));
 };
@@ -209,8 +215,8 @@ const create3D = (rectangles, nodes) => {
   renderer.domElement.style.position = "absolute";
   renderer.domElement.style.zIndex = zIndex;
 
-  // const axesHelper = new THREE.AxesHelper(100);
-  // scene.add(axesHelper);
+  const axesHelper = new THREE.AxesHelper(100);
+  scene.add(axesHelper);
   scene.background = new THREE.Color(0xfafafa);
 
   rectangles.forEach((rectangle, index) => {
@@ -220,15 +226,15 @@ const create3D = (rectangles, nodes) => {
     switch (selectedStorage.value) {
       case "currentStorage":
         rectAbove =
-          filteredData.value[index].Above_ground_current_storage / 100000000;
+          filteredData.value[index].Above_ground_current_storage / 1000000000;
         rectBelow =
-          filteredData.value[index].Below_ground_current_storage / 100000000;
+          filteredData.value[index].Below_ground_current_storage / 1000000000;
         break;
       case "potentialStorage":
         rectAbove =
-          filteredData.value[index].Above_ground_potential_storage / 100000000;
+          filteredData.value[index].Above_ground_potential_storage / 1000000000;
         rectBelow =
-          filteredData.value[index].Below_ground_potential_storage / 100000000;
+          filteredData.value[index].Below_ground_potential_storage / 1000000000;
         break;
     }
 
@@ -282,11 +288,14 @@ const create3D = (rectangles, nodes) => {
     });
     centroid.divideScalar(rectangles.length);
 
-    const material = new THREE.MeshPhongMaterial({
-      color: filteredData.value[index].color,
+    const materialAbove = new THREE.MeshPhongMaterial({
+      color: filteredData.value[index].colorAbove,
     });
-    const meshPositive = new THREE.Mesh(geometryPositive, material);
-    const meshNegative = new THREE.Mesh(geometryNegative, material);
+    const materialBelow = new THREE.MeshPhongMaterial({
+      color: filteredData.value[index].colorBelow,
+    });
+    const meshPositive = new THREE.Mesh(geometryPositive, materialAbove);
+    const meshNegative = new THREE.Mesh(geometryNegative, materialBelow);
 
     const posX = parseFloat(rectangle.getAttribute("x")) - centroid.x;
     const posY = parseFloat(rectangle.getAttribute("y")) - centroid.y;
@@ -315,7 +324,9 @@ const create3D = (rectangles, nodes) => {
   directionalLight.position.set(1, 1, 1).normalize();
   scene.add(directionalLight);
 
-  scene.rotation.x = -Math.PI / 3;
+  scene.rotation.z = 0;
+  scene.rotation.x = -Math.PI / 2;
+  scene.rotation.y = 0;
 
   const controls = new OrbitControls(camera, renderer.domElement);
 
@@ -324,11 +335,11 @@ const create3D = (rectangles, nodes) => {
   controls.screenSpacePanning = false;
   controls.maxDistance = 15000;
 
-  controls.minPolarAngle = 0;
-  controls.maxPolarAngle = 100;
+  controls.minPolarAngle = 0; // 0 degrees
+  controls.maxPolarAngle = Math.PI; // 90 degrees
 
-  controls.minAzimuthAngle = -Infinity;
-  controls.maxAzimuthAngle = Infinity;
+  // controls.minAzimuthAngle = -Infinity;
+  // controls.maxAzimuthAngle = Infinity;
 
   animate = function () {
     requestAnimationFrame(animate);
@@ -390,7 +401,7 @@ body {
 
 .storage-button {
   width: 150px;
-  height: 40px;
+  height: 35px;
   padding: 10px;
   background-color: white;
   display: flex;
@@ -426,9 +437,11 @@ body {
 }
 
 .filter-button {
-  height: 40px;
+  display: flex;
+  height: 35px;
   font-size: 16px;
   padding: 10px;
+  align-items: center;
   border: 1px solid #000;
   transition: background-color 0.3s ease-in-out; /* Add transition property */
 }
