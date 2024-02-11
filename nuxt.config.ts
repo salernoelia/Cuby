@@ -4,12 +4,9 @@ export default defineNuxtConfig({
   ssr: false,
   modules: ["@pinia/nuxt"],
   generate: {
-    nojekyll: true, //not working on this version
     fallback: "404.html",
     dir: ".output",
   },
-  router: {
-    base: "/Cuby/",
-  },
+
   target: "static", // and static, nuxt generates a SPA
 });
