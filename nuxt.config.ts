@@ -7,5 +7,8 @@ export default defineNuxtConfig({
     nojekyll: true, //not working on this version
     fallback: "404.html",
   },
+  router: {
+    base: "/Cuby/",
+  },
   target: "static", // and static, nuxt generates a SPA
 });
