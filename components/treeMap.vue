@@ -90,7 +90,8 @@ import * as d3 from "d3";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import data from "~/static/data/data.json";
-import { cloneDeep } from "lodash";
+import _ from "lodash";
+const cloneDeep = _.cloneDeep;
 
 const filteredData = ref(cloneDeep(data));
 const filterData = (habitatName) => {

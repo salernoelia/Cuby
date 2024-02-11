@@ -4,194 +4,194 @@
     {
       "name": "vite:load-fallback",
       "result": "import {optional} from \"../accessors.js\";\nimport constant, {constantZero} from \"../constant.js\";\nimport lcg from \"../lcg.js\";\nimport {packSiblingsRandom} from \"./siblings.js\";\n\nfunction defaultRadius(d) {\n  return Math.sqrt(d.value);\n}\n\nexport default function() {\n  var radius = null,\n      dx = 1,\n      dy = 1,\n      padding = constantZero;\n\n  function pack(root) {\n    const random = lcg();\n    root.x = dx / 2, root.y = dy / 2;\n    if (radius) {\n      root.eachBefore(radiusLeaf(radius))\n          .eachAfter(packChildrenRandom(padding, 0.5, random))\n          .eachBefore(translateChild(1));\n    } else {\n      root.eachBefore(radiusLeaf(defaultRadius))\n          .eachAfter(packChildrenRandom(constantZero, 1, random))\n          .eachAfter(packChildrenRandom(padding, root.r / Math.min(dx, dy), random))\n          .eachBefore(translateChild(Math.min(dx, dy) / (2 * root.r)));\n    }\n    return root;\n  }\n\n  pack.radius = function(x) {\n    return arguments.length ? (radius = optional(x), pack) : radius;\n  };\n\n  pack.size = function(x) {\n    return arguments.length ? (dx = +x[0], dy = +x[1], pack) : [dx, dy];\n  };\n\n  pack.padding = function(x) {\n    return arguments.length ? (padding = typeof x === \"function\" ? x : constant(+x), pack) : padding;\n  };\n\n  return pack;\n}\n\nfunction radiusLeaf(radius) {\n  return function(node) {\n    if (!node.children) {\n      node.r = Math.max(0, +radius(node) || 0);\n    }\n  };\n}\n\nfunction packChildrenRandom(padding, k, random) {\n  return function(node) {\n    if (children = node.children) {\n      var children,\n          i,\n          n = children.length,\n          r = padding(node) * k || 0,\n          e;\n\n      if (r) for (i = 0; i < n; ++i) children[i].r += r;\n      e = packSiblingsRandom(children, random);\n      if (r) for (i = 0; i < n; ++i) children[i].r -= r;\n      node.r = e + r;\n    }\n  };\n}\n\nfunction translateChild(k) {\n  return function(node) {\n    var parent = node.parent;\n    node.r *= k;\n    if (parent) {\n      node.x = parent.x + k * node.x;\n      node.y = parent.y + k * node.y;\n    }\n  };\n}\n",
-      "start": 1707672315608,
-      "end": 1707672315625,
+      "start": 1707672481164,
+      "end": 1707672481185,
       "sourcemaps": null
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1707672315625,
-      "end": 1707672315625,
+      "start": 1707672481185,
+      "end": 1707672481185,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1707672315625,
-      "end": 1707672315625,
+      "start": 1707672481185,
+      "end": 1707672481185,
       "order": "pre"
     },
     {
       "name": "nuxt:client-fallback-auto-id",
-      "start": 1707672315625,
-      "end": 1707672315625,
+      "start": 1707672481185,
+      "end": 1707672481185,
       "order": "pre"
     },
     {
       "name": "vite:css",
-      "start": 1707672315625,
-      "end": 1707672315625,
+      "start": 1707672481185,
+      "end": 1707672481185,
       "order": "normal"
     },
     {
       "name": "vite:esbuild",
-      "start": 1707672315625,
-      "end": 1707672315625,
+      "start": 1707672481185,
+      "end": 1707672481185,
       "order": "normal"
     },
     {
       "name": "vite:json",
-      "start": 1707672315625,
-      "end": 1707672315625,
+      "start": 1707672481185,
+      "end": 1707672481185,
       "order": "normal"
     },
     {
       "name": "vite:worker",
-      "start": 1707672315625,
-      "end": 1707672315625,
+      "start": 1707672481185,
+      "end": 1707672481185,
       "order": "normal"
     },
     {
       "name": "vite:vue",
-      "start": 1707672315625,
-      "end": 1707672315625,
+      "start": 1707672481185,
+      "end": 1707672481185,
       "order": "normal"
     },
     {
       "name": "vite:vue-jsx",
-      "start": 1707672315625,
-      "end": 1707672315625,
+      "start": 1707672481185,
+      "end": 1707672481185,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1707672315625,
-      "end": 1707672315625,
+      "start": 1707672481185,
+      "end": 1707672481185,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1707672315625,
-      "end": 1707672315625,
+      "start": 1707672481185,
+      "end": 1707672481185,
       "order": "normal"
     },
     {
       "name": "nuxt:chunk-error",
-      "start": 1707672315625,
-      "end": 1707672315625,
+      "start": 1707672481185,
+      "end": 1707672481185,
       "order": "normal"
     },
     {
       "name": "nuxt:components:imports",
-      "start": 1707672315625,
-      "end": 1707672315625,
+      "start": 1707672481185,
+      "end": 1707672481185,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1707672315625,
-      "end": 1707672315625,
+      "start": 1707672481185,
+      "end": 1707672481185,
       "order": "normal"
     },
     {
       "name": "ssr-styles",
-      "start": 1707672315625,
-      "end": 1707672315625,
+      "start": 1707672481185,
+      "end": 1707672481185,
       "order": "normal"
     },
     {
       "name": "vite:define",
-      "start": 1707672315625,
-      "end": 1707672315625,
+      "start": 1707672481185,
+      "end": 1707672481185,
       "order": "normal"
     },
     {
       "name": "vite:css-post",
-      "start": 1707672315625,
-      "end": 1707672315625,
+      "start": 1707672481185,
+      "end": 1707672481185,
       "order": "normal"
     },
     {
       "name": "vite:build-html",
-      "start": 1707672315625,
-      "end": 1707672315625,
+      "start": 1707672481185,
+      "end": 1707672481185,
       "order": "normal"
     },
     {
       "name": "vite:worker-import-meta-url",
-      "start": 1707672315625,
-      "end": 1707672315625,
+      "start": 1707672481185,
+      "end": 1707672481185,
       "order": "normal"
     },
     {
       "name": "vite:asset-import-meta-url",
-      "start": 1707672315625,
-      "end": 1707672315625,
+      "start": 1707672481185,
+      "end": 1707672481185,
       "order": "normal"
     },
     {
       "name": "commonjs",
-      "start": 1707672315625,
-      "end": 1707672315625,
+      "start": 1707672481185,
+      "end": 1707672481185,
       "order": "normal"
     },
     {
       "name": "vite:dynamic-import-vars",
-      "start": 1707672315625,
-      "end": 1707672315625,
+      "start": 1707672481185,
+      "end": 1707672481185,
       "order": "normal"
     },
     {
       "name": "vite:import-glob",
-      "start": 1707672315625,
-      "end": 1707672315625,
+      "start": 1707672481185,
+      "end": 1707672481185,
       "order": "normal"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1707672315625,
-      "end": 1707672315625,
+      "start": 1707672481185,
+      "end": 1707672481185,
       "order": "post"
     },
     {
       "name": "nuxt:imports-transform",
-      "start": 1707672315625,
-      "end": 1707672315625,
+      "start": 1707672481185,
+      "end": 1707672481185,
       "order": "post"
     },
     {
       "name": "unctx:transform",
-      "start": 1707672315625,
-      "end": 1707672315625,
+      "start": 1707672481185,
+      "end": 1707672481185,
       "order": "post"
     },
     {
       "name": "nuxt:runtime-paths-dep",
-      "start": 1707672315625,
-      "end": 1707672315625,
+      "start": 1707672481185,
+      "end": 1707672481185,
       "order": "post"
     },
     {
       "name": "nuxt:components-loader",
-      "start": 1707672315625,
-      "end": 1707672315625,
+      "start": 1707672481185,
+      "end": 1707672481185,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-composables:transform",
-      "start": 1707672315625,
-      "end": 1707672315625,
+      "start": 1707672481185,
+      "end": 1707672481185,
       "order": "post"
     },
     {
       "name": "vite:build-import-analysis",
-      "start": 1707672315625,
-      "end": 1707672315625,
+      "start": 1707672481185,
+      "end": 1707672481185,
       "order": "normal"
     },
     {
       "name": "vite:reporter",
-      "start": 1707672315625,
-      "end": 1707672315625,
+      "start": 1707672481185,
+      "end": 1707672481185,
       "order": "normal"
     }
   ]

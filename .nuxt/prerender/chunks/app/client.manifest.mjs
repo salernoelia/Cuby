@@ -1,10 +1,10 @@
 const client_manifest = {
-  "_vue.f36acd1f.8203f374.js": {
+  "_vue.f36acd1f.1f1fa033.js": {
     "resourceType": "script",
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "vue.f36acd1f.8203f374.js",
+    "file": "vue.f36acd1f.1f1fa033.js",
     "imports": [
       "node_modules/nuxt/dist/app/entry.js"
     ]
@@ -24,10 +24,10 @@ const client_manifest = {
     "css": [
       "error-404.7fc72018.css"
     ],
-    "file": "error-404.78ae34a1.js",
+    "file": "error-404.805f3099.js",
     "imports": [
       "node_modules/nuxt/dist/app/entry.js",
-      "_vue.f36acd1f.8203f374.js"
+      "_vue.f36acd1f.1f1fa033.js"
     ],
     "isDynamicEntry": true,
     "src": "node_modules/@nuxt/ui-templates/dist/templates/error-404.vue"
@@ -53,9 +53,9 @@ const client_manifest = {
     "css": [
       "error-500.c5df6088.css"
     ],
-    "file": "error-500.55f090c5.js",
+    "file": "error-500.fbb04967.js",
     "imports": [
-      "_vue.f36acd1f.8203f374.js",
+      "_vue.f36acd1f.1f1fa033.js",
       "node_modules/nuxt/dist/app/entry.js"
     ],
     "isDynamicEntry": true,
@@ -71,7 +71,7 @@ const client_manifest = {
     "resourceType": "style",
     "prefetch": true,
     "preload": true,
-    "file": "entry.2b92a579.css",
+    "file": "entry.9963b16b.css",
     "src": "node_modules/nuxt/dist/app/entry.css"
   },
   "node_modules/nuxt/dist/app/entry.js": {
@@ -80,18 +80,18 @@ const client_manifest = {
     "prefetch": true,
     "preload": true,
     "css": [
-      "entry.2b92a579.css"
+      "entry.9963b16b.css"
     ],
     "dynamicImports": [
       "node_modules/@nuxt/ui-templates/dist/templates/error-404.vue",
       "node_modules/@nuxt/ui-templates/dist/templates/error-500.vue"
     ],
-    "file": "entry.663036f2.js",
+    "file": "entry.830c240c.js",
     "isEntry": true,
     "src": "node_modules/nuxt/dist/app/entry.js"
   },
-  "entry.2b92a579.css": {
-    "file": "entry.2b92a579.css",
+  "entry.9963b16b.css": {
+    "file": "entry.9963b16b.css",
     "resourceType": "style",
     "prefetch": true,
     "preload": true

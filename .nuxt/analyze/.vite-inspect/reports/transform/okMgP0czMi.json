@@ -4,194 +4,194 @@
     {
       "name": "vite:load-fallback",
       "result": "export {default as arc} from \"./arc.js\";\nexport {default as area} from \"./area.js\";\nexport {default as line} from \"./line.js\";\nexport {default as pie} from \"./pie.js\";\nexport {default as areaRadial, default as radialArea} from \"./areaRadial.js\"; // Note: radialArea is deprecated!\nexport {default as lineRadial, default as radialLine} from \"./lineRadial.js\"; // Note: radialLine is deprecated!\nexport {default as pointRadial} from \"./pointRadial.js\";\nexport {link, linkHorizontal, linkVertical, linkRadial} from \"./link.js\";\n\nexport {default as symbol, symbolsStroke, symbolsFill, symbolsFill as symbols} from \"./symbol.js\";\nexport {default as symbolAsterisk} from \"./symbol/asterisk.js\";\nexport {default as symbolCircle} from \"./symbol/circle.js\";\nexport {default as symbolCross} from \"./symbol/cross.js\";\nexport {default as symbolDiamond} from \"./symbol/diamond.js\";\nexport {default as symbolDiamond2} from \"./symbol/diamond2.js\";\nexport {default as symbolPlus} from \"./symbol/plus.js\";\nexport {default as symbolSquare} from \"./symbol/square.js\";\nexport {default as symbolSquare2} from \"./symbol/square2.js\";\nexport {default as symbolStar} from \"./symbol/star.js\";\nexport {default as symbolTriangle} from \"./symbol/triangle.js\";\nexport {default as symbolTriangle2} from \"./symbol/triangle2.js\";\nexport {default as symbolWye} from \"./symbol/wye.js\";\nexport {default as symbolTimes, default as symbolX} from \"./symbol/times.js\";\n\nexport {default as curveBasisClosed} from \"./curve/basisClosed.js\";\nexport {default as curveBasisOpen} from \"./curve/basisOpen.js\";\nexport {default as curveBasis} from \"./curve/basis.js\";\nexport {bumpX as curveBumpX, bumpY as curveBumpY} from \"./curve/bump.js\";\nexport {default as curveBundle} from \"./curve/bundle.js\";\nexport {default as curveCardinalClosed} from \"./curve/cardinalClosed.js\";\nexport {default as curveCardinalOpen} from \"./curve/cardinalOpen.js\";\nexport {default as curveCardinal} from \"./curve/cardinal.js\";\nexport {default as curveCatmullRomClosed} from \"./curve/catmullRomClosed.js\";\nexport {default as curveCatmullRomOpen} from \"./curve/catmullRomOpen.js\";\nexport {default as curveCatmullRom} from \"./curve/catmullRom.js\";\nexport {default as curveLinearClosed} from \"./curve/linearClosed.js\";\nexport {default as curveLinear} from \"./curve/linear.js\";\nexport {monotoneX as curveMonotoneX, monotoneY as curveMonotoneY} from \"./curve/monotone.js\";\nexport {default as curveNatural} from \"./curve/natural.js\";\nexport {default as curveStep, stepAfter as curveStepAfter, stepBefore as curveStepBefore} from \"./curve/step.js\";\n\nexport {default as stack} from \"./stack.js\";\nexport {default as stackOffsetExpand} from \"./offset/expand.js\";\nexport {default as stackOffsetDiverging} from \"./offset/diverging.js\";\nexport {default as stackOffsetNone} from \"./offset/none.js\";\nexport {default as stackOffsetSilhouette} from \"./offset/silhouette.js\";\nexport {default as stackOffsetWiggle} from \"./offset/wiggle.js\";\nexport {default as stackOrderAppearance} from \"./order/appearance.js\";\nexport {default as stackOrderAscending} from \"./order/ascending.js\";\nexport {default as stackOrderDescending} from \"./order/descending.js\";\nexport {default as stackOrderInsideOut} from \"./order/insideOut.js\";\nexport {default as stackOrderNone} from \"./order/none.js\";\nexport {default as stackOrderReverse} from \"./order/reverse.js\";\n",
-      "start": 1707672315458,
-      "end": 1707672315486,
+      "start": 1707672481010,
+      "end": 1707672481039,
       "sourcemaps": null
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1707672315486,
-      "end": 1707672315486,
+      "start": 1707672481039,
+      "end": 1707672481039,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1707672315487,
-      "end": 1707672315487,
+      "start": 1707672481039,
+      "end": 1707672481039,
       "order": "pre"
     },
     {
       "name": "nuxt:client-fallback-auto-id",
-      "start": 1707672315487,
-      "end": 1707672315487,
+      "start": 1707672481039,
+      "end": 1707672481039,
       "order": "pre"
     },
     {
       "name": "vite:css",
-      "start": 1707672315487,
-      "end": 1707672315487,
+      "start": 1707672481039,
+      "end": 1707672481039,
       "order": "normal"
     },
     {
       "name": "vite:esbuild",
-      "start": 1707672315487,
-      "end": 1707672315487,
+      "start": 1707672481039,
+      "end": 1707672481039,
       "order": "normal"
     },
     {
       "name": "vite:json",
-      "start": 1707672315487,
-      "end": 1707672315487,
+      "start": 1707672481039,
+      "end": 1707672481039,
       "order": "normal"
     },
     {
       "name": "vite:worker",
-      "start": 1707672315487,
-      "end": 1707672315487,
+      "start": 1707672481039,
+      "end": 1707672481039,
       "order": "normal"
     },
     {
       "name": "vite:vue",
-      "start": 1707672315487,
-      "end": 1707672315487,
+      "start": 1707672481039,
+      "end": 1707672481039,
       "order": "normal"
     },
     {
       "name": "vite:vue-jsx",
-      "start": 1707672315487,
-      "end": 1707672315487,
+      "start": 1707672481039,
+      "end": 1707672481039,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1707672315487,
-      "end": 1707672315487,
+      "start": 1707672481039,
+      "end": 1707672481039,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1707672315487,
-      "end": 1707672315487,
+      "start": 1707672481039,
+      "end": 1707672481039,
       "order": "normal"
     },
     {
       "name": "nuxt:chunk-error",
-      "start": 1707672315487,
-      "end": 1707672315487,
+      "start": 1707672481039,
+      "end": 1707672481039,
       "order": "normal"
     },
     {
       "name": "nuxt:components:imports",
-      "start": 1707672315487,
-      "end": 1707672315487,
+      "start": 1707672481039,
+      "end": 1707672481039,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1707672315487,
-      "end": 1707672315487,
+      "start": 1707672481039,
+      "end": 1707672481039,
       "order": "normal"
     },
     {
       "name": "ssr-styles",
-      "start": 1707672315487,
-      "end": 1707672315487,
+      "start": 1707672481039,
+      "end": 1707672481039,
       "order": "normal"
     },
     {
       "name": "vite:define",
-      "start": 1707672315487,
-      "end": 1707672315487,
+      "start": 1707672481039,
+      "end": 1707672481039,
       "order": "normal"
     },
     {
       "name": "vite:css-post",
-      "start": 1707672315487,
-      "end": 1707672315487,
+      "start": 1707672481039,
+      "end": 1707672481039,
       "order": "normal"
     },
     {
       "name": "vite:build-html",
-      "start": 1707672315487,
-      "end": 1707672315487,
+      "start": 1707672481039,
+      "end": 1707672481039,
       "order": "normal"
     },
     {
       "name": "vite:worker-import-meta-url",
-      "start": 1707672315487,
-      "end": 1707672315487,
+      "start": 1707672481039,
+      "end": 1707672481039,
       "order": "normal"
     },
     {
       "name": "vite:asset-import-meta-url",
-      "start": 1707672315487,
-      "end": 1707672315487,
+      "start": 1707672481039,
+      "end": 1707672481039,
       "order": "normal"
     },
     {
       "name": "commonjs",
-      "start": 1707672315487,
-      "end": 1707672315487,
+      "start": 1707672481039,
+      "end": 1707672481039,
       "order": "normal"
     },
     {
       "name": "vite:dynamic-import-vars",
-      "start": 1707672315487,
-      "end": 1707672315487,
+      "start": 1707672481039,
+      "end": 1707672481039,
       "order": "normal"
     },
     {
       "name": "vite:import-glob",
-      "start": 1707672315487,
-      "end": 1707672315487,
+      "start": 1707672481039,
+      "end": 1707672481039,
       "order": "normal"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1707672315487,
-      "end": 1707672315487,
+      "start": 1707672481039,
+      "end": 1707672481039,
       "order": "post"
     },
     {
       "name": "nuxt:imports-transform",
-      "start": 1707672315487,
-      "end": 1707672315487,
+      "start": 1707672481039,
+      "end": 1707672481039,
       "order": "post"
     },
     {
       "name": "unctx:transform",
-      "start": 1707672315487,
-      "end": 1707672315487,
+      "start": 1707672481039,
+      "end": 1707672481039,
       "order": "post"
     },
     {
       "name": "nuxt:runtime-paths-dep",
-      "start": 1707672315487,
-      "end": 1707672315487,
+      "start": 1707672481039,
+      "end": 1707672481039,
       "order": "post"
     },
     {
       "name": "nuxt:components-loader",
-      "start": 1707672315487,
-      "end": 1707672315487,
+      "start": 1707672481039,
+      "end": 1707672481039,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-composables:transform",
-      "start": 1707672315487,
-      "end": 1707672315487,
+      "start": 1707672481039,
+      "end": 1707672481039,
       "order": "post"
     },
     {
       "name": "vite:build-import-analysis",
-      "start": 1707672315487,
-      "end": 1707672315487,
+      "start": 1707672481039,
+      "end": 1707672481039,
       "order": "normal"
     },
     {
       "name": "vite:reporter",
-      "start": 1707672315487,
-      "end": 1707672315487,
+      "start": 1707672481039,
+      "end": 1707672481039,
       "order": "normal"
     }
   ]

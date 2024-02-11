@@ -20,7 +20,7 @@ import { dirname, resolve } from 'file:///Users/eliasalerno/GitHub/Cuby/node_mod
 
 const inlineAppConfig = {
   "nuxt": {
-    "buildId": "01fb06b8-2db8-4794-82d1-5f92bae4b783"
+    "buildId": "b548976a-830e-436f-8a6b-861a9b6c1dd7"
   }
 };
 
