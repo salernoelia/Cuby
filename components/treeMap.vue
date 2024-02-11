@@ -48,6 +48,37 @@
           {{ habitat.Habitat_name }}
         </button>
       </div>
+      <div class="infoControls">
+        <button @click="popup()" class="infoButton">About</button>
+      </div>
+      <div class="popupContainer" v-if="popupBol">
+        <div class="popup">
+          <div class="popup-content">
+            <div class="popup-header">
+              <button @click="popup()" class="popup-close">Close</button>
+              <h1>Cuby</h1>
+            </div>
+            <p>
+              is a 3D visualization of the carbon storage of different biomes.
+            </p>
+            <p class="popup-title"><br />Visualization</p>
+            <ul>
+              <li>Jin Hyejin</li>
+              <li>Basil Egger</li>
+              <li>Irina Lezaic</li>
+              <li>Elia Salerno</li>
+            </ul>
+            <p class="popup-title"><br />Development</p>
+            <ul>
+              <li>Elia Salerno</li>
+            </ul>
+            <p class="popup-title"><br />Data</p>
+            <ul>
+              <li>ETH Crowther Lab</li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="canvas" ref="canvas"></div>
   </div>
@@ -88,6 +119,8 @@ const canvas = ref(null);
 let selectedStorage = ref("currentStorage");
 let rectangles = [];
 let nodes = [];
+let popupBol = ref(false);
+
 let rectAbove,
   rectBelow,
   camera,
@@ -99,13 +132,19 @@ let rectAbove,
   geometryNegative,
   resetView,
   color,
-  colorBelow;
+  colorBelow,
+  controls;
 
 let meshMap = new Map(); // Map to store references to meshes
 
 watch(selectedStorage, () => {
   resetView();
 });
+
+const popup = () => {
+  popupBol.value = !popupBol.value;
+  console.log(popupBol);
+};
 
 resetView = () => {
   geometryPositive.dispose();
@@ -349,7 +388,7 @@ const create3D = (rectangles, nodes) => {
   scene.rotation.x = -Math.PI / 2;
   scene.rotation.y = 0;
 
-  const controls = new OrbitControls(camera, renderer.domElement);
+  controls = new OrbitControls(camera, renderer.domElement);
 
   controls.enableDamping = true;
   controls.dampingFactor = 0.25;
@@ -369,6 +408,7 @@ const create3D = (rectangles, nodes) => {
   };
 
   animate();
+
   console.log(
     camera.position.x.toString(),
     camera.position.y.toString(),
@@ -416,7 +456,7 @@ body {
   z-index: 3;
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-end; /* Changed to flex-end */
   justify-content: space-between;
 }
 
@@ -438,7 +478,7 @@ body {
   justify-content: center;
   align-items: center;
   text-align: center;
-  border: 1px solid #000;
+  border: 2px solid #000;
   transition: background-color 0.3s ease-in-out; /* Add transition property */
 }
 
@@ -456,6 +496,7 @@ body {
 }
 .filterControls {
   position: relative;
+  width: 50%;
   left: 0;
   z-index: 3;
   display: flex;
@@ -472,7 +513,7 @@ body {
   font-size: 16px;
   padding: 10px;
   align-items: center;
-  border: 1px solid #000;
+  border: 2px solid #000;
   transition: background-color 0.3s ease-in-out; /* Add transition property */
 }
 
@@ -484,5 +525,72 @@ body {
   .filterControls {
     justify-content: center;
   }
+}
+
+.infoControls {
+  position: relative;
+  right: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end; /* Changed to flex-end */
+
+  gap: 10px; /* Added */
+}
+
+.infoButton {
+  height: 35px;
+  padding: 10px;
+  background-color: white;
+  display: flex;
+  font-size: 16px;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  border: 2px solid #000;
+  transition: background-color 0.3s ease-in-out; /* Add transition property */
+}
+
+.popupContainer {
+  z-index: 5;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4); /* Adjust opacity here */
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+}
+
+.popup {
+  padding: 25px;
+  z-index: 6;
+  width: 300px;
+  height: 400px;
+  border: solid 2px black;
+  background-color: white;
+}
+
+.popup-header {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 20px;
+  width: 100%;
+  background-color: white;
+}
+
+.popup-close {
+  background-color: white;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.popup-title {
+  font-weight: bold;
 }
 </style>
