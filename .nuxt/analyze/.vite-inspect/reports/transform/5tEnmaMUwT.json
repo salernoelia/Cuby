@@ -1,0 +1,198 @@
+{
+  "resolvedId": "/Users/eliasalerno/GitHub/Cuby/node_modules/d3-transition/src/transition/index.js",
+  "transforms": [
+    {
+      "name": "vite:load-fallback",
+      "result": "import {selection} from \"d3-selection\";\nimport transition_attr from \"./attr.js\";\nimport transition_attrTween from \"./attrTween.js\";\nimport transition_delay from \"./delay.js\";\nimport transition_duration from \"./duration.js\";\nimport transition_ease from \"./ease.js\";\nimport transition_easeVarying from \"./easeVarying.js\";\nimport transition_filter from \"./filter.js\";\nimport transition_merge from \"./merge.js\";\nimport transition_on from \"./on.js\";\nimport transition_remove from \"./remove.js\";\nimport transition_select from \"./select.js\";\nimport transition_selectAll from \"./selectAll.js\";\nimport transition_selection from \"./selection.js\";\nimport transition_style from \"./style.js\";\nimport transition_styleTween from \"./styleTween.js\";\nimport transition_text from \"./text.js\";\nimport transition_textTween from \"./textTween.js\";\nimport transition_transition from \"./transition.js\";\nimport transition_tween from \"./tween.js\";\nimport transition_end from \"./end.js\";\n\nvar id = 0;\n\nexport function Transition(groups, parents, name, id) {\n  this._groups = groups;\n  this._parents = parents;\n  this._name = name;\n  this._id = id;\n}\n\nexport default function transition(name) {\n  return selection().transition(name);\n}\n\nexport function newId() {\n  return ++id;\n}\n\nvar selection_prototype = selection.prototype;\n\nTransition.prototype = transition.prototype = {\n  constructor: Transition,\n  select: transition_select,\n  selectAll: transition_selectAll,\n  selectChild: selection_prototype.selectChild,\n  selectChildren: selection_prototype.selectChildren,\n  filter: transition_filter,\n  merge: transition_merge,\n  selection: transition_selection,\n  transition: transition_transition,\n  call: selection_prototype.call,\n  nodes: selection_prototype.nodes,\n  node: selection_prototype.node,\n  size: selection_prototype.size,\n  empty: selection_prototype.empty,\n  each: selection_prototype.each,\n  on: transition_on,\n  attr: transition_attr,\n  attrTween: transition_attrTween,\n  style: transition_style,\n  styleTween: transition_styleTween,\n  text: transition_text,\n  textTween: transition_textTween,\n  remove: transition_remove,\n  tween: transition_tween,\n  delay: transition_delay,\n  duration: transition_duration,\n  ease: transition_ease,\n  easeVarying: transition_easeVarying,\n  end: transition_end,\n  [Symbol.iterator]: selection_prototype[Symbol.iterator]\n};\n",
+      "start": 1707611014393,
+      "end": 1707611014416,
+      "sourcemaps": null
+    },
+    {
+      "name": "nuxt:layer-aliasing",
+      "start": 1707611014416,
+      "end": 1707611014416,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:server-devonly:transform",
+      "start": 1707611014416,
+      "end": 1707611014416,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:client-fallback-auto-id",
+      "start": 1707611014416,
+      "end": 1707611014416,
+      "order": "pre"
+    },
+    {
+      "name": "vite:css",
+      "start": 1707611014416,
+      "end": 1707611014416,
+      "order": "normal"
+    },
+    {
+      "name": "vite:esbuild",
+      "start": 1707611014416,
+      "end": 1707611014416,
+      "order": "normal"
+    },
+    {
+      "name": "vite:json",
+      "start": 1707611014416,
+      "end": 1707611014416,
+      "order": "normal"
+    },
+    {
+      "name": "vite:worker",
+      "start": 1707611014416,
+      "end": 1707611014416,
+      "order": "normal"
+    },
+    {
+      "name": "vite:vue",
+      "start": 1707611014416,
+      "end": 1707611014416,
+      "order": "normal"
+    },
+    {
+      "name": "vite:vue-jsx",
+      "start": 1707611014416,
+      "end": 1707611014416,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1707611014416,
+      "end": 1707611014416,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:remove-plugin-metadata",
+      "start": 1707611014416,
+      "end": 1707611014416,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:chunk-error",
+      "start": 1707611014416,
+      "end": 1707611014417,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:components:imports",
+      "start": 1707611014417,
+      "end": 1707611014417,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1707611014417,
+      "end": 1707611014417,
+      "order": "normal"
+    },
+    {
+      "name": "ssr-styles",
+      "start": 1707611014417,
+      "end": 1707611014417,
+      "order": "normal"
+    },
+    {
+      "name": "vite:define",
+      "start": 1707611014417,
+      "end": 1707611014417,
+      "order": "normal"
+    },
+    {
+      "name": "vite:css-post",
+      "start": 1707611014417,
+      "end": 1707611014417,
+      "order": "normal"
+    },
+    {
+      "name": "vite:build-html",
+      "start": 1707611014417,
+      "end": 1707611014417,
+      "order": "normal"
+    },
+    {
+      "name": "vite:worker-import-meta-url",
+      "start": 1707611014417,
+      "end": 1707611014417,
+      "order": "normal"
+    },
+    {
+      "name": "vite:asset-import-meta-url",
+      "start": 1707611014417,
+      "end": 1707611014417,
+      "order": "normal"
+    },
+    {
+      "name": "commonjs",
+      "start": 1707611014417,
+      "end": 1707611014417,
+      "order": "normal"
+    },
+    {
+      "name": "vite:dynamic-import-vars",
+      "start": 1707611014417,
+      "end": 1707611014417,
+      "order": "normal"
+    },
+    {
+      "name": "vite:import-glob",
+      "start": 1707611014417,
+      "end": 1707611014417,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:composable-keys",
+      "start": 1707611014417,
+      "end": 1707611014417,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:imports-transform",
+      "start": 1707611014417,
+      "end": 1707611014417,
+      "order": "post"
+    },
+    {
+      "name": "unctx:transform",
+      "start": 1707611014417,
+      "end": 1707611014417,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:runtime-paths-dep",
+      "start": 1707611014417,
+      "end": 1707611014417,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:components-loader",
+      "start": 1707611014417,
+      "end": 1707611014417,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:tree-shake-composables:transform",
+      "start": 1707611014417,
+      "end": 1707611014417,
+      "order": "post"
+    },
+    {
+      "name": "vite:build-import-analysis",
+      "start": 1707611014417,
+      "end": 1707611014417,
+      "order": "normal"
+    },
+    {
+      "name": "vite:reporter",
+      "start": 1707611014417,
+      "end": 1707611014417,
+      "order": "normal"
+    }
+  ]
+}

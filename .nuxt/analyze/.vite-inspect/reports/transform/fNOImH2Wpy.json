@@ -1,0 +1,198 @@
+{
+  "resolvedId": "/Users/eliasalerno/GitHub/Cuby/node_modules/d3-hierarchy/src/treemap/resquarify.js",
+  "transforms": [
+    {
+      "name": "vite:load-fallback",
+      "result": "import treemapDice from \"./dice.js\";\nimport treemapSlice from \"./slice.js\";\nimport {phi, squarifyRatio} from \"./squarify.js\";\n\nexport default (function custom(ratio) {\n\n  function resquarify(parent, x0, y0, x1, y1) {\n    if ((rows = parent._squarify) && (rows.ratio === ratio)) {\n      var rows,\n          row,\n          nodes,\n          i,\n          j = -1,\n          n,\n          m = rows.length,\n          value = parent.value;\n\n      while (++j < m) {\n        row = rows[j], nodes = row.children;\n        for (i = row.value = 0, n = nodes.length; i < n; ++i) row.value += nodes[i].value;\n        if (row.dice) treemapDice(row, x0, y0, x1, value ? y0 += (y1 - y0) * row.value / value : y1);\n        else treemapSlice(row, x0, y0, value ? x0 += (x1 - x0) * row.value / value : x1, y1);\n        value -= row.value;\n      }\n    } else {\n      parent._squarify = rows = squarifyRatio(ratio, parent, x0, y0, x1, y1);\n      rows.ratio = ratio;\n    }\n  }\n\n  resquarify.ratio = function(x) {\n    return custom((x = +x) > 1 ? x : 1);\n  };\n\n  return resquarify;\n})(phi);\n",
+      "start": 1707611014217,
+      "end": 1707611014240,
+      "sourcemaps": null
+    },
+    {
+      "name": "nuxt:layer-aliasing",
+      "start": 1707611014240,
+      "end": 1707611014240,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:server-devonly:transform",
+      "start": 1707611014240,
+      "end": 1707611014240,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:client-fallback-auto-id",
+      "start": 1707611014240,
+      "end": 1707611014240,
+      "order": "pre"
+    },
+    {
+      "name": "vite:css",
+      "start": 1707611014240,
+      "end": 1707611014240,
+      "order": "normal"
+    },
+    {
+      "name": "vite:esbuild",
+      "start": 1707611014240,
+      "end": 1707611014240,
+      "order": "normal"
+    },
+    {
+      "name": "vite:json",
+      "start": 1707611014240,
+      "end": 1707611014240,
+      "order": "normal"
+    },
+    {
+      "name": "vite:worker",
+      "start": 1707611014240,
+      "end": 1707611014240,
+      "order": "normal"
+    },
+    {
+      "name": "vite:vue",
+      "start": 1707611014240,
+      "end": 1707611014240,
+      "order": "normal"
+    },
+    {
+      "name": "vite:vue-jsx",
+      "start": 1707611014240,
+      "end": 1707611014240,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1707611014240,
+      "end": 1707611014240,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:remove-plugin-metadata",
+      "start": 1707611014240,
+      "end": 1707611014240,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:chunk-error",
+      "start": 1707611014240,
+      "end": 1707611014240,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:components:imports",
+      "start": 1707611014240,
+      "end": 1707611014240,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1707611014240,
+      "end": 1707611014240,
+      "order": "normal"
+    },
+    {
+      "name": "ssr-styles",
+      "start": 1707611014240,
+      "end": 1707611014240,
+      "order": "normal"
+    },
+    {
+      "name": "vite:define",
+      "start": 1707611014240,
+      "end": 1707611014240,
+      "order": "normal"
+    },
+    {
+      "name": "vite:css-post",
+      "start": 1707611014240,
+      "end": 1707611014240,
+      "order": "normal"
+    },
+    {
+      "name": "vite:build-html",
+      "start": 1707611014240,
+      "end": 1707611014240,
+      "order": "normal"
+    },
+    {
+      "name": "vite:worker-import-meta-url",
+      "start": 1707611014240,
+      "end": 1707611014240,
+      "order": "normal"
+    },
+    {
+      "name": "vite:asset-import-meta-url",
+      "start": 1707611014240,
+      "end": 1707611014240,
+      "order": "normal"
+    },
+    {
+      "name": "commonjs",
+      "start": 1707611014240,
+      "end": 1707611014240,
+      "order": "normal"
+    },
+    {
+      "name": "vite:dynamic-import-vars",
+      "start": 1707611014240,
+      "end": 1707611014240,
+      "order": "normal"
+    },
+    {
+      "name": "vite:import-glob",
+      "start": 1707611014240,
+      "end": 1707611014240,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:composable-keys",
+      "start": 1707611014240,
+      "end": 1707611014240,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:imports-transform",
+      "start": 1707611014240,
+      "end": 1707611014240,
+      "order": "post"
+    },
+    {
+      "name": "unctx:transform",
+      "start": 1707611014240,
+      "end": 1707611014240,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:runtime-paths-dep",
+      "start": 1707611014240,
+      "end": 1707611014240,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:components-loader",
+      "start": 1707611014240,
+      "end": 1707611014240,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:tree-shake-composables:transform",
+      "start": 1707611014240,
+      "end": 1707611014240,
+      "order": "post"
+    },
+    {
+      "name": "vite:build-import-analysis",
+      "start": 1707611014240,
+      "end": 1707611014240,
+      "order": "normal"
+    },
+    {
+      "name": "vite:reporter",
+      "start": 1707611014240,
+      "end": 1707611014240,
+      "order": "normal"
+    }
+  ]
+}

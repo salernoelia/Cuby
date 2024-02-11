@@ -1,0 +1,17 @@
+{
+  "resolvedId": "virtual:nuxt:/Users/eliasalerno/GitHub/Cuby/.nuxt/css.mjs",
+  "transforms": [
+    {
+      "name": "__load__",
+      "result": "",
+      "start": 1707611013160,
+      "end": 1707611013160
+    },
+    {
+      "name": "vite:reporter",
+      "start": 1707611013160,
+      "end": 1707611013160,
+      "order": "normal"
+    }
+  ]
+}

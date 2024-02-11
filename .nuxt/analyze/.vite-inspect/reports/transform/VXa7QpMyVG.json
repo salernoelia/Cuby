@@ -1,0 +1,198 @@
+{
+  "resolvedId": "/Users/eliasalerno/GitHub/Cuby/node_modules/d3-format/src/formatDecimal.js",
+  "transforms": [
+    {
+      "name": "vite:load-fallback",
+      "result": "export default function(x) {\n  return Math.abs(x = Math.round(x)) >= 1e21\n      ? x.toLocaleString(\"en\").replace(/,/g, \"\")\n      : x.toString(10);\n}\n\n// Computes the decimal coefficient and exponent of the specified number x with\n// significant digits p, where x is positive and p is in [1, 21] or undefined.\n// For example, formatDecimalParts(1.23) returns [\"123\", 0].\nexport function formatDecimalParts(x, p) {\n  if ((i = (x = p ? x.toExponential(p - 1) : x.toExponential()).indexOf(\"e\")) < 0) return null; // NaN, ±Infinity\n  var i, coefficient = x.slice(0, i);\n\n  // The string returned by toExponential either has the form \\d\\.\\d+e[-+]\\d+\n  // (e.g., 1.2e+3) or the form \\de[-+]\\d+ (e.g., 1e+3).\n  return [\n    coefficient.length > 1 ? coefficient[0] + coefficient.slice(2) : coefficient,\n    +x.slice(i + 1)\n  ];\n}\n",
+      "start": 1707611014510,
+      "end": 1707611014525,
+      "sourcemaps": null
+    },
+    {
+      "name": "nuxt:layer-aliasing",
+      "start": 1707611014525,
+      "end": 1707611014525,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:server-devonly:transform",
+      "start": 1707611014525,
+      "end": 1707611014525,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:client-fallback-auto-id",
+      "start": 1707611014525,
+      "end": 1707611014525,
+      "order": "pre"
+    },
+    {
+      "name": "vite:css",
+      "start": 1707611014525,
+      "end": 1707611014525,
+      "order": "normal"
+    },
+    {
+      "name": "vite:esbuild",
+      "start": 1707611014525,
+      "end": 1707611014525,
+      "order": "normal"
+    },
+    {
+      "name": "vite:json",
+      "start": 1707611014525,
+      "end": 1707611014525,
+      "order": "normal"
+    },
+    {
+      "name": "vite:worker",
+      "start": 1707611014525,
+      "end": 1707611014525,
+      "order": "normal"
+    },
+    {
+      "name": "vite:vue",
+      "start": 1707611014525,
+      "end": 1707611014525,
+      "order": "normal"
+    },
+    {
+      "name": "vite:vue-jsx",
+      "start": 1707611014525,
+      "end": 1707611014525,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1707611014525,
+      "end": 1707611014525,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:remove-plugin-metadata",
+      "start": 1707611014525,
+      "end": 1707611014525,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:chunk-error",
+      "start": 1707611014525,
+      "end": 1707611014525,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:components:imports",
+      "start": 1707611014525,
+      "end": 1707611014525,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1707611014525,
+      "end": 1707611014525,
+      "order": "normal"
+    },
+    {
+      "name": "ssr-styles",
+      "start": 1707611014525,
+      "end": 1707611014525,
+      "order": "normal"
+    },
+    {
+      "name": "vite:define",
+      "start": 1707611014525,
+      "end": 1707611014525,
+      "order": "normal"
+    },
+    {
+      "name": "vite:css-post",
+      "start": 1707611014525,
+      "end": 1707611014525,
+      "order": "normal"
+    },
+    {
+      "name": "vite:build-html",
+      "start": 1707611014525,
+      "end": 1707611014525,
+      "order": "normal"
+    },
+    {
+      "name": "vite:worker-import-meta-url",
+      "start": 1707611014525,
+      "end": 1707611014525,
+      "order": "normal"
+    },
+    {
+      "name": "vite:asset-import-meta-url",
+      "start": 1707611014525,
+      "end": 1707611014525,
+      "order": "normal"
+    },
+    {
+      "name": "commonjs",
+      "start": 1707611014525,
+      "end": 1707611014525,
+      "order": "normal"
+    },
+    {
+      "name": "vite:dynamic-import-vars",
+      "start": 1707611014525,
+      "end": 1707611014525,
+      "order": "normal"
+    },
+    {
+      "name": "vite:import-glob",
+      "start": 1707611014525,
+      "end": 1707611014525,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:composable-keys",
+      "start": 1707611014525,
+      "end": 1707611014525,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:imports-transform",
+      "start": 1707611014525,
+      "end": 1707611014525,
+      "order": "post"
+    },
+    {
+      "name": "unctx:transform",
+      "start": 1707611014525,
+      "end": 1707611014525,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:runtime-paths-dep",
+      "start": 1707611014525,
+      "end": 1707611014525,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:components-loader",
+      "start": 1707611014525,
+      "end": 1707611014525,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:tree-shake-composables:transform",
+      "start": 1707611014525,
+      "end": 1707611014526,
+      "order": "post"
+    },
+    {
+      "name": "vite:build-import-analysis",
+      "start": 1707611014526,
+      "end": 1707611014526,
+      "order": "normal"
+    },
+    {
+      "name": "vite:reporter",
+      "start": 1707611014526,
+      "end": 1707611014526,
+      "order": "normal"
+    }
+  ]
+}

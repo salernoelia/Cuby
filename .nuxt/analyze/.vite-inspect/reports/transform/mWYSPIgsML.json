@@ -1,0 +1,198 @@
+{
+  "resolvedId": "/Users/eliasalerno/GitHub/Cuby/node_modules/d3-interpolate/src/zoom.js",
+  "transforms": [
+    {
+      "name": "vite:load-fallback",
+      "result": "var epsilon2 = 1e-12;\n\nfunction cosh(x) {\n  return ((x = Math.exp(x)) + 1 / x) / 2;\n}\n\nfunction sinh(x) {\n  return ((x = Math.exp(x)) - 1 / x) / 2;\n}\n\nfunction tanh(x) {\n  return ((x = Math.exp(2 * x)) - 1) / (x + 1);\n}\n\nexport default (function zoomRho(rho, rho2, rho4) {\n\n  // p0 = [ux0, uy0, w0]\n  // p1 = [ux1, uy1, w1]\n  function zoom(p0, p1) {\n    var ux0 = p0[0], uy0 = p0[1], w0 = p0[2],\n        ux1 = p1[0], uy1 = p1[1], w1 = p1[2],\n        dx = ux1 - ux0,\n        dy = uy1 - uy0,\n        d2 = dx * dx + dy * dy,\n        i,\n        S;\n\n    // Special case for u0 ≅ u1.\n    if (d2 < epsilon2) {\n      S = Math.log(w1 / w0) / rho;\n      i = function(t) {\n        return [\n          ux0 + t * dx,\n          uy0 + t * dy,\n          w0 * Math.exp(rho * t * S)\n        ];\n      }\n    }\n\n    // General case.\n    else {\n      var d1 = Math.sqrt(d2),\n          b0 = (w1 * w1 - w0 * w0 + rho4 * d2) / (2 * w0 * rho2 * d1),\n          b1 = (w1 * w1 - w0 * w0 - rho4 * d2) / (2 * w1 * rho2 * d1),\n          r0 = Math.log(Math.sqrt(b0 * b0 + 1) - b0),\n          r1 = Math.log(Math.sqrt(b1 * b1 + 1) - b1);\n      S = (r1 - r0) / rho;\n      i = function(t) {\n        var s = t * S,\n            coshr0 = cosh(r0),\n            u = w0 / (rho2 * d1) * (coshr0 * tanh(rho * s + r0) - sinh(r0));\n        return [\n          ux0 + u * dx,\n          uy0 + u * dy,\n          w0 * coshr0 / cosh(rho * s + r0)\n        ];\n      }\n    }\n\n    i.duration = S * 1000 * rho / Math.SQRT2;\n\n    return i;\n  }\n\n  zoom.rho = function(_) {\n    var _1 = Math.max(1e-3, +_), _2 = _1 * _1, _4 = _2 * _2;\n    return zoomRho(_1, _2, _4);\n  };\n\n  return zoom;\n})(Math.SQRT2, 2, 4);\n",
+      "start": 1707611014232,
+      "end": 1707611014245,
+      "sourcemaps": null
+    },
+    {
+      "name": "nuxt:layer-aliasing",
+      "start": 1707611014245,
+      "end": 1707611014245,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:server-devonly:transform",
+      "start": 1707611014245,
+      "end": 1707611014245,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:client-fallback-auto-id",
+      "start": 1707611014245,
+      "end": 1707611014245,
+      "order": "pre"
+    },
+    {
+      "name": "vite:css",
+      "start": 1707611014245,
+      "end": 1707611014245,
+      "order": "normal"
+    },
+    {
+      "name": "vite:esbuild",
+      "start": 1707611014245,
+      "end": 1707611014245,
+      "order": "normal"
+    },
+    {
+      "name": "vite:json",
+      "start": 1707611014245,
+      "end": 1707611014245,
+      "order": "normal"
+    },
+    {
+      "name": "vite:worker",
+      "start": 1707611014245,
+      "end": 1707611014245,
+      "order": "normal"
+    },
+    {
+      "name": "vite:vue",
+      "start": 1707611014245,
+      "end": 1707611014245,
+      "order": "normal"
+    },
+    {
+      "name": "vite:vue-jsx",
+      "start": 1707611014247,
+      "end": 1707611014247,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1707611014247,
+      "end": 1707611014247,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:remove-plugin-metadata",
+      "start": 1707611014247,
+      "end": 1707611014247,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:chunk-error",
+      "start": 1707611014247,
+      "end": 1707611014247,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:components:imports",
+      "start": 1707611014247,
+      "end": 1707611014247,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1707611014247,
+      "end": 1707611014247,
+      "order": "normal"
+    },
+    {
+      "name": "ssr-styles",
+      "start": 1707611014247,
+      "end": 1707611014247,
+      "order": "normal"
+    },
+    {
+      "name": "vite:define",
+      "start": 1707611014247,
+      "end": 1707611014247,
+      "order": "normal"
+    },
+    {
+      "name": "vite:css-post",
+      "start": 1707611014247,
+      "end": 1707611014247,
+      "order": "normal"
+    },
+    {
+      "name": "vite:build-html",
+      "start": 1707611014247,
+      "end": 1707611014247,
+      "order": "normal"
+    },
+    {
+      "name": "vite:worker-import-meta-url",
+      "start": 1707611014247,
+      "end": 1707611014247,
+      "order": "normal"
+    },
+    {
+      "name": "vite:asset-import-meta-url",
+      "start": 1707611014247,
+      "end": 1707611014247,
+      "order": "normal"
+    },
+    {
+      "name": "commonjs",
+      "start": 1707611014247,
+      "end": 1707611014247,
+      "order": "normal"
+    },
+    {
+      "name": "vite:dynamic-import-vars",
+      "start": 1707611014247,
+      "end": 1707611014247,
+      "order": "normal"
+    },
+    {
+      "name": "vite:import-glob",
+      "start": 1707611014247,
+      "end": 1707611014247,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:composable-keys",
+      "start": 1707611014247,
+      "end": 1707611014247,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:imports-transform",
+      "start": 1707611014247,
+      "end": 1707611014247,
+      "order": "post"
+    },
+    {
+      "name": "unctx:transform",
+      "start": 1707611014247,
+      "end": 1707611014247,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:runtime-paths-dep",
+      "start": 1707611014247,
+      "end": 1707611014247,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:components-loader",
+      "start": 1707611014247,
+      "end": 1707611014247,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:tree-shake-composables:transform",
+      "start": 1707611014247,
+      "end": 1707611014247,
+      "order": "post"
+    },
+    {
+      "name": "vite:build-import-analysis",
+      "start": 1707611014247,
+      "end": 1707611014247,
+      "order": "normal"
+    },
+    {
+      "name": "vite:reporter",
+      "start": 1707611014247,
+      "end": 1707611014247,
+      "order": "normal"
+    }
+  ]
+}

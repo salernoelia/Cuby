@@ -1,0 +1,198 @@
+{
+  "resolvedId": "/Users/eliasalerno/GitHub/Cuby/node_modules/d3-selection/src/selection/attr.js",
+  "transforms": [
+    {
+      "name": "vite:load-fallback",
+      "result": "import namespace from \"../namespace.js\";\n\nfunction attrRemove(name) {\n  return function() {\n    this.removeAttribute(name);\n  };\n}\n\nfunction attrRemoveNS(fullname) {\n  return function() {\n    this.removeAttributeNS(fullname.space, fullname.local);\n  };\n}\n\nfunction attrConstant(name, value) {\n  return function() {\n    this.setAttribute(name, value);\n  };\n}\n\nfunction attrConstantNS(fullname, value) {\n  return function() {\n    this.setAttributeNS(fullname.space, fullname.local, value);\n  };\n}\n\nfunction attrFunction(name, value) {\n  return function() {\n    var v = value.apply(this, arguments);\n    if (v == null) this.removeAttribute(name);\n    else this.setAttribute(name, v);\n  };\n}\n\nfunction attrFunctionNS(fullname, value) {\n  return function() {\n    var v = value.apply(this, arguments);\n    if (v == null) this.removeAttributeNS(fullname.space, fullname.local);\n    else this.setAttributeNS(fullname.space, fullname.local, v);\n  };\n}\n\nexport default function(name, value) {\n  var fullname = namespace(name);\n\n  if (arguments.length < 2) {\n    var node = this.node();\n    return fullname.local\n        ? node.getAttributeNS(fullname.space, fullname.local)\n        : node.getAttribute(fullname);\n  }\n\n  return this.each((value == null\n      ? (fullname.local ? attrRemoveNS : attrRemove) : (typeof value === \"function\"\n      ? (fullname.local ? attrFunctionNS : attrFunction)\n      : (fullname.local ? attrConstantNS : attrConstant)))(fullname, value));\n}\n",
+      "start": 1707611014473,
+      "end": 1707611014486,
+      "sourcemaps": null
+    },
+    {
+      "name": "nuxt:layer-aliasing",
+      "start": 1707611014486,
+      "end": 1707611014486,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:server-devonly:transform",
+      "start": 1707611014486,
+      "end": 1707611014486,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:client-fallback-auto-id",
+      "start": 1707611014486,
+      "end": 1707611014486,
+      "order": "pre"
+    },
+    {
+      "name": "vite:css",
+      "start": 1707611014486,
+      "end": 1707611014486,
+      "order": "normal"
+    },
+    {
+      "name": "vite:esbuild",
+      "start": 1707611014486,
+      "end": 1707611014486,
+      "order": "normal"
+    },
+    {
+      "name": "vite:json",
+      "start": 1707611014486,
+      "end": 1707611014486,
+      "order": "normal"
+    },
+    {
+      "name": "vite:worker",
+      "start": 1707611014486,
+      "end": 1707611014486,
+      "order": "normal"
+    },
+    {
+      "name": "vite:vue",
+      "start": 1707611014486,
+      "end": 1707611014486,
+      "order": "normal"
+    },
+    {
+      "name": "vite:vue-jsx",
+      "start": 1707611014486,
+      "end": 1707611014486,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1707611014486,
+      "end": 1707611014486,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:remove-plugin-metadata",
+      "start": 1707611014486,
+      "end": 1707611014486,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:chunk-error",
+      "start": 1707611014486,
+      "end": 1707611014486,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:components:imports",
+      "start": 1707611014486,
+      "end": 1707611014486,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1707611014486,
+      "end": 1707611014486,
+      "order": "normal"
+    },
+    {
+      "name": "ssr-styles",
+      "start": 1707611014486,
+      "end": 1707611014486,
+      "order": "normal"
+    },
+    {
+      "name": "vite:define",
+      "start": 1707611014486,
+      "end": 1707611014486,
+      "order": "normal"
+    },
+    {
+      "name": "vite:css-post",
+      "start": 1707611014486,
+      "end": 1707611014486,
+      "order": "normal"
+    },
+    {
+      "name": "vite:build-html",
+      "start": 1707611014486,
+      "end": 1707611014486,
+      "order": "normal"
+    },
+    {
+      "name": "vite:worker-import-meta-url",
+      "start": 1707611014486,
+      "end": 1707611014486,
+      "order": "normal"
+    },
+    {
+      "name": "vite:asset-import-meta-url",
+      "start": 1707611014486,
+      "end": 1707611014486,
+      "order": "normal"
+    },
+    {
+      "name": "commonjs",
+      "start": 1707611014486,
+      "end": 1707611014486,
+      "order": "normal"
+    },
+    {
+      "name": "vite:dynamic-import-vars",
+      "start": 1707611014486,
+      "end": 1707611014486,
+      "order": "normal"
+    },
+    {
+      "name": "vite:import-glob",
+      "start": 1707611014486,
+      "end": 1707611014486,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:composable-keys",
+      "start": 1707611014486,
+      "end": 1707611014486,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:imports-transform",
+      "start": 1707611014486,
+      "end": 1707611014486,
+      "order": "post"
+    },
+    {
+      "name": "unctx:transform",
+      "start": 1707611014486,
+      "end": 1707611014486,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:runtime-paths-dep",
+      "start": 1707611014486,
+      "end": 1707611014486,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:components-loader",
+      "start": 1707611014486,
+      "end": 1707611014486,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:tree-shake-composables:transform",
+      "start": 1707611014486,
+      "end": 1707611014486,
+      "order": "post"
+    },
+    {
+      "name": "vite:build-import-analysis",
+      "start": 1707611014486,
+      "end": 1707611014486,
+      "order": "normal"
+    },
+    {
+      "name": "vite:reporter",
+      "start": 1707611014486,
+      "end": 1707611014486,
+      "order": "normal"
+    }
+  ]
+}

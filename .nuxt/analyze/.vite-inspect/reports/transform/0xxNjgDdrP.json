@@ -1,0 +1,198 @@
+{
+  "resolvedId": "/Users/eliasalerno/GitHub/Cuby/node_modules/d3-quadtree/src/quadtree.js",
+  "transforms": [
+    {
+      "name": "vite:load-fallback",
+      "result": "import tree_add, {addAll as tree_addAll} from \"./add.js\";\nimport tree_cover from \"./cover.js\";\nimport tree_data from \"./data.js\";\nimport tree_extent from \"./extent.js\";\nimport tree_find from \"./find.js\";\nimport tree_remove, {removeAll as tree_removeAll} from \"./remove.js\";\nimport tree_root from \"./root.js\";\nimport tree_size from \"./size.js\";\nimport tree_visit from \"./visit.js\";\nimport tree_visitAfter from \"./visitAfter.js\";\nimport tree_x, {defaultX} from \"./x.js\";\nimport tree_y, {defaultY} from \"./y.js\";\n\nexport default function quadtree(nodes, x, y) {\n  var tree = new Quadtree(x == null ? defaultX : x, y == null ? defaultY : y, NaN, NaN, NaN, NaN);\n  return nodes == null ? tree : tree.addAll(nodes);\n}\n\nfunction Quadtree(x, y, x0, y0, x1, y1) {\n  this._x = x;\n  this._y = y;\n  this._x0 = x0;\n  this._y0 = y0;\n  this._x1 = x1;\n  this._y1 = y1;\n  this._root = undefined;\n}\n\nfunction leaf_copy(leaf) {\n  var copy = {data: leaf.data}, next = copy;\n  while (leaf = leaf.next) next = next.next = {data: leaf.data};\n  return copy;\n}\n\nvar treeProto = quadtree.prototype = Quadtree.prototype;\n\ntreeProto.copy = function() {\n  var copy = new Quadtree(this._x, this._y, this._x0, this._y0, this._x1, this._y1),\n      node = this._root,\n      nodes,\n      child;\n\n  if (!node) return copy;\n\n  if (!node.length) return copy._root = leaf_copy(node), copy;\n\n  nodes = [{source: node, target: copy._root = new Array(4)}];\n  while (node = nodes.pop()) {\n    for (var i = 0; i < 4; ++i) {\n      if (child = node.source[i]) {\n        if (child.length) nodes.push({source: child, target: node.target[i] = new Array(4)});\n        else node.target[i] = leaf_copy(child);\n      }\n    }\n  }\n\n  return copy;\n};\n\ntreeProto.add = tree_add;\ntreeProto.addAll = tree_addAll;\ntreeProto.cover = tree_cover;\ntreeProto.data = tree_data;\ntreeProto.extent = tree_extent;\ntreeProto.find = tree_find;\ntreeProto.remove = tree_remove;\ntreeProto.removeAll = tree_removeAll;\ntreeProto.root = tree_root;\ntreeProto.size = tree_size;\ntreeProto.visit = tree_visit;\ntreeProto.visitAfter = tree_visitAfter;\ntreeProto.x = tree_x;\ntreeProto.y = tree_y;\n",
+      "start": 1707611014269,
+      "end": 1707611014288,
+      "sourcemaps": null
+    },
+    {
+      "name": "nuxt:layer-aliasing",
+      "start": 1707611014288,
+      "end": 1707611014288,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:server-devonly:transform",
+      "start": 1707611014288,
+      "end": 1707611014288,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:client-fallback-auto-id",
+      "start": 1707611014288,
+      "end": 1707611014288,
+      "order": "pre"
+    },
+    {
+      "name": "vite:css",
+      "start": 1707611014288,
+      "end": 1707611014288,
+      "order": "normal"
+    },
+    {
+      "name": "vite:esbuild",
+      "start": 1707611014288,
+      "end": 1707611014288,
+      "order": "normal"
+    },
+    {
+      "name": "vite:json",
+      "start": 1707611014288,
+      "end": 1707611014288,
+      "order": "normal"
+    },
+    {
+      "name": "vite:worker",
+      "start": 1707611014288,
+      "end": 1707611014288,
+      "order": "normal"
+    },
+    {
+      "name": "vite:vue",
+      "start": 1707611014288,
+      "end": 1707611014288,
+      "order": "normal"
+    },
+    {
+      "name": "vite:vue-jsx",
+      "start": 1707611014288,
+      "end": 1707611014288,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1707611014288,
+      "end": 1707611014288,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:remove-plugin-metadata",
+      "start": 1707611014288,
+      "end": 1707611014288,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:chunk-error",
+      "start": 1707611014288,
+      "end": 1707611014288,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:components:imports",
+      "start": 1707611014288,
+      "end": 1707611014288,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1707611014288,
+      "end": 1707611014288,
+      "order": "normal"
+    },
+    {
+      "name": "ssr-styles",
+      "start": 1707611014288,
+      "end": 1707611014288,
+      "order": "normal"
+    },
+    {
+      "name": "vite:define",
+      "start": 1707611014288,
+      "end": 1707611014288,
+      "order": "normal"
+    },
+    {
+      "name": "vite:css-post",
+      "start": 1707611014288,
+      "end": 1707611014288,
+      "order": "normal"
+    },
+    {
+      "name": "vite:build-html",
+      "start": 1707611014288,
+      "end": 1707611014288,
+      "order": "normal"
+    },
+    {
+      "name": "vite:worker-import-meta-url",
+      "start": 1707611014288,
+      "end": 1707611014288,
+      "order": "normal"
+    },
+    {
+      "name": "vite:asset-import-meta-url",
+      "start": 1707611014288,
+      "end": 1707611014288,
+      "order": "normal"
+    },
+    {
+      "name": "commonjs",
+      "start": 1707611014288,
+      "end": 1707611014288,
+      "order": "normal"
+    },
+    {
+      "name": "vite:dynamic-import-vars",
+      "start": 1707611014288,
+      "end": 1707611014288,
+      "order": "normal"
+    },
+    {
+      "name": "vite:import-glob",
+      "start": 1707611014288,
+      "end": 1707611014288,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:composable-keys",
+      "start": 1707611014288,
+      "end": 1707611014288,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:imports-transform",
+      "start": 1707611014288,
+      "end": 1707611014288,
+      "order": "post"
+    },
+    {
+      "name": "unctx:transform",
+      "start": 1707611014288,
+      "end": 1707611014288,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:runtime-paths-dep",
+      "start": 1707611014288,
+      "end": 1707611014288,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:components-loader",
+      "start": 1707611014288,
+      "end": 1707611014288,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:tree-shake-composables:transform",
+      "start": 1707611014288,
+      "end": 1707611014288,
+      "order": "post"
+    },
+    {
+      "name": "vite:build-import-analysis",
+      "start": 1707611014288,
+      "end": 1707611014288,
+      "order": "normal"
+    },
+    {
+      "name": "vite:reporter",
+      "start": 1707611014288,
+      "end": 1707611014288,
+      "order": "normal"
+    }
+  ]
+}

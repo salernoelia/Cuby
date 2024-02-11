@@ -1,0 +1,198 @@
+{
+  "resolvedId": "/Users/eliasalerno/GitHub/Cuby/node_modules/d3-geo/src/projection/conicConformal.js",
+  "transforms": [
+    {
+      "name": "vite:load-fallback",
+      "result": "import {abs, atan, atan2, cos, epsilon, halfPi, log, pi, pow, sign, sin, sqrt, tan} from \"../math.js\";\nimport {conicProjection} from \"./conic.js\";\nimport {mercatorRaw} from \"./mercator.js\";\n\nfunction tany(y) {\n  return tan((halfPi + y) / 2);\n}\n\nexport function conicConformalRaw(y0, y1) {\n  var cy0 = cos(y0),\n      n = y0 === y1 ? sin(y0) : log(cy0 / cos(y1)) / log(tany(y1) / tany(y0)),\n      f = cy0 * pow(tany(y0), n) / n;\n\n  if (!n) return mercatorRaw;\n\n  function project(x, y) {\n    if (f > 0) { if (y < -halfPi + epsilon) y = -halfPi + epsilon; }\n    else { if (y > halfPi - epsilon) y = halfPi - epsilon; }\n    var r = f / pow(tany(y), n);\n    return [r * sin(n * x), f - r * cos(n * x)];\n  }\n\n  project.invert = function(x, y) {\n    var fy = f - y, r = sign(n) * sqrt(x * x + fy * fy),\n      l = atan2(x, abs(fy)) * sign(fy);\n    if (fy * n < 0)\n      l -= pi * sign(x) * sign(fy);\n    return [l / n, 2 * atan(pow(f / r, 1 / n)) - halfPi];\n  };\n\n  return project;\n}\n\nexport default function() {\n  return conicProjection(conicConformalRaw)\n      .scale(109.5)\n      .parallels([30, 30]);\n}\n",
+      "start": 1707611014251,
+      "end": 1707611014272,
+      "sourcemaps": null
+    },
+    {
+      "name": "nuxt:layer-aliasing",
+      "start": 1707611014272,
+      "end": 1707611014272,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:server-devonly:transform",
+      "start": 1707611014272,
+      "end": 1707611014272,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:client-fallback-auto-id",
+      "start": 1707611014272,
+      "end": 1707611014272,
+      "order": "pre"
+    },
+    {
+      "name": "vite:css",
+      "start": 1707611014272,
+      "end": 1707611014272,
+      "order": "normal"
+    },
+    {
+      "name": "vite:esbuild",
+      "start": 1707611014272,
+      "end": 1707611014272,
+      "order": "normal"
+    },
+    {
+      "name": "vite:json",
+      "start": 1707611014272,
+      "end": 1707611014272,
+      "order": "normal"
+    },
+    {
+      "name": "vite:worker",
+      "start": 1707611014272,
+      "end": 1707611014272,
+      "order": "normal"
+    },
+    {
+      "name": "vite:vue",
+      "start": 1707611014272,
+      "end": 1707611014272,
+      "order": "normal"
+    },
+    {
+      "name": "vite:vue-jsx",
+      "start": 1707611014272,
+      "end": 1707611014272,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1707611014272,
+      "end": 1707611014272,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:remove-plugin-metadata",
+      "start": 1707611014272,
+      "end": 1707611014272,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:chunk-error",
+      "start": 1707611014272,
+      "end": 1707611014272,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:components:imports",
+      "start": 1707611014272,
+      "end": 1707611014272,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1707611014272,
+      "end": 1707611014272,
+      "order": "normal"
+    },
+    {
+      "name": "ssr-styles",
+      "start": 1707611014272,
+      "end": 1707611014272,
+      "order": "normal"
+    },
+    {
+      "name": "vite:define",
+      "start": 1707611014272,
+      "end": 1707611014272,
+      "order": "normal"
+    },
+    {
+      "name": "vite:css-post",
+      "start": 1707611014272,
+      "end": 1707611014272,
+      "order": "normal"
+    },
+    {
+      "name": "vite:build-html",
+      "start": 1707611014272,
+      "end": 1707611014272,
+      "order": "normal"
+    },
+    {
+      "name": "vite:worker-import-meta-url",
+      "start": 1707611014272,
+      "end": 1707611014272,
+      "order": "normal"
+    },
+    {
+      "name": "vite:asset-import-meta-url",
+      "start": 1707611014272,
+      "end": 1707611014272,
+      "order": "normal"
+    },
+    {
+      "name": "commonjs",
+      "start": 1707611014272,
+      "end": 1707611014272,
+      "order": "normal"
+    },
+    {
+      "name": "vite:dynamic-import-vars",
+      "start": 1707611014272,
+      "end": 1707611014272,
+      "order": "normal"
+    },
+    {
+      "name": "vite:import-glob",
+      "start": 1707611014272,
+      "end": 1707611014272,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:composable-keys",
+      "start": 1707611014272,
+      "end": 1707611014272,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:imports-transform",
+      "start": 1707611014272,
+      "end": 1707611014272,
+      "order": "post"
+    },
+    {
+      "name": "unctx:transform",
+      "start": 1707611014272,
+      "end": 1707611014272,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:runtime-paths-dep",
+      "start": 1707611014272,
+      "end": 1707611014272,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:components-loader",
+      "start": 1707611014272,
+      "end": 1707611014272,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:tree-shake-composables:transform",
+      "start": 1707611014272,
+      "end": 1707611014272,
+      "order": "post"
+    },
+    {
+      "name": "vite:build-import-analysis",
+      "start": 1707611014272,
+      "end": 1707611014272,
+      "order": "normal"
+    },
+    {
+      "name": "vite:reporter",
+      "start": 1707611014272,
+      "end": 1707611014272,
+      "order": "normal"
+    }
+  ]
+}

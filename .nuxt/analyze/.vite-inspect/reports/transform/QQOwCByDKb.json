@@ -1,0 +1,198 @@
+{
+  "resolvedId": "/Users/eliasalerno/GitHub/Cuby/node_modules/d3-shape/src/symbol.js",
+  "transforms": [
+    {
+      "name": "vite:load-fallback",
+      "result": "import constant from \"./constant.js\";\nimport {withPath} from \"./path.js\";\nimport asterisk from \"./symbol/asterisk.js\";\nimport circle from \"./symbol/circle.js\";\nimport cross from \"./symbol/cross.js\";\nimport diamond from \"./symbol/diamond.js\";\nimport diamond2 from \"./symbol/diamond2.js\";\nimport plus from \"./symbol/plus.js\";\nimport square from \"./symbol/square.js\";\nimport square2 from \"./symbol/square2.js\";\nimport star from \"./symbol/star.js\";\nimport triangle from \"./symbol/triangle.js\";\nimport triangle2 from \"./symbol/triangle2.js\";\nimport wye from \"./symbol/wye.js\";\nimport times from \"./symbol/times.js\";\n\n// These symbols are designed to be filled.\nexport const symbolsFill = [\n  circle,\n  cross,\n  diamond,\n  square,\n  star,\n  triangle,\n  wye\n];\n\n// These symbols are designed to be stroked (with a width of 1.5px and round caps).\nexport const symbolsStroke = [\n  circle,\n  plus,\n  times,\n  triangle2,\n  asterisk,\n  square2,\n  diamond2\n];\n\nexport default function Symbol(type, size) {\n  let context = null,\n      path = withPath(symbol);\n\n  type = typeof type === \"function\" ? type : constant(type || circle);\n  size = typeof size === \"function\" ? size : constant(size === undefined ? 64 : +size);\n\n  function symbol() {\n    let buffer;\n    if (!context) context = buffer = path();\n    type.apply(this, arguments).draw(context, +size.apply(this, arguments));\n    if (buffer) return context = null, buffer + \"\" || null;\n  }\n\n  symbol.type = function(_) {\n    return arguments.length ? (type = typeof _ === \"function\" ? _ : constant(_), symbol) : type;\n  };\n\n  symbol.size = function(_) {\n    return arguments.length ? (size = typeof _ === \"function\" ? _ : constant(+_), symbol) : size;\n  };\n\n  symbol.context = function(_) {\n    return arguments.length ? (context = _ == null ? null : _, symbol) : context;\n  };\n\n  return symbol;\n}\n",
+      "start": 1707611014349,
+      "end": 1707611014364,
+      "sourcemaps": null
+    },
+    {
+      "name": "nuxt:layer-aliasing",
+      "start": 1707611014364,
+      "end": 1707611014364,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:server-devonly:transform",
+      "start": 1707611014364,
+      "end": 1707611014364,
+      "order": "pre"
+    },
+    {
+      "name": "nuxt:client-fallback-auto-id",
+      "start": 1707611014364,
+      "end": 1707611014364,
+      "order": "pre"
+    },
+    {
+      "name": "vite:css",
+      "start": 1707611014364,
+      "end": 1707611014364,
+      "order": "normal"
+    },
+    {
+      "name": "vite:esbuild",
+      "start": 1707611014364,
+      "end": 1707611014364,
+      "order": "normal"
+    },
+    {
+      "name": "vite:json",
+      "start": 1707611014364,
+      "end": 1707611014364,
+      "order": "normal"
+    },
+    {
+      "name": "vite:worker",
+      "start": 1707611014364,
+      "end": 1707611014364,
+      "order": "normal"
+    },
+    {
+      "name": "vite:vue",
+      "start": 1707611014364,
+      "end": 1707611014364,
+      "order": "normal"
+    },
+    {
+      "name": "vite:vue-jsx",
+      "start": 1707611014364,
+      "end": 1707611014364,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1707611014364,
+      "end": 1707611014364,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:remove-plugin-metadata",
+      "start": 1707611014364,
+      "end": 1707611014364,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:chunk-error",
+      "start": 1707611014364,
+      "end": 1707611014364,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:components:imports",
+      "start": 1707611014364,
+      "end": 1707611014364,
+      "order": "normal"
+    },
+    {
+      "name": "replace",
+      "start": 1707611014364,
+      "end": 1707611014364,
+      "order": "normal"
+    },
+    {
+      "name": "ssr-styles",
+      "start": 1707611014364,
+      "end": 1707611014364,
+      "order": "normal"
+    },
+    {
+      "name": "vite:define",
+      "start": 1707611014364,
+      "end": 1707611014364,
+      "order": "normal"
+    },
+    {
+      "name": "vite:css-post",
+      "start": 1707611014364,
+      "end": 1707611014364,
+      "order": "normal"
+    },
+    {
+      "name": "vite:build-html",
+      "start": 1707611014364,
+      "end": 1707611014364,
+      "order": "normal"
+    },
+    {
+      "name": "vite:worker-import-meta-url",
+      "start": 1707611014364,
+      "end": 1707611014364,
+      "order": "normal"
+    },
+    {
+      "name": "vite:asset-import-meta-url",
+      "start": 1707611014364,
+      "end": 1707611014364,
+      "order": "normal"
+    },
+    {
+      "name": "commonjs",
+      "start": 1707611014364,
+      "end": 1707611014364,
+      "order": "normal"
+    },
+    {
+      "name": "vite:dynamic-import-vars",
+      "start": 1707611014364,
+      "end": 1707611014364,
+      "order": "normal"
+    },
+    {
+      "name": "vite:import-glob",
+      "start": 1707611014364,
+      "end": 1707611014364,
+      "order": "normal"
+    },
+    {
+      "name": "nuxt:composable-keys",
+      "start": 1707611014364,
+      "end": 1707611014364,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:imports-transform",
+      "start": 1707611014364,
+      "end": 1707611014364,
+      "order": "post"
+    },
+    {
+      "name": "unctx:transform",
+      "start": 1707611014364,
+      "end": 1707611014364,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:runtime-paths-dep",
+      "start": 1707611014364,
+      "end": 1707611014364,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:components-loader",
+      "start": 1707611014364,
+      "end": 1707611014364,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:tree-shake-composables:transform",
+      "start": 1707611014364,
+      "end": 1707611014364,
+      "order": "post"
+    },
+    {
+      "name": "vite:build-import-analysis",
+      "start": 1707611014364,
+      "end": 1707611014364,
+      "order": "normal"
+    },
+    {
+      "name": "vite:reporter",
+      "start": 1707611014364,
+      "end": 1707611014364,
+      "order": "normal"
+    }
+  ]
+}
