@@ -4,194 +4,194 @@
     {
       "name": "vite:load-fallback",
       "result": "// Simple caching for constant-radius points.\nlet cacheDigits, cacheAppend, cacheRadius, cacheCircle;\n\nexport default class PathString {\n  constructor(digits) {\n    this._append = digits == null ? append : appendRound(digits);\n    this._radius = 4.5;\n    this._ = \"\";\n  }\n  pointRadius(_) {\n    this._radius = +_;\n    return this;\n  }\n  polygonStart() {\n    this._line = 0;\n  }\n  polygonEnd() {\n    this._line = NaN;\n  }\n  lineStart() {\n    this._point = 0;\n  }\n  lineEnd() {\n    if (this._line === 0) this._ += \"Z\";\n    this._point = NaN;\n  }\n  point(x, y) {\n    switch (this._point) {\n      case 0: {\n        this._append`M${x},${y}`;\n        this._point = 1;\n        break;\n      }\n      case 1: {\n        this._append`L${x},${y}`;\n        break;\n      }\n      default: {\n        this._append`M${x},${y}`;\n        if (this._radius !== cacheRadius || this._append !== cacheAppend) {\n          const r = this._radius;\n          const s = this._;\n          this._ = \"\"; // stash the old string so we can cache the circle path fragment\n          this._append`m0,${r}a${r},${r} 0 1,1 0,${-2 * r}a${r},${r} 0 1,1 0,${2 * r}z`;\n          cacheRadius = r;\n          cacheAppend = this._append;\n          cacheCircle = this._;\n          this._ = s;\n        }\n        this._ += cacheCircle;\n        break;\n      }\n    }\n  }\n  result() {\n    const result = this._;\n    this._ = \"\";\n    return result.length ? result : null;\n  }\n}\n\nfunction append(strings) {\n  let i = 1;\n  this._ += strings[0];\n  for (const j = strings.length; i < j; ++i) {\n    this._ += arguments[i] + strings[i];\n  }\n}\n\nfunction appendRound(digits) {\n  const d = Math.floor(digits);\n  if (!(d >= 0)) throw new RangeError(`invalid digits: ${digits}`);\n  if (d > 15) return append;\n  if (d !== cacheDigits) {\n    const k = 10 ** d;\n    cacheDigits = d;\n    cacheAppend = function append(strings) {\n      let i = 1;\n      this._ += strings[0];\n      for (const j = strings.length; i < j; ++i) {\n        this._ += Math.round(arguments[i] * k) / k + strings[i];\n      }\n    };\n  }\n  return cacheAppend;\n}\n",
-      "start": 1707611014446,
-      "end": 1707611014460,
+      "start": 1707611463282,
+      "end": 1707611463296,
       "sourcemaps": null
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1707611014460,
-      "end": 1707611014460,
+      "start": 1707611463296,
+      "end": 1707611463296,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1707611014460,
-      "end": 1707611014460,
+      "start": 1707611463296,
+      "end": 1707611463296,
       "order": "pre"
     },
     {
       "name": "nuxt:client-fallback-auto-id",
-      "start": 1707611014460,
-      "end": 1707611014460,
+      "start": 1707611463296,
+      "end": 1707611463296,
       "order": "pre"
     },
     {
       "name": "vite:css",
-      "start": 1707611014460,
-      "end": 1707611014460,
+      "start": 1707611463296,
+      "end": 1707611463296,
       "order": "normal"
     },
     {
       "name": "vite:esbuild",
-      "start": 1707611014460,
-      "end": 1707611014460,
+      "start": 1707611463296,
+      "end": 1707611463296,
       "order": "normal"
     },
     {
       "name": "vite:json",
-      "start": 1707611014460,
-      "end": 1707611014460,
+      "start": 1707611463296,
+      "end": 1707611463296,
       "order": "normal"
     },
     {
       "name": "vite:worker",
-      "start": 1707611014460,
-      "end": 1707611014460,
+      "start": 1707611463296,
+      "end": 1707611463296,
       "order": "normal"
     },
     {
       "name": "vite:vue",
-      "start": 1707611014460,
-      "end": 1707611014460,
+      "start": 1707611463296,
+      "end": 1707611463296,
       "order": "normal"
     },
     {
       "name": "vite:vue-jsx",
-      "start": 1707611014460,
-      "end": 1707611014460,
+      "start": 1707611463296,
+      "end": 1707611463296,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1707611014460,
-      "end": 1707611014460,
+      "start": 1707611463296,
+      "end": 1707611463296,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1707611014460,
-      "end": 1707611014460,
+      "start": 1707611463296,
+      "end": 1707611463296,
       "order": "normal"
     },
     {
       "name": "nuxt:chunk-error",
-      "start": 1707611014460,
-      "end": 1707611014460,
+      "start": 1707611463296,
+      "end": 1707611463296,
       "order": "normal"
     },
     {
       "name": "nuxt:components:imports",
-      "start": 1707611014460,
-      "end": 1707611014460,
+      "start": 1707611463296,
+      "end": 1707611463296,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1707611014460,
-      "end": 1707611014461,
+      "start": 1707611463296,
+      "end": 1707611463296,
       "order": "normal"
     },
     {
       "name": "ssr-styles",
-      "start": 1707611014461,
-      "end": 1707611014461,
+      "start": 1707611463296,
+      "end": 1707611463296,
       "order": "normal"
     },
     {
       "name": "vite:define",
-      "start": 1707611014461,
-      "end": 1707611014461,
+      "start": 1707611463296,
+      "end": 1707611463296,
       "order": "normal"
     },
     {
       "name": "vite:css-post",
-      "start": 1707611014461,
-      "end": 1707611014461,
+      "start": 1707611463296,
+      "end": 1707611463296,
       "order": "normal"
     },
     {
       "name": "vite:build-html",
-      "start": 1707611014461,
-      "end": 1707611014461,
+      "start": 1707611463296,
+      "end": 1707611463296,
       "order": "normal"
     },
     {
       "name": "vite:worker-import-meta-url",
-      "start": 1707611014461,
-      "end": 1707611014461,
+      "start": 1707611463296,
+      "end": 1707611463296,
       "order": "normal"
     },
     {
       "name": "vite:asset-import-meta-url",
-      "start": 1707611014461,
-      "end": 1707611014461,
+      "start": 1707611463296,
+      "end": 1707611463296,
       "order": "normal"
     },
     {
       "name": "commonjs",
-      "start": 1707611014461,
-      "end": 1707611014461,
+      "start": 1707611463296,
+      "end": 1707611463297,
       "order": "normal"
     },
     {
       "name": "vite:dynamic-import-vars",
-      "start": 1707611014461,
-      "end": 1707611014461,
+      "start": 1707611463297,
+      "end": 1707611463297,
       "order": "normal"
     },
     {
       "name": "vite:import-glob",
-      "start": 1707611014461,
-      "end": 1707611014461,
+      "start": 1707611463297,
+      "end": 1707611463297,
       "order": "normal"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1707611014461,
-      "end": 1707611014461,
+      "start": 1707611463297,
+      "end": 1707611463297,
       "order": "post"
     },
     {
       "name": "nuxt:imports-transform",
-      "start": 1707611014461,
-      "end": 1707611014461,
+      "start": 1707611463297,
+      "end": 1707611463297,
       "order": "post"
     },
     {
       "name": "unctx:transform",
-      "start": 1707611014461,
-      "end": 1707611014461,
+      "start": 1707611463297,
+      "end": 1707611463297,
       "order": "post"
     },
     {
       "name": "nuxt:runtime-paths-dep",
-      "start": 1707611014461,
-      "end": 1707611014461,
+      "start": 1707611463297,
+      "end": 1707611463297,
       "order": "post"
     },
     {
       "name": "nuxt:components-loader",
-      "start": 1707611014461,
-      "end": 1707611014461,
+      "start": 1707611463297,
+      "end": 1707611463297,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-composables:transform",
-      "start": 1707611014461,
-      "end": 1707611014461,
+      "start": 1707611463297,
+      "end": 1707611463297,
       "order": "post"
     },
     {
       "name": "vite:build-import-analysis",
-      "start": 1707611014461,
-      "end": 1707611014461,
+      "start": 1707611463297,
+      "end": 1707611463297,
       "order": "normal"
     },
     {
       "name": "vite:reporter",
-      "start": 1707611014461,
-      "end": 1707611014461,
+      "start": 1707611463297,
+      "end": 1707611463297,
       "order": "normal"
     }
   ]

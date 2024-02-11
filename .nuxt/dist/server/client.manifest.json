@@ -1,10 +1,10 @@
 {
-  "_vue.f36acd1f.af794eaa.js": {
+  "_vue.f36acd1f.47f6509d.js": {
     "resourceType": "script",
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "vue.f36acd1f.af794eaa.js",
+    "file": "vue.f36acd1f.47f6509d.js",
     "imports": [
       "node_modules/nuxt/dist/app/entry.js"
     ]
@@ -24,10 +24,10 @@
     "css": [
       "error-404.7fc72018.css"
     ],
-    "file": "error-404.e74840fc.js",
+    "file": "error-404.bfcf7275.js",
     "imports": [
       "node_modules/nuxt/dist/app/entry.js",
-      "_vue.f36acd1f.af794eaa.js"
+      "_vue.f36acd1f.47f6509d.js"
     ],
     "isDynamicEntry": true,
     "src": "node_modules/@nuxt/ui-templates/dist/templates/error-404.vue"
@@ -53,9 +53,9 @@
     "css": [
       "error-500.c5df6088.css"
     ],
-    "file": "error-500.62b8a6a3.js",
+    "file": "error-500.bcbc0f3e.js",
     "imports": [
-      "_vue.f36acd1f.af794eaa.js",
+      "_vue.f36acd1f.47f6509d.js",
       "node_modules/nuxt/dist/app/entry.js"
     ],
     "isDynamicEntry": true,
@@ -86,7 +86,7 @@
       "node_modules/@nuxt/ui-templates/dist/templates/error-404.vue",
       "node_modules/@nuxt/ui-templates/dist/templates/error-500.vue"
     ],
-    "file": "entry.3e3744c6.js",
+    "file": "entry.b00ea482.js",
     "isEntry": true,
     "src": "node_modules/nuxt/dist/app/entry.js"
   },

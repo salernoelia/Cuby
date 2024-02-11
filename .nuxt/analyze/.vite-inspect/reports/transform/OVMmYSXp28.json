@@ -4,194 +4,194 @@
     {
       "name": "vite:load-fallback",
       "result": "import {ticks} from \"d3-array\";\nimport {format, formatSpecifier} from \"d3-format\";\nimport nice from \"./nice.js\";\nimport {copy, transformer} from \"./continuous.js\";\nimport {initRange} from \"./init.js\";\n\nfunction transformLog(x) {\n  return Math.log(x);\n}\n\nfunction transformExp(x) {\n  return Math.exp(x);\n}\n\nfunction transformLogn(x) {\n  return -Math.log(-x);\n}\n\nfunction transformExpn(x) {\n  return -Math.exp(-x);\n}\n\nfunction pow10(x) {\n  return isFinite(x) ? +(\"1e\" + x) : x < 0 ? 0 : x;\n}\n\nfunction powp(base) {\n  return base === 10 ? pow10\n      : base === Math.E ? Math.exp\n      : x => Math.pow(base, x);\n}\n\nfunction logp(base) {\n  return base === Math.E ? Math.log\n      : base === 10 && Math.log10\n      || base === 2 && Math.log2\n      || (base = Math.log(base), x => Math.log(x) / base);\n}\n\nfunction reflect(f) {\n  return (x, k) => -f(-x, k);\n}\n\nexport function loggish(transform) {\n  const scale = transform(transformLog, transformExp);\n  const domain = scale.domain;\n  let base = 10;\n  let logs;\n  let pows;\n\n  function rescale() {\n    logs = logp(base), pows = powp(base);\n    if (domain()[0] < 0) {\n      logs = reflect(logs), pows = reflect(pows);\n      transform(transformLogn, transformExpn);\n    } else {\n      transform(transformLog, transformExp);\n    }\n    return scale;\n  }\n\n  scale.base = function(_) {\n    return arguments.length ? (base = +_, rescale()) : base;\n  };\n\n  scale.domain = function(_) {\n    return arguments.length ? (domain(_), rescale()) : domain();\n  };\n\n  scale.ticks = count => {\n    const d = domain();\n    let u = d[0];\n    let v = d[d.length - 1];\n    const r = v < u;\n\n    if (r) ([u, v] = [v, u]);\n\n    let i = logs(u);\n    let j = logs(v);\n    let k;\n    let t;\n    const n = count == null ? 10 : +count;\n    let z = [];\n\n    if (!(base % 1) && j - i < n) {\n      i = Math.floor(i), j = Math.ceil(j);\n      if (u > 0) for (; i <= j; ++i) {\n        for (k = 1; k < base; ++k) {\n          t = i < 0 ? k / pows(-i) : k * pows(i);\n          if (t < u) continue;\n          if (t > v) break;\n          z.push(t);\n        }\n      } else for (; i <= j; ++i) {\n        for (k = base - 1; k >= 1; --k) {\n          t = i > 0 ? k / pows(-i) : k * pows(i);\n          if (t < u) continue;\n          if (t > v) break;\n          z.push(t);\n        }\n      }\n      if (z.length * 2 < n) z = ticks(u, v, n);\n    } else {\n      z = ticks(i, j, Math.min(j - i, n)).map(pows);\n    }\n    return r ? z.reverse() : z;\n  };\n\n  scale.tickFormat = (count, specifier) => {\n    if (count == null) count = 10;\n    if (specifier == null) specifier = base === 10 ? \"s\" : \",\";\n    if (typeof specifier !== \"function\") {\n      if (!(base % 1) && (specifier = formatSpecifier(specifier)).precision == null) specifier.trim = true;\n      specifier = format(specifier);\n    }\n    if (count === Infinity) return specifier;\n    const k = Math.max(1, base * count / scale.ticks().length); // TODO fast estimate?\n    return d => {\n      let i = d / pows(Math.round(logs(d)));\n      if (i * base < base - 0.5) i *= base;\n      return i <= k ? specifier(d) : \"\";\n    };\n  };\n\n  scale.nice = () => {\n    return domain(nice(domain(), {\n      floor: x => pows(Math.floor(logs(x))),\n      ceil: x => pows(Math.ceil(logs(x)))\n    }));\n  };\n\n  return scale;\n}\n\nexport default function log() {\n  const scale = loggish(transformer()).domain([1, 10]);\n  scale.copy = () => copy(scale, log()).base(scale.base());\n  initRange.apply(scale, arguments);\n  return scale;\n}\n",
-      "start": 1707611014291,
-      "end": 1707611014307,
+      "start": 1707611463113,
+      "end": 1707611463132,
       "sourcemaps": null
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1707611014307,
-      "end": 1707611014307,
+      "start": 1707611463132,
+      "end": 1707611463132,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1707611014307,
-      "end": 1707611014307,
+      "start": 1707611463132,
+      "end": 1707611463132,
       "order": "pre"
     },
     {
       "name": "nuxt:client-fallback-auto-id",
-      "start": 1707611014307,
-      "end": 1707611014307,
+      "start": 1707611463132,
+      "end": 1707611463132,
       "order": "pre"
     },
     {
       "name": "vite:css",
-      "start": 1707611014307,
-      "end": 1707611014307,
+      "start": 1707611463132,
+      "end": 1707611463132,
       "order": "normal"
     },
     {
       "name": "vite:esbuild",
-      "start": 1707611014307,
-      "end": 1707611014307,
+      "start": 1707611463132,
+      "end": 1707611463132,
       "order": "normal"
     },
     {
       "name": "vite:json",
-      "start": 1707611014307,
-      "end": 1707611014307,
+      "start": 1707611463132,
+      "end": 1707611463132,
       "order": "normal"
     },
     {
       "name": "vite:worker",
-      "start": 1707611014307,
-      "end": 1707611014307,
+      "start": 1707611463132,
+      "end": 1707611463132,
       "order": "normal"
     },
     {
       "name": "vite:vue",
-      "start": 1707611014307,
-      "end": 1707611014307,
+      "start": 1707611463132,
+      "end": 1707611463132,
       "order": "normal"
     },
     {
       "name": "vite:vue-jsx",
-      "start": 1707611014307,
-      "end": 1707611014307,
+      "start": 1707611463132,
+      "end": 1707611463132,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1707611014307,
-      "end": 1707611014307,
+      "start": 1707611463132,
+      "end": 1707611463132,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1707611014307,
-      "end": 1707611014307,
+      "start": 1707611463132,
+      "end": 1707611463132,
       "order": "normal"
     },
     {
       "name": "nuxt:chunk-error",
-      "start": 1707611014307,
-      "end": 1707611014307,
+      "start": 1707611463132,
+      "end": 1707611463132,
       "order": "normal"
     },
     {
       "name": "nuxt:components:imports",
-      "start": 1707611014307,
-      "end": 1707611014307,
+      "start": 1707611463132,
+      "end": 1707611463132,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1707611014307,
-      "end": 1707611014307,
+      "start": 1707611463132,
+      "end": 1707611463132,
       "order": "normal"
     },
     {
       "name": "ssr-styles",
-      "start": 1707611014307,
-      "end": 1707611014307,
+      "start": 1707611463132,
+      "end": 1707611463132,
       "order": "normal"
     },
     {
       "name": "vite:define",
-      "start": 1707611014307,
-      "end": 1707611014307,
+      "start": 1707611463132,
+      "end": 1707611463133,
       "order": "normal"
     },
     {
       "name": "vite:css-post",
-      "start": 1707611014307,
-      "end": 1707611014307,
+      "start": 1707611463133,
+      "end": 1707611463133,
       "order": "normal"
     },
     {
       "name": "vite:build-html",
-      "start": 1707611014307,
-      "end": 1707611014307,
+      "start": 1707611463133,
+      "end": 1707611463133,
       "order": "normal"
     },
     {
       "name": "vite:worker-import-meta-url",
-      "start": 1707611014307,
-      "end": 1707611014307,
+      "start": 1707611463133,
+      "end": 1707611463133,
       "order": "normal"
     },
     {
       "name": "vite:asset-import-meta-url",
-      "start": 1707611014307,
-      "end": 1707611014307,
+      "start": 1707611463133,
+      "end": 1707611463133,
       "order": "normal"
     },
     {
       "name": "commonjs",
-      "start": 1707611014307,
-      "end": 1707611014307,
+      "start": 1707611463133,
+      "end": 1707611463133,
       "order": "normal"
     },
     {
       "name": "vite:dynamic-import-vars",
-      "start": 1707611014307,
-      "end": 1707611014307,
+      "start": 1707611463133,
+      "end": 1707611463133,
       "order": "normal"
     },
     {
       "name": "vite:import-glob",
-      "start": 1707611014307,
-      "end": 1707611014307,
+      "start": 1707611463133,
+      "end": 1707611463133,
       "order": "normal"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1707611014307,
-      "end": 1707611014307,
+      "start": 1707611463133,
+      "end": 1707611463133,
       "order": "post"
     },
     {
       "name": "nuxt:imports-transform",
-      "start": 1707611014307,
-      "end": 1707611014307,
+      "start": 1707611463133,
+      "end": 1707611463133,
       "order": "post"
     },
     {
       "name": "unctx:transform",
-      "start": 1707611014307,
-      "end": 1707611014307,
+      "start": 1707611463133,
+      "end": 1707611463133,
       "order": "post"
     },
     {
       "name": "nuxt:runtime-paths-dep",
-      "start": 1707611014307,
-      "end": 1707611014307,
+      "start": 1707611463133,
+      "end": 1707611463133,
       "order": "post"
     },
     {
       "name": "nuxt:components-loader",
-      "start": 1707611014307,
-      "end": 1707611014307,
+      "start": 1707611463133,
+      "end": 1707611463133,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-composables:transform",
-      "start": 1707611014307,
-      "end": 1707611014307,
+      "start": 1707611463133,
+      "end": 1707611463133,
       "order": "post"
     },
     {
       "name": "vite:build-import-analysis",
-      "start": 1707611014307,
-      "end": 1707611014307,
+      "start": 1707611463133,
+      "end": 1707611463133,
       "order": "normal"
     },
     {
       "name": "vite:reporter",
-      "start": 1707611014307,
-      "end": 1707611014307,
+      "start": 1707611463133,
+      "end": 1707611463133,
       "order": "normal"
     }
   ]

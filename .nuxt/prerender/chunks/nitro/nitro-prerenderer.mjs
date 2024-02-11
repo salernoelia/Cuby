@@ -20,7 +20,7 @@ import { dirname, resolve } from 'file:///Users/eliasalerno/GitHub/Cuby/node_mod
 
 const inlineAppConfig = {
   "nuxt": {
-    "buildId": "d796a466-482b-45a4-ad59-1b726a1af8af"
+    "buildId": "3a9b33c3-6ddc-4208-9c71-380c89584a46"
   }
 };
 
@@ -30,7 +30,7 @@ const appConfig = defuFn(inlineAppConfig);
 
 const _inlineRuntimeConfig = {
   "app": {
-    "baseURL": "/",
+    "baseURL": "/cuby/",
     "buildAssetsDir": "/_nuxt/",
     "cdnURL": ""
   },
