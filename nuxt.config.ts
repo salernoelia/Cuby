@@ -6,6 +6,7 @@ export default defineNuxtConfig({
   generate: {
     nojekyll: true, //not working on this version
     fallback: "404.html",
+    dir: ".output",
   },
   router: {
     base: "/Cuby/",
