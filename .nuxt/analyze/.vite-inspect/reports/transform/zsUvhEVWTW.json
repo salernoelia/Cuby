@@ -4,194 +4,194 @@
     {
       "name": "vite:load-fallback",
       "result": "import array from \"./array.js\";\nimport constant from \"./constant.js\";\nimport curveLinear from \"./curve/linear.js\";\nimport line from \"./line.js\";\nimport {withPath} from \"./path.js\";\nimport {x as pointX, y as pointY} from \"./point.js\";\n\nexport default function(x0, y0, y1) {\n  var x1 = null,\n      defined = constant(true),\n      context = null,\n      curve = curveLinear,\n      output = null,\n      path = withPath(area);\n\n  x0 = typeof x0 === \"function\" ? x0 : (x0 === undefined) ? pointX : constant(+x0);\n  y0 = typeof y0 === \"function\" ? y0 : (y0 === undefined) ? constant(0) : constant(+y0);\n  y1 = typeof y1 === \"function\" ? y1 : (y1 === undefined) ? pointY : constant(+y1);\n\n  function area(data) {\n    var i,\n        j,\n        k,\n        n = (data = array(data)).length,\n        d,\n        defined0 = false,\n        buffer,\n        x0z = new Array(n),\n        y0z = new Array(n);\n\n    if (context == null) output = curve(buffer = path());\n\n    for (i = 0; i <= n; ++i) {\n      if (!(i < n && defined(d = data[i], i, data)) === defined0) {\n        if (defined0 = !defined0) {\n          j = i;\n          output.areaStart();\n          output.lineStart();\n        } else {\n          output.lineEnd();\n          output.lineStart();\n          for (k = i - 1; k >= j; --k) {\n            output.point(x0z[k], y0z[k]);\n          }\n          output.lineEnd();\n          output.areaEnd();\n        }\n      }\n      if (defined0) {\n        x0z[i] = +x0(d, i, data), y0z[i] = +y0(d, i, data);\n        output.point(x1 ? +x1(d, i, data) : x0z[i], y1 ? +y1(d, i, data) : y0z[i]);\n      }\n    }\n\n    if (buffer) return output = null, buffer + \"\" || null;\n  }\n\n  function arealine() {\n    return line().defined(defined).curve(curve).context(context);\n  }\n\n  area.x = function(_) {\n    return arguments.length ? (x0 = typeof _ === \"function\" ? _ : constant(+_), x1 = null, area) : x0;\n  };\n\n  area.x0 = function(_) {\n    return arguments.length ? (x0 = typeof _ === \"function\" ? _ : constant(+_), area) : x0;\n  };\n\n  area.x1 = function(_) {\n    return arguments.length ? (x1 = _ == null ? null : typeof _ === \"function\" ? _ : constant(+_), area) : x1;\n  };\n\n  area.y = function(_) {\n    return arguments.length ? (y0 = typeof _ === \"function\" ? _ : constant(+_), y1 = null, area) : y0;\n  };\n\n  area.y0 = function(_) {\n    return arguments.length ? (y0 = typeof _ === \"function\" ? _ : constant(+_), area) : y0;\n  };\n\n  area.y1 = function(_) {\n    return arguments.length ? (y1 = _ == null ? null : typeof _ === \"function\" ? _ : constant(+_), area) : y1;\n  };\n\n  area.lineX0 =\n  area.lineY0 = function() {\n    return arealine().x(x0).y(y0);\n  };\n\n  area.lineY1 = function() {\n    return arealine().x(x0).y(y1);\n  };\n\n  area.lineX1 = function() {\n    return arealine().x(x1).y(y0);\n  };\n\n  area.defined = function(_) {\n    return arguments.length ? (defined = typeof _ === \"function\" ? _ : constant(!!_), area) : defined;\n  };\n\n  area.curve = function(_) {\n    return arguments.length ? (curve = _, context != null && (output = curve(context)), area) : curve;\n  };\n\n  area.context = function(_) {\n    return arguments.length ? (_ == null ? context = output = null : output = curve(context = _), area) : context;\n  };\n\n  return area;\n}\n",
-      "start": 1707611463178,
-      "end": 1707611463192,
+      "start": 1707671529717,
+      "end": 1707671529726,
       "sourcemaps": null
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1707611463192,
-      "end": 1707611463192,
+      "start": 1707671529726,
+      "end": 1707671529726,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1707611463192,
-      "end": 1707611463192,
+      "start": 1707671529726,
+      "end": 1707671529726,
       "order": "pre"
     },
     {
       "name": "nuxt:client-fallback-auto-id",
-      "start": 1707611463192,
-      "end": 1707611463192,
+      "start": 1707671529726,
+      "end": 1707671529726,
       "order": "pre"
     },
     {
       "name": "vite:css",
-      "start": 1707611463192,
-      "end": 1707611463192,
+      "start": 1707671529726,
+      "end": 1707671529726,
       "order": "normal"
     },
     {
       "name": "vite:esbuild",
-      "start": 1707611463192,
-      "end": 1707611463192,
+      "start": 1707671529726,
+      "end": 1707671529726,
       "order": "normal"
     },
     {
       "name": "vite:json",
-      "start": 1707611463192,
-      "end": 1707611463192,
+      "start": 1707671529726,
+      "end": 1707671529726,
       "order": "normal"
     },
     {
       "name": "vite:worker",
-      "start": 1707611463192,
-      "end": 1707611463192,
+      "start": 1707671529726,
+      "end": 1707671529726,
       "order": "normal"
     },
     {
       "name": "vite:vue",
-      "start": 1707611463192,
-      "end": 1707611463192,
+      "start": 1707671529726,
+      "end": 1707671529726,
       "order": "normal"
     },
     {
       "name": "vite:vue-jsx",
-      "start": 1707611463192,
-      "end": 1707611463192,
+      "start": 1707671529726,
+      "end": 1707671529726,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1707611463192,
-      "end": 1707611463192,
+      "start": 1707671529727,
+      "end": 1707671529727,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1707611463192,
-      "end": 1707611463192,
+      "start": 1707671529727,
+      "end": 1707671529727,
       "order": "normal"
     },
     {
       "name": "nuxt:chunk-error",
-      "start": 1707611463192,
-      "end": 1707611463192,
+      "start": 1707671529727,
+      "end": 1707671529727,
       "order": "normal"
     },
     {
       "name": "nuxt:components:imports",
-      "start": 1707611463192,
-      "end": 1707611463192,
+      "start": 1707671529727,
+      "end": 1707671529727,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1707611463192,
-      "end": 1707611463192,
+      "start": 1707671529727,
+      "end": 1707671529727,
       "order": "normal"
     },
     {
       "name": "ssr-styles",
-      "start": 1707611463192,
-      "end": 1707611463192,
+      "start": 1707671529727,
+      "end": 1707671529727,
       "order": "normal"
     },
     {
       "name": "vite:define",
-      "start": 1707611463192,
-      "end": 1707611463192,
+      "start": 1707671529727,
+      "end": 1707671529727,
       "order": "normal"
     },
     {
       "name": "vite:css-post",
-      "start": 1707611463192,
-      "end": 1707611463192,
+      "start": 1707671529727,
+      "end": 1707671529727,
       "order": "normal"
     },
     {
       "name": "vite:build-html",
-      "start": 1707611463192,
-      "end": 1707611463192,
+      "start": 1707671529727,
+      "end": 1707671529727,
       "order": "normal"
     },
     {
       "name": "vite:worker-import-meta-url",
-      "start": 1707611463192,
-      "end": 1707611463192,
+      "start": 1707671529727,
+      "end": 1707671529727,
       "order": "normal"
     },
     {
       "name": "vite:asset-import-meta-url",
-      "start": 1707611463192,
-      "end": 1707611463192,
+      "start": 1707671529727,
+      "end": 1707671529727,
       "order": "normal"
     },
     {
       "name": "commonjs",
-      "start": 1707611463192,
-      "end": 1707611463193,
+      "start": 1707671529727,
+      "end": 1707671529727,
       "order": "normal"
     },
     {
       "name": "vite:dynamic-import-vars",
-      "start": 1707611463193,
-      "end": 1707611463193,
+      "start": 1707671529727,
+      "end": 1707671529727,
       "order": "normal"
     },
     {
       "name": "vite:import-glob",
-      "start": 1707611463193,
-      "end": 1707611463193,
+      "start": 1707671529727,
+      "end": 1707671529727,
       "order": "normal"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1707611463193,
-      "end": 1707611463193,
+      "start": 1707671529727,
+      "end": 1707671529727,
       "order": "post"
     },
     {
       "name": "nuxt:imports-transform",
-      "start": 1707611463193,
-      "end": 1707611463193,
+      "start": 1707671529727,
+      "end": 1707671529727,
       "order": "post"
     },
     {
       "name": "unctx:transform",
-      "start": 1707611463193,
-      "end": 1707611463193,
+      "start": 1707671529727,
+      "end": 1707671529727,
       "order": "post"
     },
     {
       "name": "nuxt:runtime-paths-dep",
-      "start": 1707611463193,
-      "end": 1707611463193,
+      "start": 1707671529727,
+      "end": 1707671529727,
       "order": "post"
     },
     {
       "name": "nuxt:components-loader",
-      "start": 1707611463193,
-      "end": 1707611463193,
+      "start": 1707671529727,
+      "end": 1707671529727,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-composables:transform",
-      "start": 1707611463193,
-      "end": 1707611463193,
+      "start": 1707671529727,
+      "end": 1707671529727,
       "order": "post"
     },
     {
       "name": "vite:build-import-analysis",
-      "start": 1707611463193,
-      "end": 1707611463193,
+      "start": 1707671529727,
+      "end": 1707671529727,
       "order": "normal"
     },
     {
       "name": "vite:reporter",
-      "start": 1707611463193,
-      "end": 1707611463193,
+      "start": 1707671529727,
+      "end": 1707671529727,
       "order": "normal"
     }
   ]

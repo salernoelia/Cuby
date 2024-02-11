@@ -4,194 +4,194 @@
     {
       "name": "vite:load-fallback",
       "result": "import {timeYear, timeMonth, timeWeek, timeDay, timeHour, timeMinute, timeSecond, timeTicks, timeTickInterval} from \"d3-time\";\nimport {timeFormat} from \"d3-time-format\";\nimport continuous, {copy} from \"./continuous.js\";\nimport {initRange} from \"./init.js\";\nimport nice from \"./nice.js\";\n\nfunction date(t) {\n  return new Date(t);\n}\n\nfunction number(t) {\n  return t instanceof Date ? +t : +new Date(+t);\n}\n\nexport function calendar(ticks, tickInterval, year, month, week, day, hour, minute, second, format) {\n  var scale = continuous(),\n      invert = scale.invert,\n      domain = scale.domain;\n\n  var formatMillisecond = format(\".%L\"),\n      formatSecond = format(\":%S\"),\n      formatMinute = format(\"%I:%M\"),\n      formatHour = format(\"%I %p\"),\n      formatDay = format(\"%a %d\"),\n      formatWeek = format(\"%b %d\"),\n      formatMonth = format(\"%B\"),\n      formatYear = format(\"%Y\");\n\n  function tickFormat(date) {\n    return (second(date) < date ? formatMillisecond\n        : minute(date) < date ? formatSecond\n        : hour(date) < date ? formatMinute\n        : day(date) < date ? formatHour\n        : month(date) < date ? (week(date) < date ? formatDay : formatWeek)\n        : year(date) < date ? formatMonth\n        : formatYear)(date);\n  }\n\n  scale.invert = function(y) {\n    return new Date(invert(y));\n  };\n\n  scale.domain = function(_) {\n    return arguments.length ? domain(Array.from(_, number)) : domain().map(date);\n  };\n\n  scale.ticks = function(interval) {\n    var d = domain();\n    return ticks(d[0], d[d.length - 1], interval == null ? 10 : interval);\n  };\n\n  scale.tickFormat = function(count, specifier) {\n    return specifier == null ? tickFormat : format(specifier);\n  };\n\n  scale.nice = function(interval) {\n    var d = domain();\n    if (!interval || typeof interval.range !== \"function\") interval = tickInterval(d[0], d[d.length - 1], interval == null ? 10 : interval);\n    return interval ? domain(nice(d, interval)) : scale;\n  };\n\n  scale.copy = function() {\n    return copy(scale, calendar(ticks, tickInterval, year, month, week, day, hour, minute, second, format));\n  };\n\n  return scale;\n}\n\nexport default function time() {\n  return initRange.apply(calendar(timeTicks, timeTickInterval, timeYear, timeMonth, timeWeek, timeDay, timeHour, timeMinute, timeSecond, timeFormat).domain([new Date(2000, 0, 1), new Date(2000, 0, 2)]), arguments);\n}\n",
-      "start": 1707611463120,
-      "end": 1707611463139,
+      "start": 1707671529680,
+      "end": 1707671529700,
       "sourcemaps": null
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1707611463139,
-      "end": 1707611463139,
+      "start": 1707671529700,
+      "end": 1707671529700,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1707611463139,
-      "end": 1707611463139,
+      "start": 1707671529700,
+      "end": 1707671529700,
       "order": "pre"
     },
     {
       "name": "nuxt:client-fallback-auto-id",
-      "start": 1707611463139,
-      "end": 1707611463139,
+      "start": 1707671529700,
+      "end": 1707671529700,
       "order": "pre"
     },
     {
       "name": "vite:css",
-      "start": 1707611463139,
-      "end": 1707611463139,
+      "start": 1707671529700,
+      "end": 1707671529700,
       "order": "normal"
     },
     {
       "name": "vite:esbuild",
-      "start": 1707611463139,
-      "end": 1707611463139,
+      "start": 1707671529700,
+      "end": 1707671529700,
       "order": "normal"
     },
     {
       "name": "vite:json",
-      "start": 1707611463139,
-      "end": 1707611463139,
+      "start": 1707671529700,
+      "end": 1707671529700,
       "order": "normal"
     },
     {
       "name": "vite:worker",
-      "start": 1707611463139,
-      "end": 1707611463139,
+      "start": 1707671529700,
+      "end": 1707671529700,
       "order": "normal"
     },
     {
       "name": "vite:vue",
-      "start": 1707611463139,
-      "end": 1707611463139,
+      "start": 1707671529700,
+      "end": 1707671529700,
       "order": "normal"
     },
     {
       "name": "vite:vue-jsx",
-      "start": 1707611463139,
-      "end": 1707611463139,
+      "start": 1707671529700,
+      "end": 1707671529700,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1707611463139,
-      "end": 1707611463139,
+      "start": 1707671529700,
+      "end": 1707671529700,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1707611463139,
-      "end": 1707611463139,
+      "start": 1707671529700,
+      "end": 1707671529700,
       "order": "normal"
     },
     {
       "name": "nuxt:chunk-error",
-      "start": 1707611463139,
-      "end": 1707611463139,
+      "start": 1707671529700,
+      "end": 1707671529700,
       "order": "normal"
     },
     {
       "name": "nuxt:components:imports",
-      "start": 1707611463139,
-      "end": 1707611463139,
+      "start": 1707671529700,
+      "end": 1707671529700,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1707611463139,
-      "end": 1707611463139,
+      "start": 1707671529700,
+      "end": 1707671529700,
       "order": "normal"
     },
     {
       "name": "ssr-styles",
-      "start": 1707611463139,
-      "end": 1707611463139,
+      "start": 1707671529700,
+      "end": 1707671529700,
       "order": "normal"
     },
     {
       "name": "vite:define",
-      "start": 1707611463139,
-      "end": 1707611463139,
+      "start": 1707671529700,
+      "end": 1707671529700,
       "order": "normal"
     },
     {
       "name": "vite:css-post",
-      "start": 1707611463139,
-      "end": 1707611463139,
+      "start": 1707671529700,
+      "end": 1707671529700,
       "order": "normal"
     },
     {
       "name": "vite:build-html",
-      "start": 1707611463139,
-      "end": 1707611463139,
+      "start": 1707671529700,
+      "end": 1707671529700,
       "order": "normal"
     },
     {
       "name": "vite:worker-import-meta-url",
-      "start": 1707611463139,
-      "end": 1707611463139,
+      "start": 1707671529700,
+      "end": 1707671529700,
       "order": "normal"
     },
     {
       "name": "vite:asset-import-meta-url",
-      "start": 1707611463139,
-      "end": 1707611463139,
+      "start": 1707671529700,
+      "end": 1707671529700,
       "order": "normal"
     },
     {
       "name": "commonjs",
-      "start": 1707611463139,
-      "end": 1707611463139,
+      "start": 1707671529700,
+      "end": 1707671529700,
       "order": "normal"
     },
     {
       "name": "vite:dynamic-import-vars",
-      "start": 1707611463139,
-      "end": 1707611463139,
+      "start": 1707671529700,
+      "end": 1707671529700,
       "order": "normal"
     },
     {
       "name": "vite:import-glob",
-      "start": 1707611463139,
-      "end": 1707611463139,
+      "start": 1707671529700,
+      "end": 1707671529700,
       "order": "normal"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1707611463139,
-      "end": 1707611463139,
+      "start": 1707671529700,
+      "end": 1707671529700,
       "order": "post"
     },
     {
       "name": "nuxt:imports-transform",
-      "start": 1707611463140,
-      "end": 1707611463140,
+      "start": 1707671529700,
+      "end": 1707671529700,
       "order": "post"
     },
     {
       "name": "unctx:transform",
-      "start": 1707611463140,
-      "end": 1707611463140,
+      "start": 1707671529700,
+      "end": 1707671529700,
       "order": "post"
     },
     {
       "name": "nuxt:runtime-paths-dep",
-      "start": 1707611463140,
-      "end": 1707611463140,
+      "start": 1707671529700,
+      "end": 1707671529700,
       "order": "post"
     },
     {
       "name": "nuxt:components-loader",
-      "start": 1707611463140,
-      "end": 1707611463140,
+      "start": 1707671529700,
+      "end": 1707671529700,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-composables:transform",
-      "start": 1707611463140,
-      "end": 1707611463140,
+      "start": 1707671529700,
+      "end": 1707671529700,
       "order": "post"
     },
     {
       "name": "vite:build-import-analysis",
-      "start": 1707611463140,
-      "end": 1707611463140,
+      "start": 1707671529700,
+      "end": 1707671529700,
       "order": "normal"
     },
     {
       "name": "vite:reporter",
-      "start": 1707611463140,
-      "end": 1707611463140,
+      "start": 1707671529700,
+      "end": 1707671529700,
       "order": "normal"
     }
   ]
