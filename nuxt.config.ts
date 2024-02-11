@@ -7,6 +7,8 @@ export default defineNuxtConfig({
     fallback: "404.html",
     dir: ".output",
   },
-
+  router: {
+    base: "/Cuby/",
+  },
   target: "static", // and static, nuxt generates a SPA
 });

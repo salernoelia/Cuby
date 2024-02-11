@@ -4,194 +4,194 @@
     {
       "name": "vite:load-fallback",
       "result": "import treemapDice from \"./dice.js\";\nimport treemapSlice from \"./slice.js\";\n\nexport var phi = (1 + Math.sqrt(5)) / 2;\n\nexport function squarifyRatio(ratio, parent, x0, y0, x1, y1) {\n  var rows = [],\n      nodes = parent.children,\n      row,\n      nodeValue,\n      i0 = 0,\n      i1 = 0,\n      n = nodes.length,\n      dx, dy,\n      value = parent.value,\n      sumValue,\n      minValue,\n      maxValue,\n      newRatio,\n      minRatio,\n      alpha,\n      beta;\n\n  while (i0 < n) {\n    dx = x1 - x0, dy = y1 - y0;\n\n    // Find the next non-empty node.\n    do sumValue = nodes[i1++].value; while (!sumValue && i1 < n);\n    minValue = maxValue = sumValue;\n    alpha = Math.max(dy / dx, dx / dy) / (value * ratio);\n    beta = sumValue * sumValue * alpha;\n    minRatio = Math.max(maxValue / beta, beta / minValue);\n\n    // Keep adding nodes while the aspect ratio maintains or improves.\n    for (; i1 < n; ++i1) {\n      sumValue += nodeValue = nodes[i1].value;\n      if (nodeValue < minValue) minValue = nodeValue;\n      if (nodeValue > maxValue) maxValue = nodeValue;\n      beta = sumValue * sumValue * alpha;\n      newRatio = Math.max(maxValue / beta, beta / minValue);\n      if (newRatio > minRatio) { sumValue -= nodeValue; break; }\n      minRatio = newRatio;\n    }\n\n    // Position and record the row orientation.\n    rows.push(row = {value: sumValue, dice: dx < dy, children: nodes.slice(i0, i1)});\n    if (row.dice) treemapDice(row, x0, y0, x1, value ? y0 += dy * sumValue / value : y1);\n    else treemapSlice(row, x0, y0, value ? x0 += dx * sumValue / value : x1, y1);\n    value -= sumValue, i0 = i1;\n  }\n\n  return rows;\n}\n\nexport default (function custom(ratio) {\n\n  function squarify(parent, x0, y0, x1, y1) {\n    squarifyRatio(ratio, parent, x0, y0, x1, y1);\n  }\n\n  squarify.ratio = function(x) {\n    return custom((x = +x) > 1 ? x : 1);\n  };\n\n  return squarify;\n})(phi);\n",
-      "start": 1707674269274,
-      "end": 1707674269292,
+      "start": 1707675067493,
+      "end": 1707675067515,
       "sourcemaps": null
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1707674269292,
-      "end": 1707674269292,
+      "start": 1707675067515,
+      "end": 1707675067515,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1707674269292,
-      "end": 1707674269292,
+      "start": 1707675067515,
+      "end": 1707675067515,
       "order": "pre"
     },
     {
       "name": "nuxt:client-fallback-auto-id",
-      "start": 1707674269292,
-      "end": 1707674269292,
+      "start": 1707675067515,
+      "end": 1707675067515,
       "order": "pre"
     },
     {
       "name": "vite:css",
-      "start": 1707674269292,
-      "end": 1707674269292,
+      "start": 1707675067515,
+      "end": 1707675067515,
       "order": "normal"
     },
     {
       "name": "vite:esbuild",
-      "start": 1707674269292,
-      "end": 1707674269292,
+      "start": 1707675067515,
+      "end": 1707675067515,
       "order": "normal"
     },
     {
       "name": "vite:json",
-      "start": 1707674269292,
-      "end": 1707674269292,
+      "start": 1707675067515,
+      "end": 1707675067515,
       "order": "normal"
     },
     {
       "name": "vite:worker",
-      "start": 1707674269292,
-      "end": 1707674269292,
+      "start": 1707675067515,
+      "end": 1707675067515,
       "order": "normal"
     },
     {
       "name": "vite:vue",
-      "start": 1707674269292,
-      "end": 1707674269292,
+      "start": 1707675067515,
+      "end": 1707675067515,
       "order": "normal"
     },
     {
       "name": "vite:vue-jsx",
-      "start": 1707674269292,
-      "end": 1707674269292,
+      "start": 1707675067515,
+      "end": 1707675067515,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1707674269292,
-      "end": 1707674269292,
+      "start": 1707675067515,
+      "end": 1707675067515,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1707674269292,
-      "end": 1707674269292,
+      "start": 1707675067515,
+      "end": 1707675067515,
       "order": "normal"
     },
     {
       "name": "nuxt:chunk-error",
-      "start": 1707674269292,
-      "end": 1707674269292,
+      "start": 1707675067515,
+      "end": 1707675067515,
       "order": "normal"
     },
     {
       "name": "nuxt:components:imports",
-      "start": 1707674269292,
-      "end": 1707674269292,
+      "start": 1707675067515,
+      "end": 1707675067515,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1707674269292,
-      "end": 1707674269292,
+      "start": 1707675067515,
+      "end": 1707675067515,
       "order": "normal"
     },
     {
       "name": "ssr-styles",
-      "start": 1707674269292,
-      "end": 1707674269292,
+      "start": 1707675067515,
+      "end": 1707675067515,
       "order": "normal"
     },
     {
       "name": "vite:define",
-      "start": 1707674269292,
-      "end": 1707674269292,
+      "start": 1707675067515,
+      "end": 1707675067515,
       "order": "normal"
     },
     {
       "name": "vite:css-post",
-      "start": 1707674269292,
-      "end": 1707674269292,
+      "start": 1707675067515,
+      "end": 1707675067515,
       "order": "normal"
     },
     {
       "name": "vite:build-html",
-      "start": 1707674269292,
-      "end": 1707674269292,
+      "start": 1707675067515,
+      "end": 1707675067515,
       "order": "normal"
     },
     {
       "name": "vite:worker-import-meta-url",
-      "start": 1707674269292,
-      "end": 1707674269292,
+      "start": 1707675067515,
+      "end": 1707675067515,
       "order": "normal"
     },
     {
       "name": "vite:asset-import-meta-url",
-      "start": 1707674269292,
-      "end": 1707674269292,
+      "start": 1707675067515,
+      "end": 1707675067515,
       "order": "normal"
     },
     {
       "name": "commonjs",
-      "start": 1707674269292,
-      "end": 1707674269292,
+      "start": 1707675067515,
+      "end": 1707675067516,
       "order": "normal"
     },
     {
       "name": "vite:dynamic-import-vars",
-      "start": 1707674269292,
-      "end": 1707674269292,
+      "start": 1707675067516,
+      "end": 1707675067516,
       "order": "normal"
     },
     {
       "name": "vite:import-glob",
-      "start": 1707674269292,
-      "end": 1707674269292,
+      "start": 1707675067516,
+      "end": 1707675067516,
       "order": "normal"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1707674269292,
-      "end": 1707674269292,
+      "start": 1707675067516,
+      "end": 1707675067516,
       "order": "post"
     },
     {
       "name": "nuxt:imports-transform",
-      "start": 1707674269292,
-      "end": 1707674269292,
+      "start": 1707675067516,
+      "end": 1707675067516,
       "order": "post"
     },
     {
       "name": "unctx:transform",
-      "start": 1707674269292,
-      "end": 1707674269292,
+      "start": 1707675067516,
+      "end": 1707675067516,
       "order": "post"
     },
     {
       "name": "nuxt:runtime-paths-dep",
-      "start": 1707674269292,
-      "end": 1707674269292,
+      "start": 1707675067516,
+      "end": 1707675067516,
       "order": "post"
     },
     {
       "name": "nuxt:components-loader",
-      "start": 1707674269292,
-      "end": 1707674269292,
+      "start": 1707675067516,
+      "end": 1707675067516,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-composables:transform",
-      "start": 1707674269292,
-      "end": 1707674269292,
+      "start": 1707675067516,
+      "end": 1707675067516,
       "order": "post"
     },
     {
       "name": "vite:build-import-analysis",
-      "start": 1707674269292,
-      "end": 1707674269292,
+      "start": 1707675067516,
+      "end": 1707675067516,
       "order": "normal"
     },
     {
       "name": "vite:reporter",
-      "start": 1707674269292,
-      "end": 1707674269292,
+      "start": 1707675067516,
+      "end": 1707675067516,
       "order": "normal"
     }
   ]

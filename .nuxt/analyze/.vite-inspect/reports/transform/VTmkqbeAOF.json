@@ -4,57 +4,57 @@
     {
       "name": "vite:load-fallback",
       "result": "<template>\n  <div>\n    <div class=\"controls\">\n      <div class=\"storageControls\">\n        <label\n          class=\"storage-button\"\n          :class=\"{ active: selectedStorage === 'currentStorage' }\"\n        >\n          <input\n            class=\"storage-radio\"\n            type=\"radio\"\n            name=\"selectedStorage\"\n            value=\"currentStorage\"\n            v-model=\"selectedStorage\"\n          />\n          Current Storage\n        </label>\n\n        <label\n          class=\"storage-button\"\n          :class=\"{ active: selectedStorage === 'potentialStorage' }\"\n        >\n          <input\n            class=\"storage-radio\"\n            type=\"radio\"\n            name=\"selectedStorage\"\n            value=\"potentialStorage\"\n            v-model=\"selectedStorage\"\n          />\n          Potential Storage\n        </label>\n      </div>\n      <div class=\"filterControls\">\n        <button\n          v-for=\"habitat in data\"\n          :key=\"habitat.Habitat_name\"\n          :style=\"{\n            backgroundColor: isHabitatSelected(habitat.Habitat_name)\n              ? habitat.colorAbove\n              : 'white',\n          }\"\n          :class=\"[\n            'filter-button',\n            { 'filter-button-active': isHabitatSelected(habitat.Habitat_name) },\n          ]\"\n          @click=\"filterData(habitat.Habitat_name)\"\n        >\n          {{ habitat.Habitat_name }}\n        </button>\n      </div>\n      <div class=\"infoControls\">\n        <button @click=\"popup()\" class=\"infoButton\">About</button>\n      </div>\n      <div class=\"popupContainer\" v-if=\"popupBol\">\n        <div class=\"popup\">\n          <div class=\"popup-content\">\n            <div class=\"popup-header\">\n              <button @click=\"popup()\" class=\"popup-close\">Close</button>\n              <h1>Cuby</h1>\n            </div>\n            <p>\n              is a 3D visualization of the carbon storage of different biomes.\n            </p>\n            <p class=\"popup-title\"><br />Visualization</p>\n            <ul>\n              <li>Jin Hyejin</li>\n              <li>Basil Egger</li>\n              <li>Irina Lezaic</li>\n              <li>Elia Salerno</li>\n            </ul>\n            <p class=\"popup-title\"><br />Development</p>\n            <ul>\n              <li>Elia Salerno</li>\n            </ul>\n            <p class=\"popup-title\"><br />Data</p>\n            <ul>\n              <li>ETH Crowther Lab</li>\n            </ul>\n          </div>\n        </div>\n      </div>\n    </div>\n    <div class=\"canvas\" ref=\"canvas\"></div>\n  </div>\n</template>\n\n<script setup>\nimport { ref, onMounted, watch } from \"vue\";\nimport * as d3 from \"d3\";\nimport * as THREE from \"three\";\nimport { OrbitControls } from \"three/examples/jsm/controls/OrbitControls.js\";\nimport data from \"~/static/data/data.json\";\nimport _ from \"lodash\";\nconst cloneDeep = _.cloneDeep;\n\nconst filteredData = ref(cloneDeep(data));\nconst filterData = (habitatName) => {\n  const index = filteredData.value.findIndex(\n    (item) => item.Habitat_name === habitatName\n  );\n  if (index === -1) {\n    const habitat = data.find((item) => item.Habitat_name === habitatName);\n    if (habitat) {\n      filteredData.value.push(habitat);\n    }\n  } else {\n    filteredData.value.splice(index, 1);\n  }\n  // console.log(filteredData.value);\n  resetView();\n};\n\nconst isHabitatSelected = (habitatName) => {\n  return filteredData.value.some((item) => item.Habitat_name === habitatName);\n};\n\nlet zIndex = 2;\n\nconst canvas = ref(null);\nlet selectedStorage = ref(\"currentStorage\");\nlet rectangles = [];\nlet nodes = [];\nlet popupBol = ref(false);\n\nlet rectAbove,\n  rectBelow,\n  camera,\n  scene,\n  renderer,\n  animate,\n  storageOptionSelected,\n  geometryPositive,\n  geometryNegative,\n  resetView,\n  color,\n  colorBelow,\n  controls;\n\nlet meshMap = new Map(); // Map to store references to meshes\n\nwatch(selectedStorage, () => {\n  resetView();\n});\n\nconst popup = () => {\n  popupBol.value = !popupBol.value;\n  // console.log(popupBol);\n};\n\nresetView = () => {\n  geometryPositive.dispose();\n  geometryNegative.dispose();\n\n  scene.children.length = 0;\n\n  createTreemap();\n  color();\n  filteredData.value.forEach((item) => {\n    const meshes = meshMap.get(item);\n    if (meshes) {\n      scene.remove(meshes.meshPositive);\n      scene.remove(meshes.meshNegative);\n      meshMap.delete(item);\n    }\n  });\n};\n\nonMounted(async () => {\n  initCamera();\n  createTreemap();\n});\n\nconst createTreemap = async () => {\n  const margin = { top: 10, right: 10, bottom: 10, left: 10 };\n  const width = 1000 - margin.left - margin.right;\n  const height = 1000 - margin.top - margin.bottom;\n\n  await new Promise((resolve) => {\n    const checkElement = () => {\n      if (canvas.value) {\n        resolve();\n      } else {\n        requestAnimationFrame(checkElement);\n      }\n    };\n    checkElement();\n  });\n\n  color = () => {\n    return d3.scaleOrdinal(d3.schemeCategory10);\n  };\n\n  const svg = d3\n    .select(canvas.value)\n    .attr(\"width\", width + margin.left + margin.right)\n    .attr(\"height\", height + margin.top + margin.bottom)\n    .append(\"g\")\n    .attr(\"transform\", \"translate(\" + margin.left + \",\" + margin.top + \")\");\n\n  try {\n    const root = d3\n      .hierarchy({ children: filteredData.value })\n      .sum((d) => +d.Area_Habitat)\n      .sort((a, b) => b.Area_Habitat - a.Area_Habitat); // Sort by highest to lowest value;\n\n    d3.treemap().size([width, height]).padding(0)(root);\n\n    const rects = svg\n      .selectAll(\"rect\")\n      .data(root.leaves())\n      .enter()\n      .append(\"rect\")\n      .style(\"fill\", (d) => color(d.data.Habitat_name))\n      .attr(\"x\", (d) => d.x0)\n      .attr(\"y\", (d) => d.y0)\n      .attr(\"width\", (d) => d.x1 - d.x0)\n      .attr(\"height\", (d) => d.y1 - d.y0);\n\n    rectangles = svg.selectAll(\"rect\").nodes();\n\n    nodes = root.descendants();\n\n    create3D(rectangles, nodes);\n    return { rectangles, nodes };\n  } catch (error) {\n    console.error(\"Error loading JSON data:\", error);\n  }\n};\n\nconst initCamera = () => {\n  const width = window.innerWidth / 2;\n  const height = window.innerHeight / 2;\n  const left = -width / 2;\n  const right = width / 2;\n  const top = height / 2;\n  const bottom = -height / 2;\n  const near = 0.1;\n  const far = 50000;\n\n  // Create the orthographic camera\n  camera = new THREE.OrthographicCamera(left, right, top, bottom, near, far);\n\n  // Set the camera position to match the perspective camera's position\n  camera.position.set(\n    -1488.697359746549,\n    1492.3078575429806,\n    1927.4453334372429\n  );\n\n  // Set the camera rotation to match the perspective camera's rotation\n  camera.rotation.set(\n    -0.6588359167815547,\n    -0.5482614334642727,\n    -0.3835525580843654\n  );\n\n  // Set the zoom level of the camera\n  camera.zoom = 0.12208654873684852;\n\n  // Ensure the camera is looking at the center of the scene\n  camera.lookAt(new THREE.Vector3(0, 0, 0));\n\n  // Update the camera's projection matrix with the new zoom level\n  camera.updateProjectionMatrix();\n};\n\nconst create3D = (rectangles, nodes) => {\n  scene = new THREE.Scene();\n\n  renderer = new THREE.WebGLRenderer({ antialias: true });\n  renderer.setPixelRatio(window.devicePixelRatio);\n  renderer.setSize(window.innerWidth, window.innerHeight);\n\n  zIndex++;\n  canvas.value.appendChild(renderer.domElement);\n  renderer.domElement.style.position = \"absolute\";\n  renderer.domElement.style.zIndex = zIndex;\n\n  // const axesHelper = new THREE.AxesHelper(100);\n  // scene.add(axesHelper);\n  scene.background = new THREE.Color(0xfafafa);\n\n  rectangles.forEach((rectangle, index) => {\n    let rectWidth = parseFloat(rectangle.getAttribute(\"width\"));\n    let rectHeight = parseFloat(rectangle.getAttribute(\"height\"));\n\n    switch (selectedStorage.value) {\n      case \"currentStorage\":\n        rectAbove =\n          filteredData.value[index].Above_ground_current_storage / 1000000000;\n        rectBelow =\n          filteredData.value[index].Below_ground_current_storage / 1000000000;\n        break;\n      case \"potentialStorage\":\n        rectAbove =\n          filteredData.value[index].Above_ground_potential_storage / 1000000000;\n        rectBelow =\n          filteredData.value[index].Below_ground_potential_storage / 1000000000;\n        break;\n    }\n\n    if (\n      rectAbove === null ||\n      rectAbove === undefined ||\n      rectAbove === 0 ||\n      isNaN(rectBelow)\n    ) {\n      rectAbove = 1;\n    }\n\n    if (\n      rectBelow === null ||\n      rectBelow === undefined ||\n      rectBelow === 0 ||\n      isNaN(rectBelow)\n    ) {\n      rectBelow = -1;\n    }\n\n    geometryPositive = new THREE.ExtrudeGeometry(\n      new THREE.Shape([\n        new THREE.Vector2(0, 0),\n        new THREE.Vector2(rectWidth, 0),\n        new THREE.Vector2(rectWidth, rectHeight),\n        new THREE.Vector2(0, rectHeight),\n        new THREE.Vector2(0, 0),\n      ]),\n      { depth: rectAbove, bevelEnabled: false }\n    );\n\n    geometryNegative = new THREE.ExtrudeGeometry(\n      new THREE.Shape([\n        new THREE.Vector2(0, 0),\n        new THREE.Vector2(rectWidth, 0),\n        new THREE.Vector2(rectWidth, rectHeight),\n        new THREE.Vector2(0, rectHeight),\n        new THREE.Vector2(0, 0),\n      ]),\n      { depth: Math.abs(rectBelow), bevelEnabled: false }\n    );\n\n    const centroid = new THREE.Vector3();\n\n    rectangles.forEach((rectangle) => {\n      let posX = parseFloat(rectangle.getAttribute(\"x\"));\n      let posY = parseFloat(rectangle.getAttribute(\"y\"));\n      centroid.x += posX;\n      centroid.y += posY;\n    });\n    centroid.divideScalar(rectangles.length);\n\n    const materialAbove = new THREE.MeshPhongMaterial({\n      color: filteredData.value[index].colorAbove,\n    });\n    const materialBelow = new THREE.MeshPhongMaterial({\n      color: filteredData.value[index].colorBelow,\n    });\n    const meshPositive = new THREE.Mesh(geometryPositive, materialAbove);\n    const meshNegative = new THREE.Mesh(geometryNegative, materialBelow);\n\n    const posX = parseFloat(rectangle.getAttribute(\"x\")) - centroid.x;\n    const posY = parseFloat(rectangle.getAttribute(\"y\")) - centroid.y;\n\n    meshPositive.position.set(posX, posY, 0);\n    meshNegative.position.set(posX, posY, -Math.abs(rectBelow));\n\n    const existingMeshPositive = scene.getObjectByName(`meshPositive${index}`);\n    const existingMeshNegative = scene.getObjectByName(`meshNegative${index}`);\n\n    if (existingMeshPositive) scene.remove(existingMeshPositive);\n    if (existingMeshNegative) scene.remove(existingMeshNegative);\n\n    meshPositive.name = `meshPositive${index}`;\n    meshNegative.name = `meshNegative${index}`;\n\n    scene.add(meshPositive);\n    scene.add(meshNegative);\n    meshMap.set(filteredData.value[index], { meshPositive, meshNegative });\n  });\n\n  const ambientLight = new THREE.AmbientLight(0xffffff, 1);\n  scene.add(ambientLight);\n\n  const directionalLight = new THREE.DirectionalLight(0xffffff, 1.5);\n  directionalLight.position.set(1, 1, 1).normalize();\n  scene.add(directionalLight);\n\n  scene.rotation.z = 0;\n  scene.rotation.x = -Math.PI / 2;\n  scene.rotation.y = 0;\n\n  controls = new OrbitControls(camera, renderer.domElement);\n\n  controls.enableDamping = true;\n  controls.dampingFactor = 0.25;\n  controls.screenSpacePanning = false;\n  controls.maxDistance = 15000;\n\n  controls.minPolarAngle = 0; // 0 degrees\n  controls.maxPolarAngle = Math.PI; // 90 degrees\n\n  // controls.minAzimuthAngle = -Infinity;\n  // controls.maxAzimuthAngle = Infinity;\n\n  animate = function () {\n    requestAnimationFrame(animate);\n    renderer.render(scene, camera);\n    controls.update();\n  };\n\n  animate();\n\n  /*console.log(\n    camera.position.x.toString(),\n    camera.position.y.toString(),\n    camera.position.z.toString(),\n    camera.rotation.x.toString(),\n    camera.rotation.y.toString(),\n    camera.rotation.z.toString(),\n    camera.zoom.toString()\n  );*/\n};\n</script>\n\n<style scoped>\nbody {\n  top: 0;\n  overflow: hidden;\n  overflow-y: hidden;\n  overflow-x: hidden;\n}\n* {\n  margin: 0;\n  padding: 0;\n  box-sizing: border-box;\n  font-family: Arial, Helvetica, sans-serif;\n  overflow: hidden; /* Hide scrollbars */\n}\n.canvas {\n  position: fixed;\n  width: 100vw;\n  height: 100vh;\n  z-index: 2;\n  top: -8px;\n  left: -8px;\n  margin: none;\n  padding: none;\n  position: absolute;\n}\n\n.controls {\n  width: 100%;\n  padding: 40px;\n  position: fixed; /* Fixed position */\n  bottom: 0;\n  left: 0; /* Ensure it's aligned to the left */\n  z-index: 3;\n  display: flex;\n  flex-direction: row;\n  align-items: flex-end; /* Changed to flex-end */\n  justify-content: space-between;\n}\n\n.storageControls {\n  display: flex;\n  flex-direction: column;\n  gap: 10px;\n  position: relative;\n  left: 0;\n  z-index: 3;\n}\n\n.storage-button {\n  width: 150px;\n  height: 35px;\n  padding: 10px;\n  background-color: white;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  text-align: center;\n  border: 2px solid #000;\n  transition: background-color 0.3s ease-in-out; /* Add transition property */\n}\n\n.active {\n  background-color: #ccc; /* Change the background color for active button */\n}\n\n.storage-radio {\n  position: absolute; /* Position the radio button */\n  opacity: 0; /* Make the radio button transparent */\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n}\n.filterControls {\n  position: relative;\n  width: 50%;\n  left: 0;\n  z-index: 3;\n  display: flex;\n  flex-direction: row;\n  justify-content: flex-start; /* Changed to flex-start */\n  align-items: flex-start; /* Changed to flex-start */\n  flex-wrap: wrap; /* Added */\n  gap: 10px; /* Added */\n}\n\n.filter-button {\n  display: flex;\n  height: 35px;\n  font-size: 16px;\n  padding: 10px;\n  align-items: center;\n  border: 2px solid #000;\n  transition: background-color 0.3s ease-in-out; /* Add transition property */\n}\n\n.filter-button-active {\n  background-color: #ccc; /* Change the background color for active buttons */\n}\n\n@media (max-width: 50%) {\n  .filterControls {\n    justify-content: center;\n  }\n}\n\n.infoControls {\n  position: relative;\n  right: 0;\n  z-index: 3;\n  display: flex;\n  flex-direction: row;\n  justify-content: flex-end; /* Changed to flex-end */\n\n  gap: 10px; /* Added */\n}\n\n.infoButton {\n  height: 35px;\n  padding: 10px;\n  background-color: white;\n  display: flex;\n  font-size: 16px;\n  justify-content: center;\n  align-items: center;\n  text-align: center;\n  border: 2px solid #000;\n  transition: background-color 0.3s ease-in-out; /* Add transition property */\n}\n\n.popupContainer {\n  z-index: 5;\n  position: fixed;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100%;\n  background-color: rgba(0, 0, 0, 0.4); /* Adjust opacity here */\n  display: flex;\n  justify-content: center; /* Center horizontally */\n  align-items: center; /* Center vertically */\n}\n\n.popup {\n  padding: 25px;\n  z-index: 6;\n  width: 300px;\n  height: 400px;\n  border: solid 2px black;\n  background-color: white;\n}\n\n.popup-header {\n  display: flex;\n  flex-direction: row-reverse;\n  justify-content: space-between;\n  align-items: center;\n  padding-bottom: 20px;\n  width: 100%;\n  background-color: white;\n}\n\n.popup-close {\n  background-color: white;\n  border: none;\n  font-size: 16px;\n  cursor: pointer;\n}\n\n.popup-title {\n  font-weight: bold;\n}\n</style>\n",
-      "start": 1707674268258,
-      "end": 1707674268341,
+      "start": 1707675066504,
+      "end": 1707675066578,
       "sourcemaps": null
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1707674268341,
-      "end": 1707674268341,
+      "start": 1707675066578,
+      "end": 1707675066578,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1707674268341,
-      "end": 1707674268341,
+      "start": 1707675066578,
+      "end": 1707675066578,
       "order": "pre"
     },
     {
       "name": "nuxt:client-fallback-auto-id",
-      "start": 1707674268341,
-      "end": 1707674268341,
+      "start": 1707675066578,
+      "end": 1707675066578,
       "order": "pre"
     },
     {
       "name": "vite:css",
-      "start": 1707674268341,
-      "end": 1707674268341,
+      "start": 1707675066578,
+      "end": 1707675066578,
       "order": "normal"
     },
     {
       "name": "vite:esbuild",
-      "start": 1707674268341,
-      "end": 1707674268341,
+      "start": 1707675066578,
+      "end": 1707675066578,
       "order": "normal"
     },
     {
       "name": "vite:json",
-      "start": 1707674268341,
-      "end": 1707674268341,
+      "start": 1707675066578,
+      "end": 1707675066578,
       "order": "normal"
     },
     {
       "name": "vite:worker",
-      "start": 1707674268341,
-      "end": 1707674268341,
+      "start": 1707675066578,
+      "end": 1707675066578,
       "order": "normal"
     },
     {
       "name": "vite:vue",
       "result": "import { unref as _unref, isRef as _isRef, vModelRadio as _vModelRadio, createElementVNode as _createElementVNode, withDirectives as _withDirectives, createTextVNode as _createTextVNode, normalizeClass as _normalizeClass, renderList as _renderList, Fragment as _Fragment, openBlock as _openBlock, createElementBlock as _createElementBlock, toDisplayString as _toDisplayString, normalizeStyle as _normalizeStyle, createCommentVNode as _createCommentVNode, createStaticVNode as _createStaticVNode, pushScopeId as _pushScopeId, popScopeId as _popScopeId } from \"vue\"\n\nconst _withScopeId = n => (_pushScopeId(\"data-v-88bf0f9f\"),n=n(),_popScopeId(),n)\nconst _hoisted_1 = { class: \"controls\" }\nconst _hoisted_2 = { class: \"storageControls\" }\nconst _hoisted_3 = { class: \"filterControls\" }\nconst _hoisted_4 = [\"onClick\"]\nconst _hoisted_5 = { class: \"infoControls\" }\nconst _hoisted_6 = {\n  key: 0,\n  class: \"popupContainer\"\n}\nconst _hoisted_7 = { class: \"popup\" }\nconst _hoisted_8 = { class: \"popup-content\" }\nconst _hoisted_9 = { class: \"popup-header\" }\nconst _hoisted_10 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/_createElementVNode(\"h1\", null, \"Cuby\", -1))\nconst _hoisted_11 = /*#__PURE__*/_createStaticVNode(\"<p data-v-88bf0f9f> is a 3D visualization of the carbon storage of different biomes. </p><p class=\\\"popup-title\\\" data-v-88bf0f9f><br data-v-88bf0f9f>Visualization</p><ul data-v-88bf0f9f><li data-v-88bf0f9f>Jin Hyejin</li><li data-v-88bf0f9f>Basil Egger</li><li data-v-88bf0f9f>Irina Lezaic</li><li data-v-88bf0f9f>Elia Salerno</li></ul><p class=\\\"popup-title\\\" data-v-88bf0f9f><br data-v-88bf0f9f>Development</p><ul data-v-88bf0f9f><li data-v-88bf0f9f>Elia Salerno</li></ul><p class=\\\"popup-title\\\" data-v-88bf0f9f><br data-v-88bf0f9f>Data</p><ul data-v-88bf0f9f><li data-v-88bf0f9f>ETH Crowther Lab</li></ul>\", 7)\n\nimport { ref, onMounted, watch } from \"vue\";\nimport * as d3 from \"d3\";\nimport * as THREE from \"three\";\nimport { OrbitControls } from \"three/examples/jsm/controls/OrbitControls.js\";\nimport data from \"~/static/data/data.json\";\nimport _ from \"lodash\";\n\nconst _sfc_main = {\n  __name: 'app',\n  setup(__props) {\n\nconst cloneDeep = _.cloneDeep;\n\nconst filteredData = ref(cloneDeep(data));\nconst filterData = (habitatName) => {\n  const index = filteredData.value.findIndex(\n    (item) => item.Habitat_name === habitatName\n  );\n  if (index === -1) {\n    const habitat = data.find((item) => item.Habitat_name === habitatName);\n    if (habitat) {\n      filteredData.value.push(habitat);\n    }\n  } else {\n    filteredData.value.splice(index, 1);\n  }\n  // console.log(filteredData.value);\n  resetView();\n};\n\nconst isHabitatSelected = (habitatName) => {\n  return filteredData.value.some((item) => item.Habitat_name === habitatName);\n};\n\nlet zIndex = 2;\n\nconst canvas = ref(null);\nlet selectedStorage = ref(\"currentStorage\");\nlet rectangles = [];\nlet nodes = [];\nlet popupBol = ref(false);\n\nlet rectAbove,\n  rectBelow,\n  camera,\n  scene,\n  renderer,\n  animate,\n  storageOptionSelected,\n  geometryPositive,\n  geometryNegative,\n  resetView,\n  color,\n  colorBelow,\n  controls;\n\nlet meshMap = new Map(); // Map to store references to meshes\n\nwatch(selectedStorage, () => {\n  resetView();\n});\n\nconst popup = () => {\n  popupBol.value = !popupBol.value;\n  // console.log(popupBol);\n};\n\nresetView = () => {\n  geometryPositive.dispose();\n  geometryNegative.dispose();\n\n  scene.children.length = 0;\n\n  createTreemap();\n  color();\n  filteredData.value.forEach((item) => {\n    const meshes = meshMap.get(item);\n    if (meshes) {\n      scene.remove(meshes.meshPositive);\n      scene.remove(meshes.meshNegative);\n      meshMap.delete(item);\n    }\n  });\n};\n\nonMounted(async () => {\n  initCamera();\n  createTreemap();\n});\n\nconst createTreemap = async () => {\n  const margin = { top: 10, right: 10, bottom: 10, left: 10 };\n  const width = 1000 - margin.left - margin.right;\n  const height = 1000 - margin.top - margin.bottom;\n\n  await new Promise((resolve) => {\n    const checkElement = () => {\n      if (canvas.value) {\n        resolve();\n      } else {\n        requestAnimationFrame(checkElement);\n      }\n    };\n    checkElement();\n  });\n\n  color = () => {\n    return d3.scaleOrdinal(d3.schemeCategory10);\n  };\n\n  const svg = d3\n    .select(canvas.value)\n    .attr(\"width\", width + margin.left + margin.right)\n    .attr(\"height\", height + margin.top + margin.bottom)\n    .append(\"g\")\n    .attr(\"transform\", \"translate(\" + margin.left + \",\" + margin.top + \")\");\n\n  try {\n    const root = d3\n      .hierarchy({ children: filteredData.value })\n      .sum((d) => +d.Area_Habitat)\n      .sort((a, b) => b.Area_Habitat - a.Area_Habitat); // Sort by highest to lowest value;\n\n    d3.treemap().size([width, height]).padding(0)(root);\n\n    const rects = svg\n      .selectAll(\"rect\")\n      .data(root.leaves())\n      .enter()\n      .append(\"rect\")\n      .style(\"fill\", (d) => color(d.data.Habitat_name))\n      .attr(\"x\", (d) => d.x0)\n      .attr(\"y\", (d) => d.y0)\n      .attr(\"width\", (d) => d.x1 - d.x0)\n      .attr(\"height\", (d) => d.y1 - d.y0);\n\n    rectangles = svg.selectAll(\"rect\").nodes();\n\n    nodes = root.descendants();\n\n    create3D(rectangles, nodes);\n    return { rectangles, nodes };\n  } catch (error) {\n    console.error(\"Error loading JSON data:\", error);\n  }\n};\n\nconst initCamera = () => {\n  const width = window.innerWidth / 2;\n  const height = window.innerHeight / 2;\n  const left = -width / 2;\n  const right = width / 2;\n  const top = height / 2;\n  const bottom = -height / 2;\n  const near = 0.1;\n  const far = 50000;\n\n  // Create the orthographic camera\n  camera = new THREE.OrthographicCamera(left, right, top, bottom, near, far);\n\n  // Set the camera position to match the perspective camera's position\n  camera.position.set(\n    -1488.697359746549,\n    1492.3078575429806,\n    1927.4453334372429\n  );\n\n  // Set the camera rotation to match the perspective camera's rotation\n  camera.rotation.set(\n    -0.6588359167815547,\n    -0.5482614334642727,\n    -0.3835525580843654\n  );\n\n  // Set the zoom level of the camera\n  camera.zoom = 0.12208654873684852;\n\n  // Ensure the camera is looking at the center of the scene\n  camera.lookAt(new THREE.Vector3(0, 0, 0));\n\n  // Update the camera's projection matrix with the new zoom level\n  camera.updateProjectionMatrix();\n};\n\nconst create3D = (rectangles, nodes) => {\n  scene = new THREE.Scene();\n\n  renderer = new THREE.WebGLRenderer({ antialias: true });\n  renderer.setPixelRatio(window.devicePixelRatio);\n  renderer.setSize(window.innerWidth, window.innerHeight);\n\n  zIndex++;\n  canvas.value.appendChild(renderer.domElement);\n  renderer.domElement.style.position = \"absolute\";\n  renderer.domElement.style.zIndex = zIndex;\n\n  // const axesHelper = new THREE.AxesHelper(100);\n  // scene.add(axesHelper);\n  scene.background = new THREE.Color(0xfafafa);\n\n  rectangles.forEach((rectangle, index) => {\n    let rectWidth = parseFloat(rectangle.getAttribute(\"width\"));\n    let rectHeight = parseFloat(rectangle.getAttribute(\"height\"));\n\n    switch (selectedStorage.value) {\n      case \"currentStorage\":\n        rectAbove =\n          filteredData.value[index].Above_ground_current_storage / 1000000000;\n        rectBelow =\n          filteredData.value[index].Below_ground_current_storage / 1000000000;\n        break;\n      case \"potentialStorage\":\n        rectAbove =\n          filteredData.value[index].Above_ground_potential_storage / 1000000000;\n        rectBelow =\n          filteredData.value[index].Below_ground_potential_storage / 1000000000;\n        break;\n    }\n\n    if (\n      rectAbove === null ||\n      rectAbove === undefined ||\n      rectAbove === 0 ||\n      isNaN(rectBelow)\n    ) {\n      rectAbove = 1;\n    }\n\n    if (\n      rectBelow === null ||\n      rectBelow === undefined ||\n      rectBelow === 0 ||\n      isNaN(rectBelow)\n    ) {\n      rectBelow = -1;\n    }\n\n    geometryPositive = new THREE.ExtrudeGeometry(\n      new THREE.Shape([\n        new THREE.Vector2(0, 0),\n        new THREE.Vector2(rectWidth, 0),\n        new THREE.Vector2(rectWidth, rectHeight),\n        new THREE.Vector2(0, rectHeight),\n        new THREE.Vector2(0, 0),\n      ]),\n      { depth: rectAbove, bevelEnabled: false }\n    );\n\n    geometryNegative = new THREE.ExtrudeGeometry(\n      new THREE.Shape([\n        new THREE.Vector2(0, 0),\n        new THREE.Vector2(rectWidth, 0),\n        new THREE.Vector2(rectWidth, rectHeight),\n        new THREE.Vector2(0, rectHeight),\n        new THREE.Vector2(0, 0),\n      ]),\n      { depth: Math.abs(rectBelow), bevelEnabled: false }\n    );\n\n    const centroid = new THREE.Vector3();\n\n    rectangles.forEach((rectangle) => {\n      let posX = parseFloat(rectangle.getAttribute(\"x\"));\n      let posY = parseFloat(rectangle.getAttribute(\"y\"));\n      centroid.x += posX;\n      centroid.y += posY;\n    });\n    centroid.divideScalar(rectangles.length);\n\n    const materialAbove = new THREE.MeshPhongMaterial({\n      color: filteredData.value[index].colorAbove,\n    });\n    const materialBelow = new THREE.MeshPhongMaterial({\n      color: filteredData.value[index].colorBelow,\n    });\n    const meshPositive = new THREE.Mesh(geometryPositive, materialAbove);\n    const meshNegative = new THREE.Mesh(geometryNegative, materialBelow);\n\n    const posX = parseFloat(rectangle.getAttribute(\"x\")) - centroid.x;\n    const posY = parseFloat(rectangle.getAttribute(\"y\")) - centroid.y;\n\n    meshPositive.position.set(posX, posY, 0);\n    meshNegative.position.set(posX, posY, -Math.abs(rectBelow));\n\n    const existingMeshPositive = scene.getObjectByName(`meshPositive${index}`);\n    const existingMeshNegative = scene.getObjectByName(`meshNegative${index}`);\n\n    if (existingMeshPositive) scene.remove(existingMeshPositive);\n    if (existingMeshNegative) scene.remove(existingMeshNegative);\n\n    meshPositive.name = `meshPositive${index}`;\n    meshNegative.name = `meshNegative${index}`;\n\n    scene.add(meshPositive);\n    scene.add(meshNegative);\n    meshMap.set(filteredData.value[index], { meshPositive, meshNegative });\n  });\n\n  const ambientLight = new THREE.AmbientLight(0xffffff, 1);\n  scene.add(ambientLight);\n\n  const directionalLight = new THREE.DirectionalLight(0xffffff, 1.5);\n  directionalLight.position.set(1, 1, 1).normalize();\n  scene.add(directionalLight);\n\n  scene.rotation.z = 0;\n  scene.rotation.x = -Math.PI / 2;\n  scene.rotation.y = 0;\n\n  controls = new OrbitControls(camera, renderer.domElement);\n\n  controls.enableDamping = true;\n  controls.dampingFactor = 0.25;\n  controls.screenSpacePanning = false;\n  controls.maxDistance = 15000;\n\n  controls.minPolarAngle = 0; // 0 degrees\n  controls.maxPolarAngle = Math.PI; // 90 degrees\n\n  // controls.minAzimuthAngle = -Infinity;\n  // controls.maxAzimuthAngle = Infinity;\n\n  animate = function () {\n    requestAnimationFrame(animate);\n    renderer.render(scene, camera);\n    controls.update();\n  };\n\n  animate();\n\n  /*console.log(\n    camera.position.x.toString(),\n    camera.position.y.toString(),\n    camera.position.z.toString(),\n    camera.rotation.x.toString(),\n    camera.rotation.y.toString(),\n    camera.rotation.z.toString(),\n    camera.zoom.toString()\n  );*/\n};\n\nreturn (_ctx, _cache) => {\n  return (_openBlock(), _createElementBlock(\"div\", null, [\n    _createElementVNode(\"div\", _hoisted_1, [\n      _createElementVNode(\"div\", _hoisted_2, [\n        _createElementVNode(\"label\", {\n          class: _normalizeClass([\"storage-button\", { active: _unref(selectedStorage) === 'currentStorage' }])\n        }, [\n          _withDirectives(_createElementVNode(\"input\", {\n            class: \"storage-radio\",\n            type: \"radio\",\n            name: \"selectedStorage\",\n            value: \"currentStorage\",\n            \"onUpdate:modelValue\": _cache[0] || (_cache[0] = $event => (_isRef(selectedStorage) ? (selectedStorage).value = $event : selectedStorage = $event))\n          }, null, 512), [\n            [_vModelRadio, _unref(selectedStorage)]\n          ]),\n          _createTextVNode(\" Current Storage \")\n        ], 2),\n        _createElementVNode(\"label\", {\n          class: _normalizeClass([\"storage-button\", { active: _unref(selectedStorage) === 'potentialStorage' }])\n        }, [\n          _withDirectives(_createElementVNode(\"input\", {\n            class: \"storage-radio\",\n            type: \"radio\",\n            name: \"selectedStorage\",\n            value: \"potentialStorage\",\n            \"onUpdate:modelValue\": _cache[1] || (_cache[1] = $event => (_isRef(selectedStorage) ? (selectedStorage).value = $event : selectedStorage = $event))\n          }, null, 512), [\n            [_vModelRadio, _unref(selectedStorage)]\n          ]),\n          _createTextVNode(\" Potential Storage \")\n        ], 2)\n      ]),\n      _createElementVNode(\"div\", _hoisted_3, [\n        (_openBlock(true), _createElementBlock(_Fragment, null, _renderList(_unref(data), (habitat) => {\n          return (_openBlock(), _createElementBlock(\"button\", {\n            key: habitat.Habitat_name,\n            style: _normalizeStyle({\n            backgroundColor: isHabitatSelected(habitat.Habitat_name)\n              ? habitat.colorAbove\n              : 'white',\n          }),\n            class: _normalizeClass([\n            'filter-button',\n            { 'filter-button-active': isHabitatSelected(habitat.Habitat_name) },\n          ]),\n            onClick: $event => (filterData(habitat.Habitat_name))\n          }, _toDisplayString(habitat.Habitat_name), 15, _hoisted_4))\n        }), 128))\n      ]),\n      _createElementVNode(\"div\", _hoisted_5, [\n        _createElementVNode(\"button\", {\n          onClick: _cache[2] || (_cache[2] = $event => (popup())),\n          class: \"infoButton\"\n        }, \"About\")\n      ]),\n      (_unref(popupBol))\n        ? (_openBlock(), _createElementBlock(\"div\", _hoisted_6, [\n            _createElementVNode(\"div\", _hoisted_7, [\n              _createElementVNode(\"div\", _hoisted_8, [\n                _createElementVNode(\"div\", _hoisted_9, [\n                  _createElementVNode(\"button\", {\n                    onClick: _cache[3] || (_cache[3] = $event => (popup())),\n                    class: \"popup-close\"\n                  }, \"Close\"),\n                  _hoisted_10\n                ]),\n                _hoisted_11\n              ])\n            ])\n          ]))\n        : _createCommentVNode(\"\", true)\n    ]),\n    _createElementVNode(\"div\", {\n      class: \"canvas\",\n      ref_key: \"canvas\",\n      ref: canvas\n    }, null, 512)\n  ]))\n}\n}\n\n}\n\n\nimport \"/Users/eliasalerno/GitHub/Cuby/app.vue?vue&type=style&index=0&scoped=88bf0f9f&lang.css\"\n\nimport _export_sfc from '\u0000plugin-vue:export-helper'\nexport default /*#__PURE__*/_export_sfc(_sfc_main, [['__scopeId',\"data-v-88bf0f9f\"]])",
-      "start": 1707674268341,
-      "end": 1707674268355,
+      "start": 1707675066578,
+      "end": 1707675066591,
       "order": "normal",
       "sourcemaps": {
         "mappings": ""
@@ -62,140 +62,140 @@
     },
     {
       "name": "vite:vue-jsx",
-      "start": 1707674268355,
-      "end": 1707674268355,
+      "start": 1707675066591,
+      "end": 1707675066591,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1707674268355,
-      "end": 1707674268355,
+      "start": 1707675066591,
+      "end": 1707675066591,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1707674268355,
-      "end": 1707674268355,
+      "start": 1707675066591,
+      "end": 1707675066591,
       "order": "normal"
     },
     {
       "name": "nuxt:chunk-error",
-      "start": 1707674268355,
-      "end": 1707674268355,
+      "start": 1707675066591,
+      "end": 1707675066591,
       "order": "normal"
     },
     {
       "name": "nuxt:components:imports",
-      "start": 1707674268355,
-      "end": 1707674268355,
+      "start": 1707675066591,
+      "end": 1707675066591,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1707674268355,
-      "end": 1707674268355,
+      "start": 1707675066591,
+      "end": 1707675066591,
       "order": "normal"
     },
     {
       "name": "ssr-styles",
-      "start": 1707674268355,
-      "end": 1707674268355,
+      "start": 1707675066591,
+      "end": 1707675066591,
       "order": "normal"
     },
     {
       "name": "vite:define",
-      "start": 1707674268355,
-      "end": 1707674268355,
+      "start": 1707675066591,
+      "end": 1707675066591,
       "order": "normal"
     },
     {
       "name": "vite:css-post",
-      "start": 1707674268355,
-      "end": 1707674268355,
+      "start": 1707675066591,
+      "end": 1707675066591,
       "order": "normal"
     },
     {
       "name": "vite:build-html",
-      "start": 1707674268355,
-      "end": 1707674268355,
+      "start": 1707675066591,
+      "end": 1707675066591,
       "order": "normal"
     },
     {
       "name": "vite:worker-import-meta-url",
-      "start": 1707674268355,
-      "end": 1707674268355,
+      "start": 1707675066591,
+      "end": 1707675066591,
       "order": "normal"
     },
     {
       "name": "vite:asset-import-meta-url",
-      "start": 1707674268355,
-      "end": 1707674268355,
+      "start": 1707675066591,
+      "end": 1707675066591,
       "order": "normal"
     },
     {
       "name": "commonjs",
-      "start": 1707674268355,
-      "end": 1707674268355,
+      "start": 1707675066591,
+      "end": 1707675066591,
       "order": "normal"
     },
     {
       "name": "vite:dynamic-import-vars",
-      "start": 1707674268355,
-      "end": 1707674268355,
+      "start": 1707675066591,
+      "end": 1707675066591,
       "order": "normal"
     },
     {
       "name": "vite:import-glob",
-      "start": 1707674268355,
-      "end": 1707674268355,
+      "start": 1707675066591,
+      "end": 1707675066591,
       "order": "normal"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1707674268355,
-      "end": 1707674268355,
+      "start": 1707675066591,
+      "end": 1707675066591,
       "order": "post"
     },
     {
       "name": "nuxt:imports-transform",
-      "start": 1707674268355,
-      "end": 1707674268358,
+      "start": 1707675066591,
+      "end": 1707675066594,
       "order": "post"
     },
     {
       "name": "unctx:transform",
-      "start": 1707674268358,
-      "end": 1707674268358,
+      "start": 1707675066594,
+      "end": 1707675066594,
       "order": "post"
     },
     {
       "name": "nuxt:runtime-paths-dep",
-      "start": 1707674268358,
-      "end": 1707674268358,
+      "start": 1707675066594,
+      "end": 1707675066594,
       "order": "post"
     },
     {
       "name": "nuxt:components-loader",
-      "start": 1707674268358,
-      "end": 1707674268358,
+      "start": 1707675066594,
+      "end": 1707675066594,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-composables:transform",
-      "start": 1707674268358,
-      "end": 1707674268358,
+      "start": 1707675066594,
+      "end": 1707675066594,
       "order": "post"
     },
     {
       "name": "vite:build-import-analysis",
-      "start": 1707674268358,
-      "end": 1707674268358,
+      "start": 1707675066594,
+      "end": 1707675066594,
       "order": "normal"
     },
     {
       "name": "vite:reporter",
-      "start": 1707674268358,
-      "end": 1707674268358,
+      "start": 1707675066594,
+      "end": 1707675066594,
       "order": "normal"
     }
   ]
