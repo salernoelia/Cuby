@@ -1,75 +1,11 @@
-# Nuxt 3 Minimal Starter
+## Cuby
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Module: Data Visualisation
+Visualization: Basil Egger, Irina Ležaić, Hyejin Shim, Elia Salerno
+Development: Elia Salerno
 
-## Setup
 
-Make sure to install the dependencies:
+## Task
 
-```bash
-# npm
-npm install
+This Visualization has been done for the ZHdK Interaction Design "Data Visualization" module, in which we were able to collaborate with the ETH Crowther Lab and focusTerra to create an "Interactive Mapping Table" as part of the immersive exhibition "KEEP IT CO2OL: Tech to the rescue?" from November 2024 to April 2026. The objective is to inform and engage the Swiss public, especially students, on nature-based solutions for CO2 storage and climate data. The exhibit aims to showcase the carbon storage potential of natural ecosystems, present case studies of successful conservation and regeneration projects worldwide, and convey key messages from the Crowther Lab about the importance of restoring ecosystems for carbon sequestration.
 
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
-```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm run dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm run build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm run preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
