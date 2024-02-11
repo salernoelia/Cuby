@@ -4,194 +4,194 @@
     {
       "name": "vite:load-fallback",
       "result": "import {Adder} from \"d3-array\";\nimport {areaStream, areaRingSum} from \"./area.js\";\nimport {cartesian, cartesianCross, cartesianNormalizeInPlace, spherical} from \"./cartesian.js\";\nimport {abs, degrees, epsilon, radians} from \"./math.js\";\nimport stream from \"./stream.js\";\n\nvar lambda0, phi0, lambda1, phi1, // bounds\n    lambda2, // previous lambda-coordinate\n    lambda00, phi00, // first point\n    p0, // previous 3D point\n    deltaSum,\n    ranges,\n    range;\n\nvar boundsStream = {\n  point: boundsPoint,\n  lineStart: boundsLineStart,\n  lineEnd: boundsLineEnd,\n  polygonStart: function() {\n    boundsStream.point = boundsRingPoint;\n    boundsStream.lineStart = boundsRingStart;\n    boundsStream.lineEnd = boundsRingEnd;\n    deltaSum = new Adder();\n    areaStream.polygonStart();\n  },\n  polygonEnd: function() {\n    areaStream.polygonEnd();\n    boundsStream.point = boundsPoint;\n    boundsStream.lineStart = boundsLineStart;\n    boundsStream.lineEnd = boundsLineEnd;\n    if (areaRingSum < 0) lambda0 = -(lambda1 = 180), phi0 = -(phi1 = 90);\n    else if (deltaSum > epsilon) phi1 = 90;\n    else if (deltaSum < -epsilon) phi0 = -90;\n    range[0] = lambda0, range[1] = lambda1;\n  },\n  sphere: function() {\n    lambda0 = -(lambda1 = 180), phi0 = -(phi1 = 90);\n  }\n};\n\nfunction boundsPoint(lambda, phi) {\n  ranges.push(range = [lambda0 = lambda, lambda1 = lambda]);\n  if (phi < phi0) phi0 = phi;\n  if (phi > phi1) phi1 = phi;\n}\n\nfunction linePoint(lambda, phi) {\n  var p = cartesian([lambda * radians, phi * radians]);\n  if (p0) {\n    var normal = cartesianCross(p0, p),\n        equatorial = [normal[1], -normal[0], 0],\n        inflection = cartesianCross(equatorial, normal);\n    cartesianNormalizeInPlace(inflection);\n    inflection = spherical(inflection);\n    var delta = lambda - lambda2,\n        sign = delta > 0 ? 1 : -1,\n        lambdai = inflection[0] * degrees * sign,\n        phii,\n        antimeridian = abs(delta) > 180;\n    if (antimeridian ^ (sign * lambda2 < lambdai && lambdai < sign * lambda)) {\n      phii = inflection[1] * degrees;\n      if (phii > phi1) phi1 = phii;\n    } else if (lambdai = (lambdai + 360) % 360 - 180, antimeridian ^ (sign * lambda2 < lambdai && lambdai < sign * lambda)) {\n      phii = -inflection[1] * degrees;\n      if (phii < phi0) phi0 = phii;\n    } else {\n      if (phi < phi0) phi0 = phi;\n      if (phi > phi1) phi1 = phi;\n    }\n    if (antimeridian) {\n      if (lambda < lambda2) {\n        if (angle(lambda0, lambda) > angle(lambda0, lambda1)) lambda1 = lambda;\n      } else {\n        if (angle(lambda, lambda1) > angle(lambda0, lambda1)) lambda0 = lambda;\n      }\n    } else {\n      if (lambda1 >= lambda0) {\n        if (lambda < lambda0) lambda0 = lambda;\n        if (lambda > lambda1) lambda1 = lambda;\n      } else {\n        if (lambda > lambda2) {\n          if (angle(lambda0, lambda) > angle(lambda0, lambda1)) lambda1 = lambda;\n        } else {\n          if (angle(lambda, lambda1) > angle(lambda0, lambda1)) lambda0 = lambda;\n        }\n      }\n    }\n  } else {\n    ranges.push(range = [lambda0 = lambda, lambda1 = lambda]);\n  }\n  if (phi < phi0) phi0 = phi;\n  if (phi > phi1) phi1 = phi;\n  p0 = p, lambda2 = lambda;\n}\n\nfunction boundsLineStart() {\n  boundsStream.point = linePoint;\n}\n\nfunction boundsLineEnd() {\n  range[0] = lambda0, range[1] = lambda1;\n  boundsStream.point = boundsPoint;\n  p0 = null;\n}\n\nfunction boundsRingPoint(lambda, phi) {\n  if (p0) {\n    var delta = lambda - lambda2;\n    deltaSum.add(abs(delta) > 180 ? delta + (delta > 0 ? 360 : -360) : delta);\n  } else {\n    lambda00 = lambda, phi00 = phi;\n  }\n  areaStream.point(lambda, phi);\n  linePoint(lambda, phi);\n}\n\nfunction boundsRingStart() {\n  areaStream.lineStart();\n}\n\nfunction boundsRingEnd() {\n  boundsRingPoint(lambda00, phi00);\n  areaStream.lineEnd();\n  if (abs(deltaSum) > epsilon) lambda0 = -(lambda1 = 180);\n  range[0] = lambda0, range[1] = lambda1;\n  p0 = null;\n}\n\n// Finds the left-right distance between two longitudes.\n// This is almost the same as (lambda1 - lambda0 + 360°) % 360°, except that we want\n// the distance between ±180° to be 360°.\nfunction angle(lambda0, lambda1) {\n  return (lambda1 -= lambda0) < 0 ? lambda1 + 360 : lambda1;\n}\n\nfunction rangeCompare(a, b) {\n  return a[0] - b[0];\n}\n\nfunction rangeContains(range, x) {\n  return range[0] <= range[1] ? range[0] <= x && x <= range[1] : x < range[0] || range[1] < x;\n}\n\nexport default function(feature) {\n  var i, n, a, b, merged, deltaMax, delta;\n\n  phi1 = lambda1 = -(lambda0 = phi0 = Infinity);\n  ranges = [];\n  stream(feature, boundsStream);\n\n  // First, sort ranges by their minimum longitudes.\n  if (n = ranges.length) {\n    ranges.sort(rangeCompare);\n\n    // Then, merge any ranges that overlap.\n    for (i = 1, a = ranges[0], merged = [a]; i < n; ++i) {\n      b = ranges[i];\n      if (rangeContains(a, b[0]) || rangeContains(a, b[1])) {\n        if (angle(a[0], b[1]) > angle(a[0], a[1])) a[1] = b[1];\n        if (angle(b[0], a[1]) > angle(a[0], a[1])) a[0] = b[0];\n      } else {\n        merged.push(a = b);\n      }\n    }\n\n    // Finally, find the largest gap between the merged ranges.\n    // The final bounding box will be the inverse of this gap.\n    for (deltaMax = -Infinity, n = merged.length - 1, i = 0, a = merged[n]; i <= n; a = b, ++i) {\n      b = merged[i];\n      if ((delta = angle(a[1], b[0])) > deltaMax) deltaMax = delta, lambda0 = b[0], lambda1 = a[1];\n    }\n  }\n\n  ranges = range = null;\n\n  return lambda0 === Infinity || phi0 === Infinity\n      ? [[NaN, NaN], [NaN, NaN]]\n      : [[lambda0, phi0], [lambda1, phi1]];\n}\n",
-      "start": 1707671529579,
-      "end": 1707671529603,
+      "start": 1707672315574,
+      "end": 1707672315591,
       "sourcemaps": null
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1707671529603,
-      "end": 1707671529603,
+      "start": 1707672315591,
+      "end": 1707672315591,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1707671529603,
-      "end": 1707671529603,
+      "start": 1707672315591,
+      "end": 1707672315591,
       "order": "pre"
     },
     {
       "name": "nuxt:client-fallback-auto-id",
-      "start": 1707671529603,
-      "end": 1707671529603,
+      "start": 1707672315591,
+      "end": 1707672315591,
       "order": "pre"
     },
     {
       "name": "vite:css",
-      "start": 1707671529603,
-      "end": 1707671529603,
+      "start": 1707672315591,
+      "end": 1707672315591,
       "order": "normal"
     },
     {
       "name": "vite:esbuild",
-      "start": 1707671529603,
-      "end": 1707671529603,
+      "start": 1707672315591,
+      "end": 1707672315591,
       "order": "normal"
     },
     {
       "name": "vite:json",
-      "start": 1707671529603,
-      "end": 1707671529603,
+      "start": 1707672315591,
+      "end": 1707672315591,
       "order": "normal"
     },
     {
       "name": "vite:worker",
-      "start": 1707671529603,
-      "end": 1707671529603,
+      "start": 1707672315591,
+      "end": 1707672315591,
       "order": "normal"
     },
     {
       "name": "vite:vue",
-      "start": 1707671529603,
-      "end": 1707671529603,
+      "start": 1707672315591,
+      "end": 1707672315591,
       "order": "normal"
     },
     {
       "name": "vite:vue-jsx",
-      "start": 1707671529603,
-      "end": 1707671529603,
+      "start": 1707672315591,
+      "end": 1707672315591,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1707671529603,
-      "end": 1707671529603,
+      "start": 1707672315591,
+      "end": 1707672315591,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1707671529603,
-      "end": 1707671529603,
+      "start": 1707672315591,
+      "end": 1707672315591,
       "order": "normal"
     },
     {
       "name": "nuxt:chunk-error",
-      "start": 1707671529603,
-      "end": 1707671529603,
+      "start": 1707672315591,
+      "end": 1707672315591,
       "order": "normal"
     },
     {
       "name": "nuxt:components:imports",
-      "start": 1707671529603,
-      "end": 1707671529603,
+      "start": 1707672315591,
+      "end": 1707672315591,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1707671529603,
-      "end": 1707671529603,
+      "start": 1707672315591,
+      "end": 1707672315591,
       "order": "normal"
     },
     {
       "name": "ssr-styles",
-      "start": 1707671529603,
-      "end": 1707671529603,
+      "start": 1707672315591,
+      "end": 1707672315591,
       "order": "normal"
     },
     {
       "name": "vite:define",
-      "start": 1707671529603,
-      "end": 1707671529603,
+      "start": 1707672315591,
+      "end": 1707672315591,
       "order": "normal"
     },
     {
       "name": "vite:css-post",
-      "start": 1707671529603,
-      "end": 1707671529603,
+      "start": 1707672315591,
+      "end": 1707672315591,
       "order": "normal"
     },
     {
       "name": "vite:build-html",
-      "start": 1707671529603,
-      "end": 1707671529603,
+      "start": 1707672315591,
+      "end": 1707672315591,
       "order": "normal"
     },
     {
       "name": "vite:worker-import-meta-url",
-      "start": 1707671529603,
-      "end": 1707671529603,
+      "start": 1707672315591,
+      "end": 1707672315591,
       "order": "normal"
     },
     {
       "name": "vite:asset-import-meta-url",
-      "start": 1707671529603,
-      "end": 1707671529603,
+      "start": 1707672315591,
+      "end": 1707672315591,
       "order": "normal"
     },
     {
       "name": "commonjs",
-      "start": 1707671529603,
-      "end": 1707671529603,
+      "start": 1707672315591,
+      "end": 1707672315592,
       "order": "normal"
     },
     {
       "name": "vite:dynamic-import-vars",
-      "start": 1707671529603,
-      "end": 1707671529603,
+      "start": 1707672315592,
+      "end": 1707672315592,
       "order": "normal"
     },
     {
       "name": "vite:import-glob",
-      "start": 1707671529603,
-      "end": 1707671529603,
+      "start": 1707672315592,
+      "end": 1707672315592,
       "order": "normal"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1707671529603,
-      "end": 1707671529603,
+      "start": 1707672315592,
+      "end": 1707672315592,
       "order": "post"
     },
     {
       "name": "nuxt:imports-transform",
-      "start": 1707671529603,
-      "end": 1707671529603,
+      "start": 1707672315592,
+      "end": 1707672315592,
       "order": "post"
     },
     {
       "name": "unctx:transform",
-      "start": 1707671529603,
-      "end": 1707671529603,
+      "start": 1707672315592,
+      "end": 1707672315592,
       "order": "post"
     },
     {
       "name": "nuxt:runtime-paths-dep",
-      "start": 1707671529603,
-      "end": 1707671529603,
+      "start": 1707672315592,
+      "end": 1707672315592,
       "order": "post"
     },
     {
       "name": "nuxt:components-loader",
-      "start": 1707671529603,
-      "end": 1707671529603,
+      "start": 1707672315592,
+      "end": 1707672315592,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-composables:transform",
-      "start": 1707671529603,
-      "end": 1707671529603,
+      "start": 1707672315592,
+      "end": 1707672315592,
       "order": "post"
     },
     {
       "name": "vite:build-import-analysis",
-      "start": 1707671529603,
-      "end": 1707671529603,
+      "start": 1707672315592,
+      "end": 1707672315592,
       "order": "normal"
     },
     {
       "name": "vite:reporter",
-      "start": 1707671529603,
-      "end": 1707671529603,
+      "start": 1707672315592,
+      "end": 1707672315592,
       "order": "normal"
     }
   ]
