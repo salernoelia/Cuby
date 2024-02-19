@@ -134,7 +134,9 @@ let rectAbove,
   resetView,
   color,
   colorBelow,
-  controls;
+  controls,
+  raycaster,
+  pointer;
 
 let meshMap = new Map(); // Map to store references to meshes
 
@@ -167,6 +169,7 @@ resetView = () => {
 
 onMounted(async () => {
   initCamera();
+  createRaycaster();
   createTreemap();
 });
 
@@ -264,6 +267,32 @@ const initCamera = () => {
   camera.updateProjectionMatrix();
 };
 
+const createRaycaster = () => {
+  raycaster = new THREE.Raycaster();
+  pointer = new THREE.Vector2();
+};
+
+function onPointerMove(event) {
+  // calculate pointer position in normalized device coordinates
+  // (-1 to +1) for both components
+  pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
+  pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+  raycaster.setFromCamera(pointer, camera);
+
+  const intersects = raycaster.intersectObjects(scene.children, false);
+  // console.log(intersects);
+}
+
+function onObjectClick(event) {
+  if (raycaster.intersectObjects(scene.children, false).length > 0) {
+    console.log(
+      "click",
+      raycaster.intersectObjects(scene.children, false)[0].object.id
+    );
+  }
+}
+
 const create3D = (rectangles, nodes) => {
   scene = new THREE.Scene();
 
@@ -275,6 +304,9 @@ const create3D = (rectangles, nodes) => {
   canvas.value.appendChild(renderer.domElement);
   renderer.domElement.style.position = "absolute";
   renderer.domElement.style.zIndex = zIndex;
+
+  // update the picking ray with the camera and pointer position
+  raycaster.setFromCamera(pointer, camera);
 
   // const axesHelper = new THREE.AxesHelper(100);
   // scene.add(axesHelper);
@@ -420,6 +452,14 @@ const create3D = (rectangles, nodes) => {
     camera.zoom.toString()
   );*/
 };
+
+window.addEventListener("pointermove", onPointerMove);
+window.addEventListener("click", onObjectClick);
+
+window.requestAnimationFrame(() => {
+  const event = new Event("pointermove");
+  window.dispatchEvent(event);
+});
 </script>
 
 <style scoped>
