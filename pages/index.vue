@@ -132,15 +132,14 @@ let rectAbove,
   scene,
   renderer,
   animate,
-  storageOptionSelected,
   geometryPositive,
   geometryNegative,
   resetView,
   color,
-  colorBelow,
   controls,
   raycaster,
-  pointer;
+  pointer,
+  objectClicked = false;
 
 let meshMap = new Map(); // Map to store references to meshes
 
@@ -279,34 +278,34 @@ const initCamera = () => {
   camera.updateProjectionMatrix();
 };
 
-const createRaycaster = () => {
-  raycaster = new THREE.Raycaster();
-  pointer = new THREE.Vector2();
-};
-
-function onPointerMove(event) {
-  // calculate pointer position in normalized device coordinates
-  // (-1 to +1) for both components
-  pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
-  pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
-
-  raycaster.setFromCamera(pointer, camera);
-
-  const intersects = raycaster.intersectObjects(scene.children, false);
-  // console.log(intersects);
-}
-
 function onObjectClick(event) {
   if (
     raycaster.intersectObjects(scene.children, false).length > 0 &&
     !popupBol.value
   ) {
+    event.stopPropagation();
     const clickedMesh = raycaster.intersectObjects(scene.children, false)[0]
       .object;
     const clickedData = clickedMesh.userData.meshData.id;
     ustore.clickedData = clickedData;
     console.log("Clicked data:", ustore.clickedData);
     router.push(`/details/${clickedData}`);
+    objectClicked = true;
+  }
+}
+
+const createRaycaster = () => {
+  raycaster = new THREE.Raycaster();
+  pointer = new THREE.Vector2();
+};
+
+function onPointerMove(event) {
+  if (!objectClicked) {
+    pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
+    pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    raycaster.setFromCamera(pointer, camera);
+    const intersects = raycaster.intersectObjects(scene.children, false);
+    // console.log(intersects);
   }
 }
 
@@ -464,15 +463,22 @@ const create3D = (rectangles, nodes) => {
   animate();
 };
 
-console.log("current:", popupBol.value);
-
 window.requestAnimationFrame(() => {
   const event = new Event("pointermove");
   window.dispatchEvent(event);
 });
 
-let threshold = 20; // Define the threshold here
+//disable on orbit
+
+window.addEventListener("pointermove", function (event) {
+  onPointerMove(event);
+  // Add event listener to the renderer element
+  // event.stopPropagation();
+  // Check if OrbitControls are enabled
+});
+
 let mouseDownPosition = { x: 0, y: 0 };
+let threshold = 5;
 
 window.addEventListener("mousedown", function (event) {
   // Capture the initial mouse position on mousedown
@@ -481,18 +487,21 @@ window.addEventListener("mousedown", function (event) {
 });
 
 window.addEventListener("mouseup", function (event) {
-  // Calculate the distance moved since mousedown
-  const dx = event.clientX - mouseDownPosition.x;
-  const dy = event.clientY - mouseDownPosition.y;
-  const distance = Math.sqrt(dx * dx + dy * dy);
+  if (!objectClicked) {
+    const dx = event.clientX - mouseDownPosition.x;
+    const dy = event.clientY - mouseDownPosition.y;
+    const distance = Math.sqrt(dx * dx + dy * dy);
 
-  // If the mouse has moved beyond a certain threshold, ignore the click event
-  if (distance > threshold) {
-    return;
+    // Calculate the distance moved since mousedown
+
+    // If the mouse has moved beyond a certain threshold, ignore the click event
+    if (distance > threshold) {
+      return;
+    }
+
+    // If the mouse hasn't moved much, treat it as a click
+    onObjectClick(event);
   }
-
-  // If the mouse hasn't moved much, treat it as a click
-  onObjectClick(event);
 });
 </script>
 
