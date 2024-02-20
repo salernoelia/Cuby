@@ -270,10 +270,9 @@ const onObjectClick = (event) => {
     event.stopPropagation();
     const clickedMesh = raycaster.intersectObjects(scene.children, false)[0]
       .object;
-    const clickedData = clickedMesh.userData.meshData.id;
-    ustore.clickedData = clickedData;
+    ustore.clickedData = clickedMesh.userData.meshData.id;
     console.log("Clicked data:", ustore.clickedData);
-    router.push(`/details/${clickedData}`);
+    router.push(`/details/${clickedMesh.userData.meshData.Habitat_link}`);
     objectClicked = true;
   }
 };
