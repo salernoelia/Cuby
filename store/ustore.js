@@ -1,9 +1,9 @@
 import { defineStore } from "pinia";
 
-export const userStore = defineStore("userStore", {
+export const userStore = defineStore("useUserStore", {
   state: () => {
     return {
-      selectedPage: null,
+      clickedData: null,
     };
   },
   actions: {},

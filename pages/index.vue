@@ -462,16 +462,6 @@ const create3D = (rectangles, nodes) => {
   };
 
   animate();
-
-  /*console.log(
-    camera.position.x.toString(),
-    camera.position.y.toString(),
-    camera.position.z.toString(),
-    camera.rotation.x.toString(),
-    camera.rotation.y.toString(),
-    camera.rotation.z.toString(),
-    camera.zoom.toString()
-  );*/
 };
 
 console.log("current:", popupBol.value);
@@ -481,9 +471,29 @@ window.requestAnimationFrame(() => {
   window.dispatchEvent(event);
 });
 
-//disable on orbit
-window.addEventListener("pointermove", onPointerMove);
-window.addEventListener("click", onObjectClick);
+let threshold = 20; // Define the threshold here
+let mouseDownPosition = { x: 0, y: 0 };
+
+window.addEventListener("mousedown", function (event) {
+  // Capture the initial mouse position on mousedown
+  mouseDownPosition.x = event.clientX;
+  mouseDownPosition.y = event.clientY;
+});
+
+window.addEventListener("mouseup", function (event) {
+  // Calculate the distance moved since mousedown
+  const dx = event.clientX - mouseDownPosition.x;
+  const dy = event.clientY - mouseDownPosition.y;
+  const distance = Math.sqrt(dx * dx + dy * dy);
+
+  // If the mouse has moved beyond a certain threshold, ignore the click event
+  if (distance > threshold) {
+    return;
+  }
+
+  // If the mouse hasn't moved much, treat it as a click
+  onObjectClick(event);
+});
 </script>
 
 <style scoped>
