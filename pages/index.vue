@@ -85,13 +85,17 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from "vue";
 import * as d3 from "d3";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import data from "~/static/data/data.json";
 import _ from "lodash";
+
+/*--------------------------------*/
+// Import and copy dataset && filtering functionality
+
 import { userStore } from "../store/ustore.js";
+
 const ustore = userStore();
 
 const cloneDeep = _.cloneDeep;
@@ -117,14 +121,19 @@ const isHabitatSelected = (habitatName) => {
   return filteredData.value.some((item) => item.Habitat_name === habitatName);
 };
 
-let zIndex = 2;
-
 const router = useRouter();
 const canvas = ref(null);
+
+/*--------------------------------*/
+// Initialize all variables
+
 let selectedStorage = ref("currentStorage");
 let rectangles = [];
 let nodes = [];
 let popupBol = ref(false);
+
+let mouseDownPosition = { x: 0, y: 0 };
+let threshold = 5;
 
 let rectAbove,
   rectBelow,
@@ -143,22 +152,14 @@ let rectAbove,
 
 let meshMap = new Map(); // Map to store references to meshes
 
-watch(selectedStorage, () => {
-  resetView();
+/*--------------------------------*/
+// Setup and Reset Graph
+
+onMounted(async () => {
+  initCamera();
+  createRaycaster();
+  createTreemap();
 });
-
-const popup = () => {
-  popupBol.value = !popupBol.value;
-  console.log("current:", popupBol.value);
-};
-
-function closePopup(event) {
-  // Stop event propagation to prevent triggering onObjectClick
-  event.stopPropagation();
-
-  // Close the popup
-  popup();
-}
 
 resetView = () => {
   geometryPositive.dispose();
@@ -178,11 +179,24 @@ resetView = () => {
   });
 };
 
-onMounted(async () => {
-  initCamera();
-  createRaycaster();
-  createTreemap();
-});
+/*--------------------------------*/
+// Handle popup
+
+const popup = () => {
+  popupBol.value = !popupBol.value;
+  console.log("current:", popupBol.value);
+};
+
+const closePopup = (event) => {
+  // Stop event propagation to prevent triggering onObjectClick
+  event.stopPropagation();
+
+  // Close the popup
+  popup();
+};
+
+/*--------------------------------*/
+// Render the treemap
 
 const createTreemap = async () => {
   const margin = { top: 10, right: 10, bottom: 10, left: 10 };
@@ -241,6 +255,103 @@ const createTreemap = async () => {
   }
 };
 
+/*--------------------------------*/
+// Add event watchers and listeners
+
+watch(selectedStorage, () => {
+  resetView();
+});
+
+const onObjectClick = (event) => {
+  if (
+    raycaster.intersectObjects(scene.children, false).length > 0 &&
+    !popupBol.value
+  ) {
+    event.stopPropagation();
+    const clickedMesh = raycaster.intersectObjects(scene.children, false)[0]
+      .object;
+    const clickedData = clickedMesh.userData.meshData.id;
+    ustore.clickedData = clickedData;
+    console.log("Clicked data:", ustore.clickedData);
+    router.push(`/details/${clickedData}`);
+    objectClicked = true;
+  }
+};
+
+const createRaycaster = () => {
+  raycaster = new THREE.Raycaster();
+  pointer = new THREE.Vector2();
+};
+
+const onPointerMove = (event) => {
+  if (!objectClicked) {
+    pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
+    pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    raycaster.setFromCamera(pointer, camera);
+    const intersects = raycaster.intersectObjects(scene.children, false);
+    // console.log(intersects);
+  }
+};
+
+window.addEventListener("pointermove", function (event) {
+  onPointerMove(event);
+});
+
+window.addEventListener("mousedown", function (event) {
+  // Capture the initial mouse position on mousedown
+  mouseDownPosition.x = event.clientX;
+  mouseDownPosition.y = event.clientY;
+});
+
+window.addEventListener("mouseup", function (event) {
+  if (!objectClicked) {
+    const dx = event.clientX - mouseDownPosition.x;
+    const dy = event.clientY - mouseDownPosition.y;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+
+    // Calculate the distance moved since mousedown
+
+    // If the mouse has moved beyond a certain threshold, ignore the click event
+    if (distance > threshold) {
+      return;
+    }
+
+    // If the mouse hasn't moved much, treat it as a click
+    onObjectClick(event);
+  }
+});
+
+/*--------------------------------*/
+// Resize the renderer and camera when the window is resized
+
+const initialAspectRatio = window.innerWidth / window.innerHeight;
+
+window.addEventListener("resize", () => {
+  const newAspectRatio = window.innerWidth / window.innerHeight;
+
+  if (newAspectRatio > initialAspectRatio) {
+    // Window width is larger relative to height, so adjust height to match initial aspect ratio
+    const newHeight = window.innerWidth / initialAspectRatio;
+    camera.aspect = initialAspectRatio;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, newHeight);
+  } else {
+    // Window height is larger relative to width, so adjust width to match initial aspect ratio
+    const newWidth = window.innerHeight * initialAspectRatio;
+    camera.aspect = initialAspectRatio;
+    camera.updateProjectionMatrix();
+    renderer.setSize(newWidth, window.innerHeight);
+  }
+});
+
+window.requestAnimationFrame(() => {
+  const event = new Event("pointermove");
+  window.dispatchEvent(event);
+});
+
+/*--------------------------------*/
+// Setup and render three.js scene
+
 const initCamera = () => {
   const width = window.innerWidth / 2;
   const height = window.innerHeight / 2;
@@ -278,37 +389,6 @@ const initCamera = () => {
   camera.updateProjectionMatrix();
 };
 
-function onObjectClick(event) {
-  if (
-    raycaster.intersectObjects(scene.children, false).length > 0 &&
-    !popupBol.value
-  ) {
-    event.stopPropagation();
-    const clickedMesh = raycaster.intersectObjects(scene.children, false)[0]
-      .object;
-    const clickedData = clickedMesh.userData.meshData.id;
-    ustore.clickedData = clickedData;
-    console.log("Clicked data:", ustore.clickedData);
-    router.push(`/details/${clickedData}`);
-    objectClicked = true;
-  }
-}
-
-const createRaycaster = () => {
-  raycaster = new THREE.Raycaster();
-  pointer = new THREE.Vector2();
-};
-
-function onPointerMove(event) {
-  if (!objectClicked) {
-    pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
-    pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
-    raycaster.setFromCamera(pointer, camera);
-    const intersects = raycaster.intersectObjects(scene.children, false);
-    // console.log(intersects);
-  }
-}
-
 const create3D = (rectangles, nodes) => {
   scene = new THREE.Scene();
 
@@ -316,10 +396,8 @@ const create3D = (rectangles, nodes) => {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
 
-  zIndex++;
   canvas.value.appendChild(renderer.domElement);
   renderer.domElement.style.position = "absolute";
-  renderer.domElement.style.zIndex = zIndex;
 
   // update the picking ray with the camera and pointer position
   raycaster.setFromCamera(pointer, camera);
@@ -451,9 +529,6 @@ const create3D = (rectangles, nodes) => {
   controls.minPolarAngle = 0; // 0 degrees
   controls.maxPolarAngle = Math.PI; // 90 degrees
 
-  // controls.minAzimuthAngle = -Infinity;
-  // controls.maxAzimuthAngle = Infinity;
-
   animate = function () {
     requestAnimationFrame(animate);
     renderer.render(scene, camera);
@@ -462,47 +537,6 @@ const create3D = (rectangles, nodes) => {
 
   animate();
 };
-
-window.requestAnimationFrame(() => {
-  const event = new Event("pointermove");
-  window.dispatchEvent(event);
-});
-
-//disable on orbit
-
-window.addEventListener("pointermove", function (event) {
-  onPointerMove(event);
-  // Add event listener to the renderer element
-  // event.stopPropagation();
-  // Check if OrbitControls are enabled
-});
-
-let mouseDownPosition = { x: 0, y: 0 };
-let threshold = 5;
-
-window.addEventListener("mousedown", function (event) {
-  // Capture the initial mouse position on mousedown
-  mouseDownPosition.x = event.clientX;
-  mouseDownPosition.y = event.clientY;
-});
-
-window.addEventListener("mouseup", function (event) {
-  if (!objectClicked) {
-    const dx = event.clientX - mouseDownPosition.x;
-    const dy = event.clientY - mouseDownPosition.y;
-    const distance = Math.sqrt(dx * dx + dy * dy);
-
-    // Calculate the distance moved since mousedown
-
-    // If the mouse has moved beyond a certain threshold, ignore the click event
-    if (distance > threshold) {
-      return;
-    }
-
-    // If the mouse hasn't moved much, treat it as a click
-    onObjectClick(event);
-  }
-});
 </script>
 
 <style scoped>
