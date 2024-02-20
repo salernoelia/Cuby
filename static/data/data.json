@@ -1,5 +1,6 @@
 [
   {
+    "id": "1",
     "Habitat_name": "Forest",
     "colorAbove": "#85AF9E",
     "colorBelow": "#527365",
@@ -37,6 +38,7 @@
     "References": ""
   },
   {
+    "id": "2",
     "Habitat_name": "Savanna",
     "colorAbove": "#FFA187",
     "colorBelow": "#CE5C3C",
@@ -74,6 +76,7 @@
     "References": ""
   },
   {
+    "id": "3",
     "Habitat_name": "Shrubland",
     "colorAbove": "#B19FD7",
     "colorBelow": "#77649F",
@@ -111,6 +114,7 @@
     "References": ""
   },
   {
+    "id": "4",
     "Habitat_name": "Grassland",
     "colorAbove": "#FCC9D6",
     "colorBelow": "#EE8EA7",
@@ -148,6 +152,7 @@
     "References": ""
   },
   {
+    "id": "5",
     "Habitat_name": "Wetlands",
     "colorAbove": "#78B2D9",
     "colorBelow": "#7B9DB6",
@@ -185,6 +190,7 @@
     "References": ""
   },
   {
+    "id": "6",
     "Habitat_name": "Desert",
     "colorAbove": "#FFE384",
     "colorBelow": "#FFCA00",
@@ -222,6 +228,7 @@
     "References": ""
   },
   {
+    "id": "7",
     "Habitat_name": "Blue Carbon Ecosystems",
     "colorAbove": "#B4BB67",
     "colorBelow": "#99A136",
@@ -259,6 +266,7 @@
     "References": "Macreadie et al., 2021, Nature Reviews Earth & Environment, and references within"
   },
   {
+    "id": "8",
     "Habitat_name": "Continental margins",
     "colorAbove": "#FFD089",
     "colorBelow": "#FFAC2D",
@@ -296,6 +304,7 @@
     "References": "Polar Margins\nAtwood et al., 2020; Couture et al., 2018\n\nUpwelling Margins\nAtwood et al., 2020; McPhaden et al., 2020\n\nRiver-dominated Margins\nLaruelle et al., 2013; Atwood et al., 2020; Milliman and Farnsworth 2005; Zhao et al., 2021; Boes et al., 2014\n\nOther Margins\nAtwood et al., 2020; Paradis et al., 2021"
   },
   {
+    "id": "9",
     "Habitat_name": "Open Ocean",
     "colorAbove": "#67B0D7",
     "colorBelow": "#2E6E92",

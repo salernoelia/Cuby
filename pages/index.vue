@@ -55,7 +55,7 @@
         <div class="popup">
           <div class="popup-content">
             <div class="popup-header">
-              <button @click="popup()" class="popup-close">Close</button>
+              <button @click="closePopup" class="popup-close">Close</button>
               <h1>Cuby</h1>
             </div>
             <p>
@@ -91,6 +91,9 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import data from "~/static/data/data.json";
 import _ from "lodash";
+import { userStore } from "../store/ustore.js";
+const ustore = userStore();
+
 const cloneDeep = _.cloneDeep;
 
 const filteredData = ref(cloneDeep(data));
@@ -116,6 +119,7 @@ const isHabitatSelected = (habitatName) => {
 
 let zIndex = 2;
 
+const router = useRouter();
 const canvas = ref(null);
 let selectedStorage = ref("currentStorage");
 let rectangles = [];
@@ -146,8 +150,16 @@ watch(selectedStorage, () => {
 
 const popup = () => {
   popupBol.value = !popupBol.value;
-  // console.log(popupBol);
+  console.log("current:", popupBol.value);
 };
+
+function closePopup(event) {
+  // Stop event propagation to prevent triggering onObjectClick
+  event.stopPropagation();
+
+  // Close the popup
+  popup();
+}
 
 resetView = () => {
   geometryPositive.dispose();
@@ -285,11 +297,16 @@ function onPointerMove(event) {
 }
 
 function onObjectClick(event) {
-  if (raycaster.intersectObjects(scene.children, false).length > 0) {
-    console.log(
-      "click",
-      raycaster.intersectObjects(scene.children, false)[0].object.id
-    );
+  if (
+    raycaster.intersectObjects(scene.children, false).length > 0 &&
+    !popupBol.value
+  ) {
+    const clickedMesh = raycaster.intersectObjects(scene.children, false)[0]
+      .object;
+    const clickedData = clickedMesh.userData.meshData.id;
+    ustore.clickedData = clickedData;
+    console.log("Clicked data:", ustore.clickedData);
+    router.push(`/details/${clickedData}`);
   }
 }
 
@@ -390,6 +407,10 @@ const create3D = (rectangles, nodes) => {
     const meshPositive = new THREE.Mesh(geometryPositive, materialAbove);
     const meshNegative = new THREE.Mesh(geometryNegative, materialBelow);
 
+    const meshData = filteredData.value[index];
+    meshPositive.userData = { meshData };
+    meshNegative.userData = { meshData };
+
     const posX = parseFloat(rectangle.getAttribute("x")) - centroid.x;
     const posY = parseFloat(rectangle.getAttribute("y")) - centroid.y;
 
@@ -453,13 +474,16 @@ const create3D = (rectangles, nodes) => {
   );*/
 };
 
-window.addEventListener("pointermove", onPointerMove);
-window.addEventListener("click", onObjectClick);
+console.log("current:", popupBol.value);
 
 window.requestAnimationFrame(() => {
   const event = new Event("pointermove");
   window.dispatchEvent(event);
 });
+
+//disable on orbit
+window.addEventListener("pointermove", onPointerMove);
+window.addEventListener("click", onObjectClick);
 </script>
 
 <style scoped>
