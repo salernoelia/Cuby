@@ -4,194 +4,206 @@
     {
       "name": "vite:load-fallback",
       "result": "import {quadtree} from \"d3-quadtree\";\nimport constant from \"./constant.js\";\nimport jiggle from \"./jiggle.js\";\nimport {x, y} from \"./simulation.js\";\n\nexport default function() {\n  var nodes,\n      node,\n      random,\n      alpha,\n      strength = constant(-30),\n      strengths,\n      distanceMin2 = 1,\n      distanceMax2 = Infinity,\n      theta2 = 0.81;\n\n  function force(_) {\n    var i, n = nodes.length, tree = quadtree(nodes, x, y).visitAfter(accumulate);\n    for (alpha = _, i = 0; i < n; ++i) node = nodes[i], tree.visit(apply);\n  }\n\n  function initialize() {\n    if (!nodes) return;\n    var i, n = nodes.length, node;\n    strengths = new Array(n);\n    for (i = 0; i < n; ++i) node = nodes[i], strengths[node.index] = +strength(node, i, nodes);\n  }\n\n  function accumulate(quad) {\n    var strength = 0, q, c, weight = 0, x, y, i;\n\n    // For internal nodes, accumulate forces from child quadrants.\n    if (quad.length) {\n      for (x = y = i = 0; i < 4; ++i) {\n        if ((q = quad[i]) && (c = Math.abs(q.value))) {\n          strength += q.value, weight += c, x += c * q.x, y += c * q.y;\n        }\n      }\n      quad.x = x / weight;\n      quad.y = y / weight;\n    }\n\n    // For leaf nodes, accumulate forces from coincident quadrants.\n    else {\n      q = quad;\n      q.x = q.data.x;\n      q.y = q.data.y;\n      do strength += strengths[q.data.index];\n      while (q = q.next);\n    }\n\n    quad.value = strength;\n  }\n\n  function apply(quad, x1, _, x2) {\n    if (!quad.value) return true;\n\n    var x = quad.x - node.x,\n        y = quad.y - node.y,\n        w = x2 - x1,\n        l = x * x + y * y;\n\n    // Apply the Barnes-Hut approximation if possible.\n    // Limit forces for very close nodes; randomize direction if coincident.\n    if (w * w / theta2 < l) {\n      if (l < distanceMax2) {\n        if (x === 0) x = jiggle(random), l += x * x;\n        if (y === 0) y = jiggle(random), l += y * y;\n        if (l < distanceMin2) l = Math.sqrt(distanceMin2 * l);\n        node.vx += x * quad.value * alpha / l;\n        node.vy += y * quad.value * alpha / l;\n      }\n      return true;\n    }\n\n    // Otherwise, process points directly.\n    else if (quad.length || l >= distanceMax2) return;\n\n    // Limit forces for very close nodes; randomize direction if coincident.\n    if (quad.data !== node || quad.next) {\n      if (x === 0) x = jiggle(random), l += x * x;\n      if (y === 0) y = jiggle(random), l += y * y;\n      if (l < distanceMin2) l = Math.sqrt(distanceMin2 * l);\n    }\n\n    do if (quad.data !== node) {\n      w = strengths[quad.data.index] * alpha / l;\n      node.vx += x * w;\n      node.vy += y * w;\n    } while (quad = quad.next);\n  }\n\n  force.initialize = function(_nodes, _random) {\n    nodes = _nodes;\n    random = _random;\n    initialize();\n  };\n\n  force.strength = function(_) {\n    return arguments.length ? (strength = typeof _ === \"function\" ? _ : constant(+_), initialize(), force) : strength;\n  };\n\n  force.distanceMin = function(_) {\n    return arguments.length ? (distanceMin2 = _ * _, force) : Math.sqrt(distanceMin2);\n  };\n\n  force.distanceMax = function(_) {\n    return arguments.length ? (distanceMax2 = _ * _, force) : Math.sqrt(distanceMax2);\n  };\n\n  force.theta = function(_) {\n    return arguments.length ? (theta2 = _ * _, force) : Math.sqrt(theta2);\n  };\n\n  return force;\n}\n",
-      "start": 1707675067440,
-      "end": 1707675067452,
+      "start": 1710766540343,
+      "end": 1710766540359,
       "sourcemaps": null
     },
     {
       "name": "nuxt:layer-aliasing",
-      "start": 1707675067452,
-      "end": 1707675067452,
+      "start": 1710766540359,
+      "end": 1710766540359,
       "order": "pre"
     },
     {
       "name": "nuxt:server-devonly:transform",
-      "start": 1707675067452,
-      "end": 1707675067452,
+      "start": 1710766540359,
+      "end": 1710766540359,
       "order": "pre"
     },
     {
       "name": "nuxt:client-fallback-auto-id",
-      "start": 1707675067452,
-      "end": 1707675067452,
+      "start": 1710766540359,
+      "end": 1710766540359,
       "order": "pre"
     },
     {
       "name": "vite:css",
-      "start": 1707675067452,
-      "end": 1707675067452,
+      "start": 1710766540359,
+      "end": 1710766540359,
       "order": "normal"
     },
     {
       "name": "vite:esbuild",
-      "start": 1707675067452,
-      "end": 1707675067452,
+      "start": 1710766540359,
+      "end": 1710766540359,
       "order": "normal"
     },
     {
       "name": "vite:json",
-      "start": 1707675067452,
-      "end": 1707675067452,
+      "start": 1710766540359,
+      "end": 1710766540359,
       "order": "normal"
     },
     {
       "name": "vite:worker",
-      "start": 1707675067452,
-      "end": 1707675067452,
+      "start": 1710766540359,
+      "end": 1710766540359,
       "order": "normal"
     },
     {
       "name": "vite:vue",
-      "start": 1707675067452,
-      "end": 1707675067452,
+      "start": 1710766540359,
+      "end": 1710766540359,
       "order": "normal"
     },
     {
       "name": "vite:vue-jsx",
-      "start": 1707675067452,
-      "end": 1707675067452,
+      "start": 1710766540359,
+      "end": 1710766540359,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1707675067452,
-      "end": 1707675067452,
+      "start": 1710766540359,
+      "end": 1710766540359,
       "order": "normal"
     },
     {
       "name": "nuxt:remove-plugin-metadata",
-      "start": 1707675067452,
-      "end": 1707675067452,
+      "start": 1710766540359,
+      "end": 1710766540359,
       "order": "normal"
     },
     {
       "name": "nuxt:chunk-error",
-      "start": 1707675067452,
-      "end": 1707675067452,
+      "start": 1710766540359,
+      "end": 1710766540359,
       "order": "normal"
     },
     {
       "name": "nuxt:components:imports",
-      "start": 1707675067452,
-      "end": 1707675067452,
+      "start": 1710766540359,
+      "end": 1710766540359,
       "order": "normal"
     },
     {
       "name": "replace",
-      "start": 1707675067452,
-      "end": 1707675067452,
+      "start": 1710766540359,
+      "end": 1710766540359,
       "order": "normal"
     },
     {
       "name": "ssr-styles",
-      "start": 1707675067452,
-      "end": 1707675067452,
+      "start": 1710766540359,
+      "end": 1710766540359,
       "order": "normal"
     },
     {
       "name": "vite:define",
-      "start": 1707675067452,
-      "end": 1707675067452,
+      "start": 1710766540359,
+      "end": 1710766540359,
       "order": "normal"
     },
     {
       "name": "vite:css-post",
-      "start": 1707675067452,
-      "end": 1707675067452,
+      "start": 1710766540359,
+      "end": 1710766540359,
       "order": "normal"
     },
     {
       "name": "vite:build-html",
-      "start": 1707675067452,
-      "end": 1707675067452,
+      "start": 1710766540359,
+      "end": 1710766540359,
       "order": "normal"
     },
     {
       "name": "vite:worker-import-meta-url",
-      "start": 1707675067452,
-      "end": 1707675067452,
+      "start": 1710766540359,
+      "end": 1710766540359,
       "order": "normal"
     },
     {
       "name": "vite:asset-import-meta-url",
-      "start": 1707675067452,
-      "end": 1707675067452,
+      "start": 1710766540359,
+      "end": 1710766540359,
       "order": "normal"
     },
     {
       "name": "commonjs",
-      "start": 1707675067452,
-      "end": 1707675067452,
+      "start": 1710766540359,
+      "end": 1710766540359,
       "order": "normal"
     },
     {
       "name": "vite:dynamic-import-vars",
-      "start": 1707675067452,
-      "end": 1707675067452,
+      "start": 1710766540359,
+      "end": 1710766540359,
       "order": "normal"
     },
     {
       "name": "vite:import-glob",
-      "start": 1707675067452,
-      "end": 1707675067452,
+      "start": 1710766540359,
+      "end": 1710766540359,
       "order": "normal"
     },
     {
       "name": "nuxt:composable-keys",
-      "start": 1707675067452,
-      "end": 1707675067452,
+      "start": 1710766540359,
+      "end": 1710766540359,
       "order": "post"
     },
     {
       "name": "nuxt:imports-transform",
-      "start": 1707675067452,
-      "end": 1707675067452,
+      "start": 1710766540359,
+      "end": 1710766540359,
       "order": "post"
     },
     {
       "name": "unctx:transform",
-      "start": 1707675067452,
-      "end": 1707675067452,
+      "start": 1710766540359,
+      "end": 1710766540359,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:pages-macros-transform",
+      "start": 1710766540359,
+      "end": 1710766540359,
       "order": "post"
     },
     {
       "name": "nuxt:runtime-paths-dep",
-      "start": 1707675067452,
-      "end": 1707675067452,
+      "start": 1710766540359,
+      "end": 1710766540359,
+      "order": "post"
+    },
+    {
+      "name": "nuxt:route-injection-plugin",
+      "start": 1710766540359,
+      "end": 1710766540359,
       "order": "post"
     },
     {
       "name": "nuxt:components-loader",
-      "start": 1707675067452,
-      "end": 1707675067452,
+      "start": 1710766540359,
+      "end": 1710766540359,
       "order": "post"
     },
     {
       "name": "nuxt:tree-shake-composables:transform",
-      "start": 1707675067452,
-      "end": 1707675067452,
+      "start": 1710766540359,
+      "end": 1710766540359,
       "order": "post"
     },
     {
       "name": "vite:build-import-analysis",
-      "start": 1707675067452,
-      "end": 1707675067452,
+      "start": 1710766540359,
+      "end": 1710766540359,
       "order": "normal"
     },
     {
       "name": "vite:reporter",
-      "start": 1707675067452,
-      "end": 1707675067452,
+      "start": 1710766540359,
+      "end": 1710766540359,
       "order": "normal"
     }
   ]
