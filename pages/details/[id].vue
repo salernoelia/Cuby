@@ -14,9 +14,9 @@
         <h2>Habitat management strategies</h2>
         <p>{{ selectedData.Habitat_managment_strategies }}</p>
 
-        <p>{{ selectedData.Case_Study_Conservation }}</p>
+        <!-- <p>{{ selectedData.Case_Study_Conservation }}</p>
         <p>{{ selectedData.Case_Study_Regeneration }}</p>
-        <p>{{ selectedData.References }}</p>
+        <p>{{ selectedData.References }}</p> -->
       </div>
       <div class="right-half"></div>
     </div>
@@ -28,7 +28,7 @@ import * as d3 from "d3";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
-import data from "~/public/data/data.json";
+import data from "~/assets/data/data.json";
 import { userStore } from "../store/ustore.js";
 
 /*-------------------*/
@@ -187,6 +187,7 @@ body {
   display: flex;
   grid-template-columns: 1fr 1fr;
   flex-direction: row;
+  gap: 2em;
 }
 
 .left-half {

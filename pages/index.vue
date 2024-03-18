@@ -88,7 +88,7 @@
 import * as d3 from "d3";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import data from "~/public/data/data.json";
+import data from "~/assets/data/data.json";
 
 import _ from "lodash";
 
