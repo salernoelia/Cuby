@@ -3,6 +3,7 @@
 Module: Data Visualisation
 Visualization: Basil Egger, Irina Ležaić, Hyejin Shim, Elia Salerno
 Development: Elia Salerno
+[Link to the Visualization](https://cubyviz.netlify.app/)
 
 
 ## Task
