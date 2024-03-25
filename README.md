@@ -1,7 +1,7 @@
 ## Cuby
 
 Module: Data Visualisation
-Visualization: Basil Egger, Irina Ležaić, Hyejin Shim, Elia Salerno
+Visualization: Basil Egger, Irina Ležaić, Hyejin Shim, Elia Salerno <br>
 Development: Elia Salerno
 [Link to the Visualization](https://cubyviz.netlify.app/)
 
