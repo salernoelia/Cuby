@@ -143,10 +143,6 @@ let mouseDownPosition = { x: 0, y: 0 };
 let mouseIsNotOverButton = ref(true);
 let threshold = 5;
 
-watch(mouseIsNotOverButton, () => {
-  console.log("mouseIsNotOverButton:", mouseIsNotOverButton);
-});
-
 let rectAbove,
   rectBelow,
   camera,

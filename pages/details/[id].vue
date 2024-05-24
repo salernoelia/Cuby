@@ -7,11 +7,11 @@
       >
         <h1>{{ selectedData.Habitat_name }}</h1>
         <p>Biome Type: {{ selectedData.Habitat_type }}</p>
-        <h2>{{ selectedData.Habitat_description }}</h2>
+        <h3>{{ selectedData.Habitat_description }}</h3>
 
-        <h2>Habitat threats</h2>
+        <h4>Habitat threats</h4>
         <p>{{ selectedData.Habitat_threats }}</p>
-        <h2>Habitat management strategies</h2>
+        <h4>Habitat management strategies</h4>
         <p>{{ selectedData.Habitat_managment_strategies }}</p>
 
         <!-- <p>{{ selectedData.Case_Study_Conservation }}</p>
@@ -169,30 +169,17 @@ const animate = () => {
 </script>
 
 <style lang="scss" scoped>
-* {
-  margin: 0;
-  padding: 0;
-  overflow: hidden; /* Hide scrollbars */
-}
-
-body {
-  height: 100vh;
-  margin: 0; /* Ensure no default margin */
-}
-
 .main {
-  margin: 0;
-  padding: 0;
   height: 100vh; /* This should be enough to fill the viewport height */
   display: flex;
-  grid-template-columns: 1fr 1fr;
   flex-direction: row;
-  gap: 2em;
 }
 
 .left-half {
   display: flex;
+  overflow-y: scroll;
   flex-direction: column;
+  gap: 0.5em;
   width: 50%;
   padding: 3em;
 
@@ -202,23 +189,5 @@ body {
 .right-half {
   width: 50%;
   background-color: #f2f2f2;
-}
-
-h1 {
-  font-size: 2em;
-  padding-bottom: 0.5em;
-  font-weight: 100;
-}
-
-h2 {
-  font-size: 1.5em;
-  padding-bottom: 0.5em;
-  font-weight: 100;
-}
-
-p {
-  white-space: pre-line;
-  font-size: 1em;
-  padding-bottom: 0.5em;
 }
 </style>
