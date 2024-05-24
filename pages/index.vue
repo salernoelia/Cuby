@@ -5,6 +5,8 @@
         <label
           class="storage-button"
           :class="{ active: selectedStorage === 'currentStorage' }"
+          @mouseover="mouseIsNotOverButton = false"
+          @mouseleave="mouseIsNotOverButton = true"
         >
           <input
             class="storage-radio"
@@ -19,6 +21,8 @@
         <label
           class="storage-button"
           :class="{ active: selectedStorage === 'potentialStorage' }"
+          @mouseover="mouseIsNotOverButton = false"
+          @mouseleave="mouseIsNotOverButton = true"
         >
           <input
             class="storage-radio"
@@ -32,6 +36,8 @@
       </div>
       <div class="filterControls">
         <button
+          @mouseover="mouseIsNotOverButton = false"
+          @mouseleave="mouseIsNotOverButton = true"
           v-for="habitat in data"
           :key="habitat.Habitat_name"
           :style="{
@@ -134,7 +140,12 @@ let nodes = [];
 let popupBol = ref(false);
 
 let mouseDownPosition = { x: 0, y: 0 };
+let mouseIsNotOverButton = ref(true);
 let threshold = 5;
+
+watch(mouseIsNotOverButton, () => {
+  console.log("mouseIsNotOverButton:", mouseIsNotOverButton);
+});
 
 let rectAbove,
   rectBelow,
@@ -317,7 +328,9 @@ window.addEventListener("mouseup", function (event) {
     }
 
     // If the mouse hasn't moved much, treat it as a click
-    onObjectClick(event);
+    if (mouseIsNotOverButton.value == true) {
+      onObjectClick(event);
+    }
   }
 });
 
@@ -589,10 +602,8 @@ body {
 .storage-button {
   width: 150px;
   height: 35px;
-  padding: 10px;
   background-color: white;
   display: flex;
-  justify-content: center;
   align-items: center;
   text-align: center;
   border: 2px solid #000;
@@ -604,7 +615,6 @@ body {
 }
 
 .storage-radio {
-  position: absolute; /* Position the radio button */
   opacity: 0; /* Make the radio button transparent */
   top: 0;
   left: 0;
