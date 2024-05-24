@@ -86,10 +86,7 @@ const initCamera = () => {
   // Ensure the camera is looking at the center of the scene
   camera.lookAt(new THREE.Vector3(0, 0, 0));
 
-  updateCameraAspectRatio(); // Set initial aspect ratio
-
   // Listen for container resize events to update camera aspect ratio
-  window.addEventListener("resize", updateCameraAspectRatio);
 };
 
 const updateCameraAspectRatio = () => {
@@ -124,17 +121,16 @@ const initControls = () => {
   controls.dampingFactor = 0.25;
   controls.enableZoom = true;
 
-  controls.screenSpacePanning = false;
   controls.maxDistance = 15000;
-
-  controls.minPolarAngle = 0; // 0 degrees
-  controls.maxPolarAngle = Math.PI; // 90 degrees
 };
 
 const addLight = () => {
-  const light = new THREE.AmbientLight(0xffffff, 1);
-  light.position.set(0, 0, 1);
-  scene.add(light);
+  const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+  scene.add(ambientLight);
+
+  const directionalLight = new THREE.DirectionalLight(0xffffff, 1.5);
+  directionalLight.position.set(1, 1, 1).normalize();
+  scene.add(directionalLight);
 };
 
 const addCube = (data) => {
@@ -165,6 +161,8 @@ const renderObjects = () => {
 const animate = () => {
   requestAnimationFrame(animate);
   renderer.render(scene, camera);
+  console.log("Camera Position", camera.position);
+  console.log("Camera Rotation", camera.rotation);
 };
 </script>
 

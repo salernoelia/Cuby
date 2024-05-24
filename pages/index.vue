@@ -122,6 +122,8 @@ const filterData = (habitatName) => {
   }
   // console.log(filteredData.value);
   resetView();
+  updateControlsTarget();
+  controls.update(); // Call this to make the camera look at the new target
 };
 
 const isHabitatSelected = (habitatName) => {
@@ -546,6 +548,30 @@ const create3D = (rectangles, nodes) => {
 
   animate();
 };
+
+function updateControlsTarget() {
+  let centroid = new THREE.Vector3(0, 0, 0);
+  let totalObjects = 0;
+
+  scene.traverse((object) => {
+    if (object.isMesh) {
+      // Compute the bounding box if not already computed
+      if (!object.geometry.boundingBox) object.geometry.computeBoundingBox();
+
+      let bbox = object.geometry.boundingBox.clone();
+      let objectCenter = bbox.getCenter(new THREE.Vector3());
+      object.localToWorld(objectCenter); // Convert to world coordinates
+      centroid.add(objectCenter);
+      totalObjects++;
+    }
+  });
+
+  if (totalObjects > 0) {
+    centroid.divideScalar(totalObjects);
+    controls.target.copy(centroid);
+    controls.update(); // Important to call this to reorient the camera
+  }
+}
 </script>
 
 <style scoped>
