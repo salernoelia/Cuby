@@ -7,6 +7,9 @@ Development: Elia Salerno
 The Visualization has been published on netlify, is yet not finished though:
 https://cubyviz.netlify.app/
 
+Find out more about the project:
+https://eliasalerno.ch/portfolio#cuby
+
 
 ## Task
 
